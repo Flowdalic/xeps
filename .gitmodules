@@ -1,0 +1,3 @@
+[submodule "xmpp"]
+	path = xmpp
+	url = git@gitorious.org:xmpp/xmpp.git
