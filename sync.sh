@@ -6,6 +6,7 @@ set -x
 . config
 
 rsync --archive \
+	--delete \
 	-v \
 	-e ssh \
 	--exclude=xmpp/ \
