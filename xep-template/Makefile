@@ -2,7 +2,7 @@
 
 FROM_XMPP_GIT := xep.xsl xep.dtd xep.ent
 
-all: xep-cmr.html
+all: xep-template.html
 
 xep.xsl: ../xmpp/extensions/xep.xsl
 	cp $^ $@
@@ -13,9 +13,9 @@ xep.dtd: ../xmpp/extensions/xep.dtd
 xep.ent: ../xmpp/extensions/xep.ent
 	cp $^ $@
 
-xep-cmr.html: xep-cmr.xml $(FROM_XMPP_GIT)
+xep-template.html: xep-template.xml $(FROM_XMPP_GIT)
 	xsltproc $^ --output $@
 
 clean:
-	rm -f xep-cmr.html
+	rm -f xep-template.html
 	rm -r $(FROM_XMPP_GIT)
