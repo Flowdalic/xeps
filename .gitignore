@@ -4,6 +4,7 @@
 /template/xep-template.xml
 /config
 
+xep-*/*.html
 xep.dtd
 xep.ent
 xep.xsl
