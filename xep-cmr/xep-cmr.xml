@@ -250,25 +250,25 @@ Deliver to all non-negative resources. And if message type is 'chat', only to th
 </section3>
 
 <section3 topic='Deliver to most active resource'>
-
-<strong>Algorithm Namespace</strong><tt>urn:xmpp:cmr:mostactive</tt>
-
+<p>
+<strong>Algorithm Namespace:</strong> <tt>urn:xmpp:cmr:mostactive</tt>
+</p>
 Deliver the message to the "most available" resource or resources, depending on the server's implementation.
 
 </section3>
 
 <section3 topic='Load balance using round robin'>
-
-<strong>Algorithm Namespace</strong><tt>urn:xmpp:cmr:roundrobin</tt>
-
+<p>
+<strong>Algorithm Namespace:</strong> <tt>urn:xmpp:cmr:roundrobin</tt>
+</p>
 Deliver the message to the next resource selected by a round-robin algorithm.
 
 </section3>
 
 <section3 topic='Weighted load balancing'>
-
-<strong>Algorithm Namespace</strong><tt>urn:xmpp:cmr:weighted</tt>
-
+<p>
+<strong>Algorithm Namespace:</strong> <tt>urn:xmpp:cmr:weighted</tt>
+</p>
 Deliver the message to a resource selected by a weighted round-robin algorithm. The weight of a resource is its priority.
 
 </section3>
