@@ -52,9 +52,6 @@ The "Server Rules for Processing XML Stanzas" section in &rfc6121; defines only 
 <p>
 &xep0254; defines a XEP to queue PubSub items, which could be used as alternative approach, instead of the herein defined message routing algorithms ('urn:xmpp:cmr:roundrobin' and 'urn:xmpp:cmr:weighted'). But this solution requires more and complexer code on the server and client side, while the guarantees provided by XEP-0254 are not always required.
 </p>
-<p>
-Customizable Message Routing also allows the implementation of a routing algorithm that will fork messages and send those to all connected resources (without further constraints or with custom constraints). Such a custom message routing algorithm could be used for example to signal incoming calls with message a stanzas to all resources. But it is recommended to use Message Carbons (XEP-280) for this.
-  </p>
 </section1>
 
 <section1 topic='Requirements' anchor='reqs'>
@@ -110,6 +107,11 @@ Examples for balancing algorithms include:
 <li><p>Weighted load balancing ('urn:xmpp:cmr:weighted')</p></li>
 </ul>
 </section2>
+  <section2 topic='Non-Use Cases'>
+	  <p>
+		  CMR is not suitable for scenarios where the routing behavior should also consider resources with negative priority. This would violate RFC 6121 § 8.5.2.1.1. A suiteable specification for such use cases may already exists. For example a proper solution that involves forking of messages even to resources with negatives priorities is provided in Section 6 of &xep0280;.
+	  </p>
+  </section2>
 </section1>
 
 <section1 topic='Protocol' anchor='protocol'>
@@ -117,7 +119,7 @@ Examples for balancing algorithms include:
 
 An entity advertises support for this protocol by including the 'urn:xmpp:cmr:0' feature in its service discovery information features as specified in Service Discovery (XEP-0030) or section 6.3 of Entity Capabilities (XEP-0015). 
 
-<example caption='Service discovery ifnormation request'><![CDATA[
+<example caption='Service discovery information request'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
     id='info1'
@@ -142,9 +144,9 @@ An entity advertises support for this protocol by including the 'urn:xmpp:cmr:0'
 ]]></example>
 </section2>
 <section2 topic='Quering the current active and available message routing algorithms'>
-
-Clients are able to query the server for the currently active and available message routing algorithms. The result IQ, must include exactly one <active/> element and at least one <available/> element. Both elements must posses a 'algorithm' attribute, which contains the name of the available or active algorithm.
-
+<p>
+Clients are able to query the server for the currently active and available message routing algorithms.
+</p>
 <example caption='Client requests the current CMR state'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
@@ -154,6 +156,9 @@ Clients are able to query the server for the currently active and available mess
 </iq>
 ]]></example>
 
+<p>
+ The result IQ, must include exactly one <active/> element and at least one <available/> element. Both elements must posses a 'algorithm' attribute, which contains the name of the available or active algorithm.
+</p>
 <example caption='Server returns information about the CMR state'><![CDATA[
 <iq xmlns='jabber:client'
   from='romeo@montague.example'
@@ -168,9 +173,12 @@ Clients are able to query the server for the currently active and available mess
   <available algorithm='urn:xmpp:cmr:weighted'/>
 </iq>
 ]]></example>
+
 </section2>
 <section2 topic='Changing the active message routing algorithm'>
-
+<p>
+To change the active message routing algorithm, the client sends an &IQ; of type 'set' containing a "cmr" child element which contains the desired algorithm as value of the "algorithm" attribute.
+</p>
 <example caption='Client requests to change the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
@@ -181,6 +189,9 @@ Clients are able to query the server for the currently active and available mess
 </iq>
 ]]></example>
 
+<p>
+The server will respond with an result &IQ; if the routing algorithm was successfully changed.
+</p>
 <example caption='Server acknowledges the change of the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example'
@@ -188,10 +199,25 @@ Clients are able to query the server for the currently active and available mess
     to='romeo@montague.example/garden'
     type='result'/>
 ]]></example>
+
+<p>
+If the server is unable to change the message routing algorithm, then an error &IQ; is returned to the client.
+</p>
+  <example caption='Server informs client that the routing algorithm was not changed'><![CDATA[
+<iq xmlns='jabber:client'
+    from='user@example.com'
+    id='change1'
+    to='user@example.com/resource'
+    type='error'>
+  <error type='cancel'>
+    <not-allowed xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]></example>
 </section2>
+
 <section2 topic='Message Routing Hints'>
 
-If allowed and supported by the server, then clients are able to annotate message stanza with a routing hint, that SHOULD affect the used message routing algorithm for the annotated stanza.
+If allowed and supported by the server, clients are able to annotate message stanza with a routing hint, that SHOULD affect the used message routing algorithm for the annotated stanza.
 
 <section3 topic='Determing support'>
 
@@ -255,7 +281,8 @@ If allowed and supported by the server, then clients are able to annotate messag
     from='romeo@montague.example/garden'
     to='foo@bar.example'>
   <body>Hello everyone</body>
-  <cmr xmlns='urn:xmpp:cmr:0' algorithm='run:xmpp:cmr:forkalways'/>
+  <cmr xmlns='urn:xmpp:cmr:0'
+       algorithm='run:xmpp:cmr:forkalways'/>
 </message>
 ]]></example>
 </section3>
@@ -267,7 +294,7 @@ If allowed and supported by the server, then clients are able to annotate messag
 Clients are allowed to change the CMR state at any time. CMR MUST only affect the routing of message stanzas of type 'normal' or 'chat', which are addressed to a bare JID and where the receiving entity has more then one available resource with a non-negative presence priority. That is, it affects the routing decision as described in RFC 6121 § 8.5.2.1.1 for messages of type 'normal' and 'chat'.
 	  </p>
 	  <p>
-The CMR state is kept per XMPP entity, implementations MUST NOT allow different CMR states between the resources of the same bare JID.
+The CMR state, ie. the used routing algorithm, is identical for every session of an XMPP client. Therefore implementations MUST NOT allow different CMR states between the resources of the same bare JID.
 	  </p>
 	  <p>
 		  If an entity advertises support for CMR as described in 3. it MUST support at least one message routing algorithm.
@@ -279,7 +306,7 @@ The CMR state is kept per XMPP entity, implementations MUST NOT allow different 
 <p>
 <strong>Algorithm Namespace:</strong> 'urn:xmpp:cmr:all'
 </p>
-Deliver to all non-negative resources. And if message type is 'chat', only to those that have opted in to receive chat messages.
+Deliver to all non-negative resources with share the same maximum priority. And if message type is 'chat', only to those that have opted in to receive chat messages.
 
 </section3>
 
@@ -309,7 +336,7 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
 </section2>
 </section1>
 <section1 topic='Implementation Notes' anchor='impl'>
-  <p>Servers implementing CMR MUST at least implement one message routing algorithm, and offer at least one of of 'urn:xmpp:cmr:all' and 'urn:xmpp:cmr:mostactive'. Technically this is a constraint derived from RFC 6121 § 8.5.2.1.1.</p>
+  <p>Servers implementing CMR MUST at least implement one message routing algorithm, and offer at least one of of 'urn:xmpp:cmr:all' and 'urn:xmpp:cmr:mostactive'. Technically this is a constraint derived from Section 8.5.2.1.1. of RFC 6121.</p>
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
