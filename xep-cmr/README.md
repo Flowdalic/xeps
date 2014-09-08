@@ -1,13 +1,22 @@
-Motiviation
+Motivation
 ===========
 
-Basically https://community.igniterealtime.org/message/242204
+The idea behind "Customizeable Message Routing" (CMR) originated from
+a Ignite Realtime forum thread
+(https://community.igniterealtime.org/message/242204). A user asked
+about Openfire's message routing behavior when multiple resources
+where available and if a round-robin distribution of the messages to
+the resources would be possible. He wanted to distributed incoming
+stanzas, originating from sensors, evenly over nodes of a cluster
+collecting the data from the sensors. Every node of the cluster is
+connected using the same JID, but with a different resource of course.
 
-Openfire has had the route.all-resources propertery for years now,
-which is a global on/off switch. I can only assume that the motivation
-for this feature orignitated from PubSub demands.
+So we find ourselves in a M2M scenario that uses XMPP. Traditionally the
+XMPP RFCs lay out two possible routing algorithms in that case:
+1. Route to all resource or 2. Route to the "most available"
+resource. The newer RFC (6121) leave it up to the server
+implementation how to determine the "most available" resource.
 
-The thread shows that there is a demand for a third way, besides
-sending the message stable to one resource and broadcasting it to all
-resources (with the same priority): Using round robin, in order to
-achieve load balancing.
+That is where CMR jumps in, by exploiting this freedom RFC 6121 to
+allow e.g. to define the "most available" resource as the resource
+chosen by a round-robin algorithm.
