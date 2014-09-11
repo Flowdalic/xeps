@@ -82,7 +82,7 @@ Non-balancing message algorithms consists of the traditional algorithms that are
 Examples for non-balancing algorithms include:
 </p>
 <ul>
-<li><p>Deliver top all ('urn:xmpp:cmr:all')</p></li>
+<li><p>Deliver to all ('urn:xmpp:cmr:all')</p></li>
 <li><p>Deliver to most active resource ('urn:xmpp:cmr:mostactive')</p></li>
 </ul>
 </section2>
