@@ -147,7 +147,7 @@ Clients are able to query the server for the currently active and available mess
 
 <example caption='Client requests the current CMR state'><![CDATA[
 <iq xmlns='jabber:client'
-    from='user@example.com/resource'
+    from='romeo@montague.example/garden'
     id='state1'
     type='get'>
   <query xmlns='urn:xmpp:cmr:0'/>
@@ -156,9 +156,9 @@ Clients are able to query the server for the currently active and available mess
 
 <example caption='Server returns information about the CMR state'><![CDATA[
 <iq xmlns='jabber:client'
-  from='user@example.com'
+  from='romeo@montague.example'
   id='state1'
-  to='user@example.com/resource'
+  to='romeo@montague.example/garden'
   type='result'>
 <query xmlns='xmlns='urn:xmpp:cmr:0'>
   <active algorithm='urn:xmpp:cmr:all' />
@@ -173,7 +173,7 @@ Clients are able to query the server for the currently active and available mess
 
 <example caption='Client requests to change the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
-    from='user@example.com/resource'
+    from='romeo@montague.example/garden'
     id='change1'
     type='set'>
   <cmr xmlns='urn:xmpp:cmr:0'
@@ -183,9 +183,9 @@ Clients are able to query the server for the currently active and available mess
 
 <example caption='Server acknowledges the change of the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
-    from='user@example.com'
+    from='romeo@montague.example'
     id='change1'
-    to='user@example.com/resource'
+    to='romeo@montague.example/garden'
     type='result'/>
 ]]></example>
 </section2>
@@ -199,7 +199,7 @@ If allowed and supported by the server, then clients are able to annotate messag
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
     id='info2'
-    to='bar.com'
+    to='bar.example'
     type='get'>
   <query xmlns='http://jabber.org/protocol/disco#info'/>
 </iq>
@@ -207,7 +207,7 @@ If allowed and supported by the server, then clients are able to annotate messag
 
 <example caption='Server replies with service discovery information response'><![CDATA[
   <iq xmlns='jabber:client'
-    from='bar.com'
+    from='bar.example'
     id='info2'
     to='romeo@montague.example/garden'
     type='result'>
@@ -224,8 +224,8 @@ If allowed and supported by the server, then clients are able to annotate messag
 
 <example caption='Client requests available message routing algorithms'><![CDATA[
 <iq xmlns='jabber:client'
-    from='user@example.com/resource'
-    to='bar.com'
+    from='romeo@montague.example/garden'
+    to='bar.example'
     id='state1'
     type='get'>
   <query xmlns='urn:xmpp:cmr:0'/>
@@ -234,9 +234,9 @@ If allowed and supported by the server, then clients are able to annotate messag
 
 <example caption='Server replies with available message routing algorithms'><![CDATA[
 <iq xmlns='jabber:client'
-  from='bar.com'
+  from='bar.example'
   id='state1'
-  to='user@example.com/resource'
+  to='romeo@montague.example/garden'
   type='result'>
 <query xmlns='xmlns='urn:xmpp:cmr:0'>
   <available algorithm='urn:xmpp:cmr:all'/>
@@ -252,8 +252,8 @@ If allowed and supported by the server, then clients are able to annotate messag
 
 <example caption='Client sends a message with a routing hint'><![CDATA[
 <message xmlns='jabber:client'
-    from='user@example.com/resource'
-    to='foo@bar.com'>
+    from='romeo@montague.example/garden'
+    to='foo@bar.example'>
   <body>Hello everyone</body>
   <cmr xmlns='urn:xmpp:cmr:0' algorithm='run:xmpp:cmr:forkalways'/>
 </message>
