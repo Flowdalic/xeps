@@ -205,9 +205,9 @@ If the server is unable to change the message routing algorithm, then an error &
 </p>
   <example caption='Server informs client that the routing algorithm was not changed'><![CDATA[
 <iq xmlns='jabber:client'
-    from='user@example.com'
+    from='romeo@montague.example'
     id='change1'
-    to='user@example.com/resource'
+    to='romeo@montague.example/garden'
     type='error'>
   <error type='cancel'>
     <not-allowed xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
