@@ -68,15 +68,15 @@ The authors have designed the customizable message routing protocol with the fol
 <section1 topic='Glossary' anchor='glossary'>
 <p>The following terms are used throughout this document</p>
   <dl>
-  <di><dt>Customizable Message Routing (CMR)</dt><dd>The name of this XEP and the protocol defined by it</dd></di>
-  <di><dt>Message Routing Algorithm</dt><dd>An algorithm that defines how a server processes message stanzas send to a server-local bare JID of type 'message' or 'chat', with at least one available or connected resource of the receiver. (RFC 6121 § 8.5.2.1.1)</dd></di>
+  <di><dt>Customizable Message Routing (CMR)</dt><dd>The name of this XEP and the protocol defined by it.</dd></di>
+  <di><dt>Message Routing Algorithm</dt><dd>An algorithm that defines how a server processes message stanzas send to a server-local bare JID of type 'message' or 'chat', with at least one available or connected resource of the receiver (RFC 6121 § 8.5.2.1.1).</dd></di>
 </dl>
 </section1>
 
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Non-balancing Message Routing Algorithms'>
 <p>
-Non-balancing message algorithms consists of the traditional algorithms that are widely used by XMPP implementations as defined in RFC 6121 § 8.5.2.1.1 and &rfc3921;. They usually try to send a message either to the all resources or try to determine the best resource based on some heuristic. They where usually designed with human-to-human interaction in mind.
+Non-balancing message algorithms consists of the traditional algorithms that are widely used by XMPP implementations as defined in RFC 6121 § 8.5.2.1.1 and &rfc3921;. They usually try to send a message either to the all resources or try to determine the best resource based on some heuristic. They where designed with human-to-human interaction in mind.
 </p>
 <p>
 Examples for non-balancing algorithms include:
@@ -88,7 +88,7 @@ Examples for non-balancing algorithms include:
 </section2>
 <section2 topic='Balancing Message Routing Algorithms'>
 <p>
-Balanced message routing algorithms try to distribute messages between the available resources of the receiver. They are ideal for use with machine to machine (M2M) technologies or the Internet of Things (IoT).
+Balanced message routing algorithms try to distribute messages between the available resources of the receiver. They are ideal for use with the Internet of Things (IoT) and especially machine to machine (M2M) technologies.
 </p>
 <p>
 Consider a large deployment of sensor nodes send their data to a cluster for further processing. Every cluster node establishes a connection using the same bare JID but a different resource for receiving the sensor data. Furthermore, after a cluster connection is authenticated, it queries the XMPP service for the CMR status, and enables a balancing message routing algorithm.
@@ -109,7 +109,7 @@ Examples for balancing algorithms include:
 </section2>
   <section2 topic='Non-Use Cases'>
 	  <p>
-		  CMR is not suitable for scenarios where the routing behavior should also consider resources with negative priority. This would violate RFC 6121 § 8.5.2.1.1. A suiteable specification for such use cases may already exists. For example a proper solution that involves forking of messages even to resources with negatives priorities is provided in Section 6 of &xep0280;.
+		  CMR is not suitable for scenarios where the routing behavior should also consider resources with negative priority. This would violate RFC 6121 § 8.5.2.1.1. A suitable specification for such use cases may already exists. For example a proper solution that involves forking of messages even to resources with negatives priorities is explained in Section 6 of &xep0280;.
 	  </p>
   </section2>
 </section1>
@@ -157,7 +157,7 @@ Clients are able to query the server for the currently active and available mess
 ]]></example>
 
 <p>
- The result IQ, must include exactly one <active/> element and at least one <available/> element. Both elements must posses a 'algorithm' attribute, which contains the name of the available or active algorithm.
+ The result IQ, must include exactly one &lt;active/&gt; element and at least one &lt;available/&gt; element. Both elements must posses a &apos;algorithm&apos; attribute, which contains the name of the available or active algorithm.
 </p>
 <example caption='Server returns information about the CMR state'><![CDATA[
 <iq xmlns='jabber:client'
@@ -177,7 +177,7 @@ Clients are able to query the server for the currently active and available mess
 </section2>
 <section2 topic='Changing the active message routing algorithm'>
 <p>
-To change the active message routing algorithm, the client sends an &IQ; of type 'set' containing a "cmr" child element which contains the desired algorithm as value of the "algorithm" attribute.
+To change the active message routing algorithm, the client sends an &IQ; of type &apos;set&apos; containing a &apso;cmr&apos; child element which contains the desired algorithm as value of the &apos;algorithm&apos; attribute.
 </p>
 <example caption='Client requests to change the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
@@ -340,7 +340,7 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
-  <p>The security model assumed by this document is that all of the resources for a single XMPP entity are in the same trust boundary.</p>
+  <p>This specification introduces no known security considerations.</p>
 </section1>
 
 <section1 topic='IANA Considerations' anchor='iana'>
