@@ -404,4 +404,8 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
 </xs:schema>
   ]]></code>
 </section1>
+
+<section1 topic='Acknowledgements' anchor='acks'>
+Thanks to Steffen Larsen and Joachim Lindborg for their feedback.
+</section1>
 </xep>
