@@ -41,6 +41,7 @@
     <remark>
       <p>Fixed Schema</p>
       <p>Add note about difference between CMR and message carbons</p>
+      <p>Explain benefit of CMR in "use Cases"</p>
     </remark>
   </revision>
   <revision>
@@ -92,6 +93,9 @@ The authors have designed the customizable message routing protocol with the fol
 </section1>
 
 <section1 topic='Use Cases' anchor='usecases'>
+  <p>
+	CMR allows receiving clients to determine if their XMPP service allows customizable message routing algorithms. Different clients can use different message routing algorithms while using the same XMPP server.
+  </p>
   <section2 topic='Non-balancing Message Routing Algorithms'>
 <p>
 Non-balancing message algorithms consists of the traditional algorithms that are widely used by XMPP implementations as defined in RFC 6121 § 8.5.2.1.1 and &rfc3921;. They usually try to send a message either to the all resources or try to determine the best resource based on some heuristic. They where designed with human-to-human interaction in mind.
