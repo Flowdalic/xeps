@@ -336,7 +336,7 @@ Deliver to all non-negative resources with share the same maximum priority. And 
 <p>
 <strong>Algorithm Namespace:</strong> 'urn:xmpp:cmr:mostactive'
 </p>
-Deliver the message to the "most available" resource or resources, depending on the server's implementation.
+Deliver the message to the "most active" resource or resources, depending on the server's implementation.
 
 </section3>
 
