@@ -40,6 +40,7 @@
     <initials>fs</initials>
     <remark>
       <p>Fixed Schema</p>
+      <p>Add note about difference between CMR and message carbons</p>
     </remark>
   </revision>
   <revision>
@@ -66,6 +67,9 @@ The "Server Rules for Processing XML Stanzas" section in &rfc6121; defines only 
 <p>
 &xep0254; defines a XEP to queue PubSub items, which could be used as alternative approach, instead of the herein defined message routing algorithms ('urn:xmpp:cmr:roundrobin' and 'urn:xmpp:cmr:weighted'). But this solution requires more and complexer code on the server and client side, while the guarantees provided by XEP-0254 are not always required.
 </p>
+  <p>
+	Compared to &xep0280; this XEP only deals with messages send to a bare JID. Furthermore &xep0280; section 6 also specifies message carbons for messages addressed to a bare JID, but those carbons are send to all carbon enabled resources, while this XEP allows a (receiving) client to control how those messages are delivered. For example by specifying a load-balancing round-robin algorithm that does not send those messages to all resources of the receiving client.
+  </p>
 </section1>
 
 <section1 topic='Requirements' anchor='reqs'>
