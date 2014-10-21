@@ -187,7 +187,7 @@ Clients are able to query the server for the currently active and available mess
   id='state1'
   to='romeo@montague.example/garden'
   type='result'>
-<query xmlns='xmlns='urn:xmpp:cmr:0'>
+<query xmlns='urn:xmpp:cmr:0'>
   <active algorithm='urn:xmpp:cmr:all' />
   <available algorithm='urn:xmpp:cmr:all'/>
   <available algorithm='urn:xmpp:cmr:mostactive'/>
