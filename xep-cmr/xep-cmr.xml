@@ -35,6 +35,14 @@
     <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
+    <version>0.X</version>
+    <date>XXXX-XX-XX</date>
+    <initials>fs</initials>
+    <remark>
+      <p>Fixed Schema</p>
+    </remark>
+  </revision>
+  <revision>
     <version>0.1</version>
     <date>2014-10-15</date>
     <initials>XEP Editor (aw)</initials>
@@ -402,9 +410,7 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
   <xs:element name='cmr' type='cmrtype'/>
 
   <xs:complexType name='cmrtype'>
-    <xs:complexType>
-      <xs:attribute name='algorithm' type='xs:string' use='required'/>
-    </xs:complexContent>
+    <xs:attribute name='algorithm' type='xs:string' use='required'/>
   </xs:complexType>
 
 </xs:schema>
