@@ -7,7 +7,7 @@
 <xep>
 <header>
   <title>Customizable Message Routing</title>
-  <abstract>This specification specifies customizable behavior of RFC 6121 § 8.5.2.1.1 to allow various message routing algorithms (e.g. for load balancing).</abstract>
+  <abstract>This specification specifies customizable behavior of RFC 6121 section 8.5.2.1.1 to allow various message routing algorithms (e.g., for load balancing).</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -15,8 +15,8 @@
     <liability>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.</liability>
     <conformance>This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<link url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).</conformance>
   </legal>
-  <number>xxxx</number>
-  <status>ProtoXEP</status>
+  <number>0354</number>
+  <status>Experimental</status>
   <type>Standards Track</type>
   <sig>Standards</sig>
   <approver>Council</approver>
@@ -35,8 +35,14 @@
     <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
+    <version>0.1</version>
+    <date>2014-10-15</date>
+    <initials>XEP Editor (aw)</initials>
+    <remark><p>Initial published version approved by the XMPP Council.</p></remark>
+  </revision>
+  <revision>
     <version>0.0.1</version>
-    <date>2014-09-01</date>
+    <date>2014-09-22</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -117,7 +123,7 @@ Examples for balancing algorithms include:
 <section1 topic='Protocol' anchor='protocol'>
 <section2 topic='Discovering Support'>
 
-An entity advertises support for this protocol by including the 'urn:xmpp:cmr:0' feature in its service discovery information features as specified in Service Discovery (XEP-0030) or section 6.3 of Entity Capabilities (XEP-0015). 
+An entity advertises support for this protocol by including the 'urn:xmpp:cmr:0' feature in its service discovery information features as specified in &xep0030; or section 6.3 of &xep0115;.
 
 <example caption='Service discovery information request'><![CDATA[
 <iq xmlns='jabber:client'
@@ -177,7 +183,7 @@ Clients are able to query the server for the currently active and available mess
 </section2>
 <section2 topic='Changing the active message routing algorithm'>
 <p>
-To change the active message routing algorithm, the client sends an &IQ; of type &apos;set&apos; containing a &apso;cmr&apos; child element which contains the desired algorithm as value of the &apos;algorithm&apos; attribute.
+To change the active message routing algorithm, the client sends an &IQ; of type &apos;set&apos; containing a &apos;cmr&apos; child element which contains the desired algorithm as value of the &apos;algorithm&apos; attribute.
 </p>
 <example caption='Client requests to change the active message routing algorithm'><![CDATA[
 <iq xmlns='jabber:client'
@@ -344,7 +350,7 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
 </section1>
 
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>This document requires no interaction with &IANA;.</p> 
+  <p>This document requires no interaction with &IANA;.</p>
 </section1>
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
