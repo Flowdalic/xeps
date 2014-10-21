@@ -421,3 +421,9 @@ Deliver the message to a resource selected by a weighted round-robin algorithm. 
 Thanks to Steffen Larsen and Joachim Lindborg for their feedback.
 </section1>
 </xep>
+<!-- Emacs Indentation Settings
+Local Variables:
+nxml-child-indent: 2
+sgml-indent-step: 2
+End:
+-->
