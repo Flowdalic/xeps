@@ -42,7 +42,7 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with MAM to uniquely identify a message withing an archive. They are also useful in the context of multi user conferences, to identiy a MUC service reflected message. And they could be used together with carbons, so that clients are able to retrive the archive starting from a given message.</p>
+  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with MAM to uniquely identify a message withing an archive. They are also useful in the context of multi user conferences, to identiy a MUC service reflected message. And they could be used together with carbons, so that clients are able to retrieve the archive starting from a given message.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
@@ -52,6 +52,15 @@
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <p>STRONGLY RECOMMENDED.</p>
+  <example caption='A message stanza with the message ID extension.'><![CDATA[
+<message xmlns='jabber:client'
+         to='romea@example.org/garden'>
+  <body>Typical body text</body>
+  <message-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+</message>
+]]></example>
+  The service generates the value of the id attribute. The value must be service local unique and stable, i.e. it MUST NOT change later for some reason. It is RECOMMEND that the id generating service uses UUID (TODO RFC?) to generate the IDs.
+  XMPP servers MUST NOT strip the message-id element from message stanzas.
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
   <p>OPTIONAL.</p>
