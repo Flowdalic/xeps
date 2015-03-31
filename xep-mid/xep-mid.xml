@@ -6,8 +6,8 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>XEP Template</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <title>Unique and stable message IDs</title>
+  <abstract>This specification describes unique and stable IDs for message stanzas.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -27,22 +27,22 @@
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED</shortname>
+  <shortname>NOT_YET_ASSIGNED (suggested: mid)</shortname>
   <author>
-    <firstname>Peter</firstname>
-    <surname>Saint-Andre</surname>
-    <email>stpeter@jabber.org</email>
-    <jid>stpeter@jabber.org</jid>
+    <firstname>John</firstname>
+    <surname>Doe</surname>
+    <email>john@doe.org</email>
+    <jid>john@doe.org</jid>
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2001-09-14</date>
-    <initials>psa</initials>
-    <remark><p>First draft.</p></remark>
+    <date>2015-03-31</date>
+    <initials>jd</initials>
+    <remark><p>Not really the first draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with MAM to uniquely identify a message withing an archive. They are also useful in the context of multi user conferences, to identiy a MUC service reflected message. And they could be used together with carbons, so that clients are able to retrive the archive starting from a given message.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
