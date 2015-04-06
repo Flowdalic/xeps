@@ -26,5 +26,5 @@ prettify.js: xmpp/prettify.js
 $(XEPS): init
 	$(MAKE) -C $@ $(TARGET)
 
-sync: all
-	./sync.sh
+deploy: all
+	./deploy.sh
