@@ -83,24 +83,21 @@
   <section2 topic="Discovering support" anchor="discovery">
     <p>If the server supports CSI, it advertises it in the stream features after the client has authenticated:</p>
     <example caption='Server indicates support for CSI'><![CDATA[
-      <stream:features>
-        <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
-        <csi xmlns='urn:xmpp:csi:0'/>
-      </stream:features>
-    ]]></example>
+<stream:features>
+  <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
+  <csi xmlns='urn:xmpp:csi:0'/>
+</stream:features>]]></example>
   </section2>
 
   <section2 topic="Indicating state" anchor="indication">
     <p>A stream always begins in 'active' state. If a client wishes to inform the server that it has become inactive,
     it sends an &lt;inactive/&gt; element in the 'urn:xmpp:csi:0' namespace:</p>
     <example caption='Client indicates it is inactive'><![CDATA[
-      <inactive xmlns='urn:xmpp:csi:0'/>
-    ]]></example>
+<inactive xmlns='urn:xmpp:csi:0'/>]]></example>
     
     <p>As might be anticipated, when the client is active again it sends an &lt;active/&gt; element:</p>
     <example caption='Client indicates it is active'><![CDATA[
-      <active xmlns='urn:xmpp:csi:0'/>
-    ]]></example>
+<active xmlns='urn:xmpp:csi:0'/>]]></example>
   
     <p>There is no reply from the server to either of these elements (though they may indirectly cause the server to
   send stanzas, e.g., to update presence information when the client becomes active after a period of inactivity).</p>
