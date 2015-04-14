@@ -99,8 +99,7 @@
     <example caption='Client indicates it is active'><![CDATA[
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
   
-    <p>There is no reply from the server to either of these elements (though they may indirectly cause the server to
-  send stanzas, e.g., to update presence information when the client becomes active after a period of inactivity).</p>
+    <p>The server MUST signal the transition of the client state by sending either a &lt;active/&gt; or &lt;inactive/&gt; to the client once he performed all actions necessary to change the state.</p>
   </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
