@@ -89,7 +89,7 @@
 </stream:features>]]></example>
   </section2>
 
-  <section2 topic="Indicating state" anchor="indication">
+  <section2 topic="Indicating state to the server" anchor="indication">
     <p>A stream always begins in 'active' state. If a client wishes to inform the server that it has become inactive,
     it sends an &lt;inactive/&gt; element in the 'urn:xmpp:csi:0' namespace:</p>
     <example caption='Client indicates it is inactive'><![CDATA[
@@ -98,8 +98,16 @@
     <p>As might be anticipated, when the client is active again it sends an &lt;active/&gt; element:</p>
     <example caption='Client indicates it is active'><![CDATA[
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
-  
-    <p>The server MUST signal the transition of the client state by sending either a &lt;active/&gt; or &lt;inactive/&gt; to the client once he performed all actions necessary to change the state.</p>
+  </section2>
+
+  <section2 topic="Server state notification to the client" anchor="server-notification">
+    <p>The server MUST signal the completion of the client state transition by sending a message indicating that the CSI state changed to the full JID which requested the change, once he performed all actions necessary to change the state. The message must contain a &lt;csi/&gt; element qualified by the 'urn:xmpp:csi:1' namespace, containing either an &lt;active/&gt; or &lt;inactive/&gt; child element. The receiving client MUST NOT make any assumption about the message type of the message containing the &lt;csi/&gt; element. The 'from' attribute of the message MUST be empty.</p>
+	<example caption='Server notifies the client about a completed change of the CSI state'><![CDATA[
+<message to='client@examle.org/resource'>
+  <csi xmlns='urn:xmpp:csi:1'>
+    <active/>
+  </csi>
+</message>]]></example>
   </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
@@ -145,6 +153,7 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- TODO add schema for message stanza 'csi' extension element -->
 </xs:schema>
     ]]></code>
 </section1>
