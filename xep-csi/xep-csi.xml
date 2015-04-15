@@ -108,6 +108,7 @@
     <active/>
   </csi>
 </message>]]></example>
+	<p>Implementations MAY send an &lt;active/&gt; CSI notification after stream resumption (&xep0198;), in order to override possible pending inactive notifications in the stream's queue.</p>
   </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
@@ -122,6 +123,8 @@
   fully standard behaviour of XMPP is required.</p>
 
   <p>The CSI state MUST NOT be keept when a stream is resumed by means for &xep0198;. If a stream is resumed by a client, it is always in 'active' state.</p>
+
+  <p>The server MAY changes the CSI state at any time to 'active'. Therfore a client MUST be prepared to receive CSI notifications at any point in time.</p>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
   <p>To protect the privacy of users, servers MUST NOT reveal the clients active/inactive state to other
