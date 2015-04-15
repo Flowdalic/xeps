@@ -101,12 +101,12 @@
   </section2>
 
   <section2 topic="Server state notification to the client" anchor="server-notification">
-    <p>The server MUST signal the completion of the client state transition by sending a message indicating that the CSI state changed to the full JID which requested the change, once he performed all actions necessary to change the state. The message must contain a &lt;csi/&gt; element qualified by the 'urn:xmpp:csi:1' namespace, containing either an &lt;active/&gt; or &lt;inactive/&gt; child element. The receiving client MUST NOT make any assumption about the message type of the message containing the &lt;csi/&gt; element. The 'from' attribute of the message MUST be empty.</p>
+    <p>The server MUST signal the completion of the client state transition by sending a message indicating that the CSI state changed to the full JID which requested the change, once he performed all actions necessary to change the state. The message must contain a &lt;notification/&gt; element qualified by the 'urn:xmpp:csi:1' namespace, containing either an &lt;active/&gt; or &lt;inactive/&gt; child element. The receiving client MUST NOT make any assumption about the message type of the message containing the &lt;notification/&gt; element. The 'from' attribute of the message MUST be empty.</p>
 	<example caption='Server notifies the client about a completed change of the CSI state'><![CDATA[
 <message to='client@examle.org/resource'>
-  <csi xmlns='urn:xmpp:csi:1'>
+  <notification xmlns='urn:xmpp:csi:1'>
     <active/>
-  </csi>
+  </notification>
 </message>]]></example>
 	<p>CSI enabled Servers MUST (TODO: MAY?) send an &lt;active/&gt; CSI notification after stream resumption (&xep0198;), in order to override possible pending inactive notifications in the stream's queue. Therefore CSI notification receiving entites MUST be prepared to receive CSI notifications at any time, e.g. even if no CSI state change was previously requested.</p>
   </section2>
