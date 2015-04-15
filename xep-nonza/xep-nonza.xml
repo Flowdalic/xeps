@@ -48,7 +48,16 @@
 </section1>
 <section1 topic='Nonza definition' anchor='nonza'>
   <p><strong>Nonza:</strong> A Nonza is every top level stream element which is not a Stanza.</p>
-  <p>The term Nonza makes it easy to recall it's definition: Not a Stanza. See the following nonza examples:</p>
+  <p>
+	<ul>
+	  <li>Nonzas MUST NOT be routed, i.e. the are only exchanged between the two endpoints of an XMPP stream.</li>
+	  <li>Nonzas MUST NOT have a &apos;from&apos; or &apos;to&apos; attribute</li>
+	</ul>
+  </p>
+  <p>The term Nonza makes it easy to recall it's definition: Not a Stanza.</p>
+</section1>
+<section1 topic='Nonza examples' anchor='nonza-examples'>
+  <p>Here are some examples of nonzas:</p>
   <example caption='The Stream Management (XEP-198) &quot;enable&quot; nonza'><![CDATA[
 <enable xmlns='urn:xmpp:sm:3'/>]]></example>
   <example caption='The CSI (XEP-352) &quot;active&quot; nonza'><![CDATA[
