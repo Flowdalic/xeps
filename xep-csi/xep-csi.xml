@@ -122,7 +122,7 @@
   the possible optimisations implemented by the server, it may not be suitable for non-IM purposes where the
   fully standard behaviour of XMPP is required.</p>
 
-  <p>The CSI state MUST NOT be keept when a stream is resumed by means for &xep0198;. If a stream is resumed by a client, it is always in 'active' state.</p>
+  <p>The CSI state MUST NOT be keept when a stream is resumed by means of <cite>Stream Management (XEP-0198) § 5. Resumption</cite>;. If a stream is resumed by a client, it is always in 'active' state.</p>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
   <p>To protect the privacy of users, servers MUST NOT reveal the clients active/inactive state to other
