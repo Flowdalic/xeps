@@ -42,20 +42,27 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>The usage of non-Stanza top level stream elements is steadily increasing in the last years. Starting with &xep0198;, which is the first XEP which specified and used additional non-stanza top level stream elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them .</p>
-  <p>This leads to the situation where some submitted XEPs errornous refer to non-Stanza top level stream elements as "Stanzas". Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
-  <p>This XEP tries to fix this by providing a term and a definition for those top level elements.</p>
+  <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, which is one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them .</p>
+  <p>This leads to the unfortunate situation where some submitted XEPs errornous refer to non-Stanza top level stream elements as "Stanzas". Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
+  <p>This XEP tries to fix this by providing a term and a definition for those elements.</p>
 </section1>
 <section1 topic='Nonza Definition' anchor='nonza'>
   <p><strong>Nonza:</strong> A Nonza is every top level XMPP stream element which is not a Stanza.</p>
   <p>The term Nonza consists of the beginning and ending letters of its definitions and thus makes it easy to recall that definition: <strong>No</strong>t a Sta<strong>nza</strong>.</p>
 </section1>
 <section1 topic='Nonza Examples' anchor='nonza-examples'>
-  <p>Here are some examples of nonzas:</p>
-  <example caption='The Stream Management (XEP-198) &quot;enable&quot; nonza'><![CDATA[
+  <section2 topic='Nonzas used before resource binding' anchor='nonza-examples-before-binding'>
+	<example caption='The Stream Compression (XEP-0138) &quot;compress&quot; Nonza'><![CDATA[
+<compress xmlns='http://jabber.org/protocol/compress'>
+  <method>zlib</method>
+</compress>]]></example>
+  </section2>
+  <section2 topic='Nonzas used after resource binding' anchor='nonza-examples-after-binding'>
+  <example caption='The Stream Management (XEP-0198) &quot;enable&quot; Nonza'><![CDATA[
 <enable xmlns='urn:xmpp:sm:3'/>]]></example>
-  <example caption='The CSI (XEP-352) &quot;active&quot; nonza'><![CDATA[
+  <example caption='The Client State Indication (XEP-0352) &quot;active&quot; Nonza'><![CDATA[
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
+  </section2>
 </section1>
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
