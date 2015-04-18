@@ -44,7 +44,7 @@
 <section1 topic='Introduction' anchor='intro'>
   <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, which is one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them .</p>
   <p>This leads to the unfortunate situation where some submitted XEPs errornous refer to non-Stanza top level stream elements as "Stanzas". Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
-  <p>This XEP tries to fix this by providing a term and a definition for those elements.</p>
+  <p>This XEP tries to fix this by providing a term, a definition and declares some rules for those elements.</p>
 </section1>
 <section1 topic='Nonza Definition' anchor='nonza'>
   <p><strong>Nonza:</strong> A Nonza is every top level XMPP stream element which is not a Stanza.</p>
