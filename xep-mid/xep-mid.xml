@@ -29,10 +29,10 @@
   <supersededby/>
   <shortname>NOT_YET_ASSIGNED (suggested: mid)</shortname>
   <author>
-    <firstname>John</firstname>
-    <surname>Doe</surname>
-    <email>john@doe.org</email>
-    <jid>john@doe.org</jid>
+    <firstname>Florian</firstname>
+    <surname>Schmaus</surname>
+    <email>flo@geekplace.eu</email>
+    <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
     <version>0.0.1</version>
@@ -78,10 +78,12 @@
   <p>REQUIRED.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>REQUIRED.</p>
+  <section2 topic='Protocol Namespaces' anchor='ns'>
+    <p>The &REGISTRAR; includes "urn:xmpp:mid:0" in its registry of protocol namespaces (see &NAMESPACES;).</p>
+  </section2>
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
   <p>REQUIRED for protocol specifications.</p>
