@@ -64,9 +64,11 @@
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
   </section2>
 </section1>
+<!--
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
 </section1>
+-->
 <section1 topic='Use Cases' anchor='usecases'>
   <p>Nonzas are commonly used when it's not neccessary to route the exchanged information behind the endpoints of an XMPP stream. For example, one use case is to control the Stream like it is done in <cite>XEP-0198: Stream Management</cite>.</p>
 </section1>
@@ -78,6 +80,7 @@
 	</ul>
   </p>
 </section1>
+<!--
 <section1 topic='Implementation Notes' anchor='impl'>
   <p>OPTIONAL.</p>
 </section1>
@@ -87,16 +90,19 @@
 <section1 topic='Internationalization Considerations' anchor='i18n'>
   <p>OPTIONAL.</p>
 </section1>
+-->  
 <section1 topic='Security Considerations' anchor='security'>
   <p>As noted, Nonas MUST NOT get routed, as this could introduce the ability for third parties to spoof them.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &REGISTRAR;.</p>
 </section1>
+<!--
 <section1 topic='XML Schema' anchor='schema'>
   <p>REQUIRED for protocol specifications.</p>
 </section1>
+-->  
 </xep>
