@@ -42,7 +42,7 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with MAM to uniquely identify a message withing an archive. They are also useful in the context of multi user conferences, to identiy a MUC service reflected message. And they could be used together with carbons, so that clients are able to retrieve the archive starting from a given message.</p>
+  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with &xep0313; to uniquely identify a message withing an archive. They are also useful in the context of &xep0045; conferences, to identify a message reflected by a MUC service back to the originating entity. And they could be used together with &xep0280;, so that clients are able to retrieve the archive starting from a given message.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
@@ -51,7 +51,7 @@
   <p>OPTIONAL.</p>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
-  <p>STRONGLY RECOMMENDED.</p>
+  <section2 topic='Unique message IDs' anchor='message-id'>
   <example caption='A message stanza with the message ID extension.'><![CDATA[
 <message xmlns='jabber:client'
          to='romea@example.org/garden'>
@@ -60,10 +60,39 @@
 </message>
 ]]></example>
   The service generates the value of the id attribute. The value must be service local unique and stable, i.e. it MUST NOT change later for some reason. It is RECOMMEND that the id generating service uses UUID (TODO RFC?) to generate the IDs.
-  XMPP servers MUST NOT strip the message-id element from message stanzas.
+  </section2>
+  <section2 topic='Client generated message IDs' anchor='client-id'>
+	<p>
+	  Some use cases require the client to generate the message ID. In this case, the client MUST use "client-id" as attribute name for the ID.
+	</p>
+	<example caption='A message stanza with the message ID extension.'><![CDATA[
+<message xmlns='jabber:client'
+         to='room@muc.example.org'
+         type='groupchat'>
+  <body>Typical body text</body>
+  <message-id xmlns='urn:xmpp:mid:0' client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+</message>]]></example>
+	<p>
+	  The server MAY override the ID. If so, the "message-id" element MUST contain a "id" <em>and</em> a "client-id" attribute.
+	</p>
+	<example caption='A message stanza with the message ID extension.'><![CDATA[
+<message xmlns='jabber:client'
+         to='room@muc.example.org'
+         type='groupchat'>
+  <body>Typical body text</body>
+  <message-id xmlns='urn:xmpp:mid:0'
+              id='new-id-overrides-client-id'
+              client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+</message>]]></example>
+	<p>
+	  Otherwise, if the server does not override the ID, he MAY ommit the "client-id" attribute.
+	</p>
+  </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
-  <p>OPTIONAL.</p>
+  <ol>
+	<li>XMPP entities routing stanzas MUST NOT strip the message-id element from message stanzas.</li>
+  </ol>
 </section1>
 <section1 topic='Implementation Notes' anchor='impl'>
   <p>OPTIONAL.</p>
