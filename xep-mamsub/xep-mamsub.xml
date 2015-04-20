@@ -6,8 +6,8 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>XEP Template</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <title>MAM Subscriptions</title>
+  <abstract>Allow entities to subscribe to message archives in order to keep updated and engaged in a converstation.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -29,29 +29,97 @@
   <supersededby/>
   <shortname>NOT_YET_ASSIGNED</shortname>
   <author>
-    <firstname>Peter</firstname>
-    <surname>Saint-Andre</surname>
-    <email>stpeter@jabber.org</email>
-    <jid>stpeter@jabber.org</jid>
+    <firstname>Florian</firstname>
+    <surname>Schmaus</surname>
+    <email>flo@geekplace.eu</email>
+    <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2001-09-14</date>
-    <initials>psa</initials>
+    <date>2015-04-20</date>
+    <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+  <p>
+  This extension of &xep0313; allows entities to subscribe to message archives, removing the need for &xep0280;.
+  </p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Discovering Support' anchor='disco'>
+  <p>An entity advertises support for this protocol by including the "urn:xmpp:mam:sub:0" feature in its service discovery information features as specified in &xep0030;.</p>
+  <example caption='Client requests information about its own server'><![CDATA[
+<iq xmlns='jabber:client'
+    from='romeo@montague.example/garden'
+    id='info1'
+    to='montague.example'
+    type='get'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+  </iq>]]></example>
+    <example caption='Server responds with Carbons feature'><![CDATA[
+  <iq xmlns='jabber:client'
+    from='montague.example'
+    id='info1'
+    to='romeo@montague.example/garden'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    ...
+    <feature var='urn:xmpp:mam:sub:0'/>
+    ...
+  </query>
+</iq>]]></example>
 </section1>
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Subscription Management' anchor='management'>
+  <section2 topic='Subscriping' anchor='sub'>
+  <example caption='Client subscribes to the message archive'><![CDATA[
+<iq xmlns='jabber:client'
+    from='romeo@montague.example/garden'
+    id='sub1'
+    type='set'>
+  <subscribe xmlns='urn:xmpp:mam:sub:0'/>
+</iq>]]></example>
+  </section2>
+  <section2 topic='Unsubscriping' anchor='unsub'>
+  <example caption='Client unsubscribes to the message archive'><![CDATA[
+<iq xmlns='jabber:client'
+    from='romeo@montague.example/garden'
+    id='unsub1'
+    type='set'>
+  <unsubscribe xmlns='urn:xmpp:mam:sub:0'/>
+</iq>]]></example>
+  </section2>
+</section1>
+<section1 topic='Receiving notifications' anchor='notifications'>
+  <p>Each notification is wrapped using &xep0297; (TODO or not?), containing a "message-id" extension as specified in XEP-MID.</p>
+  <example caption='Server sends carbon to Romeo&apos;s other clients'><![CDATA[
+<message xmlns='jabber:client'
+         from='romeo@montague.example'
+         to='romeo@montague.example/home'
+         type='chat'>
+  <mamsub xmlns='urn:xmpp:mam:sub:0'>
+    <forwarded xmlns='urn:xmpp:forward:0'>
+      <message xmlns='jabber:client'
+               from='juliet@capulet.example/balcony'
+               to='romeo@montague.example/garden'
+               type='chat'>
+        <body>What man art thou that, thus bescreen'd in night, so stumblest on my counsel?</body>
+        <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+        <messsage-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+      </message>
+    </forwarded>
+  </mamsub>
+</message>
+]]></example>
+  <p>TODO: Every message added to the archive MUST be sent to entities subscribed to the archive, regardless of the message type or content (TODO wording, message opt-out?).</p>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
   <p>OPTIONAL.</p>
