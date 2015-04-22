@@ -327,7 +327,7 @@
     <p>When the results returned by the server are complete (that is: when they are the last page of the result set), the server MUST include a 'complete' attribute in the &IQ; result, with a value of 'true'. If it is not the last page of the result set, the server MUST either omit the 'complete' attribute, or give it a value of 'false'.</p>
     <example caption='Server completes a result with the last page of messages'><![CDATA[
 <!-- result messages -->
-<iq type='result' id='u29303'/>
+<iq type='result' id='u29303'>
   <fin xmlns='urn:xmpp:mam:0' complete='true'>
     <set xmlns='http://jabber.org/protocol/rsm'>
       <first index='0'>23452-4534-1</first>
