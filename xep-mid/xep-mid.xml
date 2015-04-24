@@ -92,6 +92,7 @@
 <section1 topic='Business Rules' anchor='rules'>
   <ol>
 	<li>XMPP entities routing stanzas MUST NOT strip the message-id element from message stanzas.</li>
+	<li>The ID values SHOULD be unpredictable.</li>
   </ol>
 </section1>
 <section1 topic='Implementation Notes' anchor='impl'>
@@ -116,5 +117,8 @@
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
   <p>REQUIRED for protocol specifications.</p>
+</section1>
+<section1 topic='Acknowledgements' anchor='ack'>
+  <p>Thanks to Thijs Alkemade for provding feedback.</p>
 </section1>
 </xep>
