@@ -161,8 +161,15 @@
 </iq>]]></example>
 
     <example caption='Their server sends the matching messages'><![CDATA[
-<message from="witch@shakespeare.lit" to="macbeth@shakespeare.lit">
-    <body>Hail to thee</body>
+<message id='aeb213' to='juliet@capulet.lit/chamber'>
+  <result xmlns='urn:xmpp:mam:0' queryid='f27' id='28482-98726-73623'>
+    <forwarded xmlns='urn:xmpp:forward:0'>
+      <delay xmlns='urn:xmpp:delay' stamp='2010-07-10T23:08:25Z'/>
+      <message from="witch@shakespeare.lit" to="macbeth@shakespeare.lit">
+        <body>Hail to thee</body>
+      </message>
+    </forwarded>
+  </result>
 </message>]]></example>
 
     <example caption='Server returns the result IQ to signal the end'><![CDATA[
