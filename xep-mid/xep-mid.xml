@@ -36,28 +36,21 @@
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2015-03-31</date>
-    <initials>jd</initials>
-    <remark><p>Not really the first draft.</p></remark>
+    <date>2015-05-12</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with &xep0313; to uniquely identify a message withing an archive. They are also useful in the context of &xep0045; conferences, to identify a message reflected by a MUC service back to the originating entity. And they could be used together with &xep0280;, so that clients are able to retrieve the archive starting from a given message.</p>
+  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with &xep0313; to uniquely identify a message within an archive. They are also useful in the context of &xep0045; conferences, to identify a message reflected by a MUC service back to the originating entity. And they could be used together with &xep0280;, so that clients are able to retrieve the archive starting from a given message.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
-  <p>STRONGLY RECOMMENDED.</p>
-</section1>
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
+  <p>The herein defined messages IDs must be unique and stable within the scope of the generating XMPP entity.</p>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Unique message IDs' anchor='message-id'>
-  <example caption='A message stanza with the message ID extension.'><![CDATA[
-<message xmlns='jabber:client'
-         to='romea@example.org/garden'>
-  <body>Typical body text</body>
-  <message-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
-</message>
+  <example caption='The message ID extension.'><![CDATA[
+<message-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
 ]]></example>
   The service generates the value of the id attribute. The value must be service local unique and stable, i.e. it MUST NOT change later for some reason. It is RECOMMEND that the id generating service uses UUID (TODO RFC?) to generate the IDs.
   </section2>
@@ -85,27 +78,18 @@
               client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
 </message>]]></example>
 	<p>
-	  Otherwise, if the server does not override the ID, he MAY ommit the "client-id" attribute.
+	  Otherwise, if the server does not override the ID, he MAY omit the "client-id" attribute.
 	</p>
   </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
   <ol>
 	<li>XMPP entities routing stanzas MUST NOT strip the message-id element from message stanzas.</li>
-	<li>The ID values SHOULD be unpredictable.</li>
+	<li>The values of the 'id' attribute SHOULD be unpredictable.</li>
   </ol>
 </section1>
-<section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Accessibility Considerations' anchor='access'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Internationalization Considerations' anchor='i18n'>
-  <p>OPTIONAL.</p>
-</section1>
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+  <p>The value of the 'id' attribute should not provide any further information besides the opaque ID itself. Entities observing the value MUST NOT be able to infer any information from it, e.g. the size of the message archive.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>This document requires no interaction with &IANA;.</p>
@@ -119,6 +103,6 @@
   <p>REQUIRED for protocol specifications.</p>
 </section1>
 <section1 topic='Acknowledgements' anchor='ack'>
-  <p>Thanks to Thijs Alkemade for provding feedback.</p>
+  <p>Thanks to Thijs Alkemade for providing feedback.</p>
 </section1>
 </xep>

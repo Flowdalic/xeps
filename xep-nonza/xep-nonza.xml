@@ -36,31 +36,31 @@
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2015-04-15</date>
+    <date>2015-05-12</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, which is one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them .</p>
-  <p>This leads to the unfortunate situation where some submitted XEPs errornous refer to non-Stanza top level stream elements as "Stanzas". Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
-  <p>This XEP tries to fix this by providing a term, a definition and declares some rules for those elements.</p>
+  <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them.</p>
+  <p>This leads to the unfortunate situation where some submitted XEPs erroneous refer to non-Stanza top level stream elements as 'Stanzas'. Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
+  <p>This XEP tries to fix this by providing a term, a definition and declaring some rules for those XMPP stream elements.</p>
 </section1>
 <section1 topic='Nonza Definition' anchor='nonza'>
   <p><strong>Nonza:</strong> A Nonza is every top level XMPP stream element which is not a Stanza.</p>
-  <p>The term Nonza consists of the beginning and ending letters of its definitions and thus makes it easy to recall that definition: <strong>No</strong>t a Sta<strong>nza</strong>.</p>
+  <p>The term 'Nonza' originates from the beginning and ending letters of its definition and thus makes it easy to recall that definition: <strong>No</strong>t a Sta<strong>nza</strong>.</p>
 </section1>
 <section1 topic='Nonza Examples' anchor='nonza-examples'>
   <section2 topic='Nonzas used before resource binding' anchor='nonza-examples-before-binding'>
-	<example caption='The Stream Compression (XEP-0138) &quot;compress&quot; Nonza'><![CDATA[
+	<example caption='The Stream Compression (XEP-0138) &lt;compress/&gt; Nonza'><![CDATA[
 <compress xmlns='http://jabber.org/protocol/compress'>
   <method>zlib</method>
 </compress>]]></example>
   </section2>
   <section2 topic='Nonzas used after resource binding' anchor='nonza-examples-after-binding'>
-  <example caption='The Stream Management (XEP-0198) &quot;enable&quot; Nonza'><![CDATA[
+  <example caption='The Stream Management (XEP-0198) &lt;enable/&gt; Nonza'><![CDATA[
 <enable xmlns='urn:xmpp:sm:3'/>]]></example>
-  <example caption='The Client State Indication (XEP-0352) &quot;active&quot; Nonza'><![CDATA[
+  <example caption='The Client State Indication (XEP-0352) &lt;active/&gt; Nonza'><![CDATA[
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
   </section2>
 </section1>
@@ -70,29 +70,20 @@
 </section1>
 -->
 <section1 topic='Use Cases' anchor='usecases'>
-  <p>Nonzas are commonly used when it's not neccessary to route the exchanged information behind the endpoints of an XMPP stream. For example, one use case is to control the Stream like it is done in <cite>XEP-0198: Stream Management</cite>.</p>
+  <p>Nonzas are commonly used when it's not necessary to route the exchanged information behind the endpoints of an XMPP stream. For example, one use case is to control the XMPP stream like it is done in <cite>XEP-0198: Stream Management</cite>.</p>
+  <p>Nonzas sent before resource binding, as defined in RFC 6120 § 7., usually follow a request-response pattern. But after the client successfully bound a resource, they are used in a more "asynchronous" fashion, where a 'request' Nonza does not, or at least not immediately, trigger a 'result' Nonza sent back.</p>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
   <p>
-	<ul>
-	  <li>Nonzas MUST NOT be routed, i.e. the are only exchanged between the two endpoints of an XMPP stream.</li>
+	<ol>
+	  <li>Nonzas MUST NOT be routed, i.e. they are only exchanged between the two endpoints of an XMPP stream.</li>
 	  <li>Nonzas SHOULD NOT have a &apos;from&apos; or &apos;to&apos; attribute.</li>
-	</ul>
+	</ol>
+	Note that an exception from 2. are the the widely used &lt;db/&gt; Nonzas defined in &xep0220;.
   </p>
 </section1>
-<!--
-<section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Accessibility Considerations' anchor='access'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Internationalization Considerations' anchor='i18n'>
-  <p>OPTIONAL.</p>
-</section1>
--->  
 <section1 topic='Security Considerations' anchor='security'>
-  <p>As noted, Nonas MUST NOT get routed, as this could introduce the ability for third parties to spoof them.</p>
+  <p>As noted, Nonzas MUST NOT get routed, because this could introduce the ability for third parties to spoof them.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>This document requires no interaction with &IANA;.</p>
@@ -100,9 +91,4 @@
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
   <p>This document requires no interaction with &REGISTRAR;.</p>
 </section1>
-<!--
-<section1 topic='XML Schema' anchor='schema'>
-  <p>REQUIRED for protocol specifications.</p>
-</section1>
--->  
 </xep>
