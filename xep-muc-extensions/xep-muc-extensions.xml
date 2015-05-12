@@ -6,8 +6,8 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>XEP Template</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <title>Multi-User Chat Extensions</title>
+  <abstract>This specification definies optional extensions to Multi-User Chat (XEP-0045).</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -22,36 +22,101 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
+    <spec>XEP-0045</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
   <shortname>NOT_YET_ASSIGNED</shortname>
   <author>
-    <firstname>Peter</firstname>
-    <surname>Saint-Andre</surname>
-    <email>stpeter@jabber.org</email>
-    <jid>stpeter@jabber.org</jid>
+    <firstname>Florian</firstname>
+    <surname>Schmaus</surname>
+    <email>flo@geekplace.eu</email>
+    <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2001-09-14</date>
-    <initials>psa</initials>
+    <date>2015-05-12</date>
+    <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+  <p>This XEP provides some useful optional extensions to &xep0045;.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
+<section1 topic='Determing Support' anchor='disco'>
+    <p>An entity may wish to discover if a service implements the Multi-User Chat protocol and the optional extensions defined in this XEP; in order to do so, it sends a service discovery information ("disco#info") query to the MUC service's JID.</p>
+    <example caption='Entity Queries Chat Service for MUC Support via Disco'><![CDATA[
+<iq from='hag66@shakespeare.lit/pda'
+    id='lx09df27'
+    to='chat.shakespeare.lit'
+    type='get'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+</iq>]]></example>
+    <p>The service MUST return its identity and the features it supports.</p>
+    <example caption='Service Returns Disco Info Result'><![CDATA[
+<iq from='chat.shakespeare.lit'
+    id='lx09df27'
+    to='hag66@shakespeare.lit/pda'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    <identity
+        category='conference'
+        name='Shakespearean Chat Service'
+        type='text'/>
+    <feature var='http://jabber.org/protocol/muc'/>
+    <feature var='urn:xmpp:muc:mid'/>
+    <feature var='urn:xmpp:muc:pmtag'/>
+  </query>
+</iq>]]></example>
 </section1>
-<section1 topic='Use Cases' anchor='usecases'>
-  <p>STRONGLY RECOMMENDED.</p>
+<section1 topic='Extensions' anchor='extensions'>
+  <section2 topic='Unique and stable message IDs' anchor='mid'>
+	<p>
+	  If the MUC service announces support for the 'urn:xmpp:muc:mid' feature, then he MUST handle the &lt;message-id/&gt; element as defined in TODO XEP-MID. Client can send messages with the &lt;message-id/&gt; extension element. Message Stanzas send from the MUC service to MUC participants MUST contain a unique and stable message ID witin &lt;message-id/&gt; element.
+	</p>
+	<example caption='A message stanza with the message ID extension.'><![CDATA[
+<message xmlns='jabber:client'
+         to='room@muc.example.org'
+         type='groupchat'>
+  <body>Typical body text</body>
+  <message-id xmlns='urn:xmpp:mid:0' client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+</message>]]></example>
+	<p>
+	  The server MAY override the ID. If so, the "message-id" element MUST contain an "id" <em>and</em> a "client-id" attribute.
+	</p>
+	<example caption='A message stanza with the message ID extension.'><![CDATA[
+<message xmlns='jabber:client'
+         to='room@muc.example.org'
+         type='groupchat'>
+  <body>Typical body text</body>
+  <message-id xmlns='urn:xmpp:mid:0'
+              id='new-id-overrides-client-id'
+              client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
+</message>]]></example>
+	<p>
+	  Otherwise, if the server does not override the ID, he MAY omit the "client-id" attribute.
+	</p>
+  </section2>
+  <section2 topic='Taging private MUC messages' anchor='pmtag'>
+	<p>
+	  If the MUC service announces support for the 'urn:xmpp:muc:pmtag' feature, then he MUST tag private MUC messages with a &lt;x/&gt; element qualified by the 'http://jabber.org/protocol/muc#user' namespace before sending it to the recipient (see XEP-45 § 7.5 Sending a Private Message).
+	</p>
+	<example caption='Tagged private MUC message'><![CDATA[
+<message
+    from='coven@chat.shakespeare.lit/firstwitch'
+    id='hgn27af1'
+    to='crone1@shakespeare.lit/desktop'
+    type='chat'>
+  <body>I'll give thee a wind.</body>
+  <x xmlns='http://jabber.org/protocol/muc#user'/>
+</message>]]></example>
+	<p>
+	  This allows clients receiving the message by e.g. carbon copies to determine that it's a MUC private message.
+	</p>
+  </section2>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
   <p>OPTIONAL.</p>
