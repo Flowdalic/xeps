@@ -42,12 +42,13 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &quot;&rfc6120; § 8. XML Stanzas&quot;, there is no term and definition provided for them.</p>
+  <p>The usage of non-Stanza top-level XMPP stream elements is steadily increasing in the last years. Starting with &xep0198;, one of the earliest XEPs which specified and used additional non-Stanza elements, the XMPP community sees an increasing usage of those elements in submitted specifications. Unlike Stanzas which are specified in &rfc6120; § 4.1 "Stream Fundamentals" and § 8. "XML Stanzas", there is no term and definition provided for them.</p>
   <p>This leads to the unfortunate situation where some submitted XEPs erroneous refer to non-Stanza top level stream elements as 'Stanzas'. Thus causing confusion, and opening the door to possible interoperability breakage and security vulnerabilities.</p>
   <p>This XEP tries to fix this by providing a term, a definition and declaring some rules for those XMPP stream elements.</p>
 </section1>
 <section1 topic='Nonza Definition' anchor='nonza'>
-  <p><strong>Nonza:</strong> A Nonza is every top level XMPP stream element which is not a Stanza.</p>
+  <p><strong>Nonza:</strong> A Nonza is every XML element found at the XMPP stream's top level which is not a Stanza. The top level of an XMPP stream is the child XML level beneath the last &lt;stream&gt; opening tag as defined in RFC 6120 § 4.2. "Opening a Stream", i.e. at depth=1 of the stream.</p>
+  <p><strong>Informal definition:</strong> A XMPP stream element is a Nonza, if its name is not 'message', 'iq' or 'presence'.</p>
   <p>The term 'Nonza' originates from the beginning and ending letters of its definition and thus makes it easy to recall that definition: <strong>No</strong>t a Sta<strong>nza</strong>.</p>
 </section1>
 <section1 topic='Nonza Examples' anchor='nonza-examples'>
@@ -64,13 +65,8 @@
 <active xmlns='urn:xmpp:csi:0'/>]]></example>
   </section2>
 </section1>
-<!--
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
-</section1>
--->
 <section1 topic='Use Cases' anchor='usecases'>
-  <p>Nonzas are commonly used when it's not necessary to route the exchanged information behind the endpoints of an XMPP stream. For example, one use case is to control the XMPP stream like it is done in <cite>XEP-0198: Stream Management</cite>.</p>
+  <p>Nonzas are commonly used when it is not necessary to route the exchanged information behind the endpoints of an XMPP stream. For example, one use case is to control the XMPP stream like it is done in <cite>XEP-0198: Stream Management</cite>.</p>
   <p>Nonzas sent before resource binding, as defined in RFC 6120 § 7., usually follow a request-response pattern. But after the client successfully bound a resource, they are used in a more "asynchronous" fashion, where a 'request' Nonza does not, or at least not immediately, trigger a 'result' Nonza sent back.</p>
 </section1>
 <section1 topic='Business Rules' anchor='rules'>
