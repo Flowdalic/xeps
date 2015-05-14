@@ -7,7 +7,7 @@
 <xep>
 <header>
   <title>MAM Subscriptions</title>
-  <abstract>Allow entities to subscribe to message archives in order to keep updated and engaged in a converstation.</abstract>
+  <abstract>Allow entities to subscribe to MAM (XEP-0313) archives in order to keep updated and engaged in a converstation.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -22,12 +22,13 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
+    <spec>XEP-0297</spec>
+    <spec>XEP-0313</spec>
+    <spec>XEP-MID (TODO)</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED</shortname>
+  <shortname>NOT_YET_ASSIGNED (suggested: 'mamsub')</shortname>
   <author>
     <firstname>Florian</firstname>
     <surname>Schmaus</surname>
@@ -36,21 +37,23 @@
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2015-04-20</date>
+    <date>2015-05-14</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
   <p>
-  This extension of &xep0313; allows entities to subscribe to message archives, removing the need for &xep0280;.
+  This extension of &xep0313; allows XMPP clients to subscribe to MAM archives, removing the need for &xep0280;. After a client is subscribed to an archive, it will receive notifications when a new &MESSAGE; was added to the archive, which include the added &MESSAGE;.
   </p>
 </section1>
+<!--
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
+-->
 <section1 topic='Discovering Support' anchor='disco'>
-  <p>An entity advertises support for this protocol by including the "urn:xmpp:mam:sub:0" feature in its service discovery information features as specified in &xep0030;.</p>
+  <p>An entity advertises support for this protocol by including the 'urn:xmpp:mam:sub:0' feature in its service discovery information features as specified in &xep0030;.</p>
   <example caption='Client requests information about its own server'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
@@ -59,7 +62,7 @@
     type='get'>
   <query xmlns='http://jabber.org/protocol/disco#info'/>
   </iq>]]></example>
-    <example caption='Server responds with Carbons feature'><![CDATA[
+    <example caption='Server responds with &quot;MAM subscritions&quot; feature'><![CDATA[
   <iq xmlns='jabber:client'
     from='montague.example'
     id='info1'
@@ -72,40 +75,72 @@
   </query>
 </iq>]]></example>
 </section1>
+<!--
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
+-->
 <section1 topic='Subscription Management' anchor='management'>
-  <section2 topic='Subscriping' anchor='sub'>
-  <example caption='Client subscribes to the message archive'><![CDATA[
+  <section2 topic='Subscribing' anchor='sub'>
+    <p>
+      When a client wants to receive notifications about messages being added to a MAM archive, it does subscripe to the archive by sending an &IQ; of type 'set' containing a child element &lt;subscribe/&gt; qualified by the 'urn:xmpp:mam:sub:0' namespace.
+    </p>
+  <example caption='Client subscribes to the MAM archive'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
     id='sub1'
     type='set'>
   <subscribe xmlns='urn:xmpp:mam:sub:0'/>
 </iq>]]></example>
+  <p>
+    The server will respond with an &IQ;-result when the client was successfully subscribed to the archive.
+  </p>
+  <example caption='Server acknowledges subscription'><![CDATA[
+<iq xmlns='jabber:client'
+    from='romeo@montague.example/garden'
+    id='sub1'
+    type='result'/>]]></example>
   </section2>
-  <section2 topic='Unsubscriping' anchor='unsub'>
-  <example caption='Client unsubscribes to the message archive'><![CDATA[
+  <section2 topic='Unsubscribing' anchor='unsub'>
+    <p>
+      At any point, clients can unsubscribe from the MAM archive by sending an &IQ; of type 'set' containing a child element &lt;unsubscribe/&gt; qualified by the 'urn:xmpp:mam:sub:0' namespace.
+    </p>
+  <example caption='Client unsubscribes from the MAM archive'><![CDATA[
 <iq xmlns='jabber:client'
     from='romeo@montague.example/garden'
     id='unsub1'
     type='set'>
   <unsubscribe xmlns='urn:xmpp:mam:sub:0'/>
 </iq>]]></example>
+  <p>
+    The server will respond with an &IQ;-result when the client was successfully unsubscribed from the archive.
+  </p>
+  <example caption='Server acknowledges subscription removal'><![CDATA[
+<iq xmlns='jabber:client'
+    from='romeo@montague.example/garden'
+    id='unsub1'
+    type='result'/>]]></example>
   </section2>
 </section1>
-<section1 topic='Receiving notifications' anchor='notifications'>
-  <p>Each notification is wrapped using &xep0297; (TODO or not?), containing a "message-id" extension as specified in XEP-MID.</p>
-  <example caption='Server sends carbon to Romeo&apos;s other clients'><![CDATA[
+<section1 topic='Receiving MAM notifications' anchor='notifications'>
+  <p>
+    Every time a message is added to the MAM archive, a MAM notification MUST be sent to entities subscribed to the archive, regardless of the message type or content. Note that this implies that clients, which are subscribed to the MAM archive and  are also the final recipient of a &MESSAGE;, will receive such a &MESSAGE; twice: In the first place because of the stanza routing rules defined in &rfc6120; and &rfc6121;, and also as content of the resulting MAM archive notification.
+  </p>
+  <p>
+    Each notification is send as &MESSAGE; of type 'normal' from the clients bare JID containing a &lt;mamsub/&gt; extension, which SHOULD contain the a &lt;message-id/&gt; element as defined in XEP-MID (TODO XEP number) and MUST contain exaclty one &lt;forwareded&gt; element as defined in &xep0297; containing the original message.
+  </p>
+  <p>
+    The value of the 'id' attribute found in the &lt;message-id/&gt; element is the unique and stable ID of the message, which unambigously identifies the message withing the MAM archive.
+  </p>
+  <example caption='Server sends MAM notification'><![CDATA[
 <message xmlns='jabber:client'
          from='romeo@montague.example'
-         to='romeo@montague.example/home'
-         type='chat'>
+         to='romeo@montague.example/home'>
   <mamsub xmlns='urn:xmpp:mam:sub:0'>
+    <messsage-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
     <forwarded xmlns='urn:xmpp:forward:0'>
       <message xmlns='jabber:client'
                from='juliet@capulet.example/balcony'
@@ -113,14 +148,13 @@
                type='chat'>
         <body>What man art thou that, thus bescreen'd in night, so stumblest on my counsel?</body>
         <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
-        <messsage-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
       </message>
     </forwarded>
   </mamsub>
 </message>
 ]]></example>
-  <p>TODO: Every message added to the archive MUST be sent to entities subscribed to the archive, regardless of the message type or content (TODO wording, message opt-out?).</p>
 </section1>
+<!--
 <section1 topic='Business Rules' anchor='rules'>
   <p>OPTIONAL.</p>
 </section1>
@@ -133,14 +167,24 @@
 <section1 topic='Internationalization Considerations' anchor='i18n'>
   <p>OPTIONAL.</p>
 </section1>
+-->
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+  <p>
+    As the notifications defined in this document contain full &MESSAGE; stanzas, it is important for implementations to take care that the receiving entities of such notifications are allowed to see that information. This usually means they receiving entities share the same bare JID with the intended receiver. (TODO wording)
+  </p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>REQUIRED.</p>
+  <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
+    <p>
+      The &REGISTRAR; includes 'urn:xmpp:mam:sub:0' in its registry of protocol namespaces (see &NAMESPACES;).
+    </p>
+  </section2>
+  <section2 topic='Protocol Versioning' anchor='registrar-versioning'>
+    &NSVER;
+  </section2>
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
   <p>REQUIRED for protocol specifications.</p>
