@@ -22,6 +22,7 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
+	<spec>XEP-0030</spec>
     <spec>XEP-0045</spec>
   </dependencies>
   <supersedes/>
@@ -115,6 +116,11 @@
 </message>]]></example>
 	<p>
 	  This allows clients receiving the message by e.g. carbon copies to determine that it's a MUC private message.
+	</p>
+  </section2>
+  <section2 topic='Checking own occupant status' anchor='occupant-status'>
+	<p>
+	  TODO: Provide a method to query if client is considered to be an occupant of a MUC by the MUC service.
 	</p>
   </section2>
 </section1>

@@ -22,6 +22,7 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
+    <spec>XEP-0030</spec>
     <spec>XEP-0297</spec>
     <spec>XEP-0313</spec>
     <spec>XEP-MID (TODO)</spec>
@@ -44,7 +45,7 @@
 </header>
 <section1 topic='Introduction' anchor='intro'>
   <p>
-  This extension of &xep0313; allows XMPP clients to subscribe to MAM archives, removing the need for &xep0280;. After a client is subscribed to an archive, it will receive notifications when a new &MESSAGE; was added to the archive, which include the added &MESSAGE;.
+  This extension of &xep0313; allows XMPP clients to subscribe to MAM archives and to carbon copy/fork messages to all connected resources of the receiving XMPP entity, removing the need for &xep0280;. After a client is subscribed to an archive, it will receive notifications when a new &MESSAGE; was added to the archive, which include the added &MESSAGE;.
   </p>
 </section1>
 <!--
@@ -130,7 +131,7 @@
     Every time a message is added to the MAM archive, a MAM notification MUST be sent to entities subscribed to the archive, regardless of the message type or content. Note that this implies that clients, which are subscribed to the MAM archive and  are also the final recipient of a &MESSAGE;, will receive such a &MESSAGE; twice: In the first place because of the stanza routing rules defined in &rfc6120; and &rfc6121;, and also as content of the resulting MAM archive notification.
   </p>
   <p>
-    Each notification is send as &MESSAGE; of type 'normal' from the clients bare JID containing a &lt;mamsub/&gt; extension, which SHOULD contain the a &lt;message-id/&gt; element as defined in XEP-MID (TODO XEP number) and MUST contain exaclty one &lt;forwareded&gt; element as defined in &xep0297; containing the original message.
+    Each notification is send as &MESSAGE; of type 'normal' from the clients bare JID containing a &lt;mamsub/&gt; extension, which SHOULD contain the a &lt;message-id/&gt; element as defined in XEP-MID (TODO XEP number) and MUST contain exaclty one &lt;forwarded&gt; element as defined in &xep0297; containing the original message.
   </p>
   <p>
     The value of the 'id' attribute found in the &lt;message-id/&gt; element is the unique and stable ID of the message, which unambigously identifies the message withing the MAM archive.
