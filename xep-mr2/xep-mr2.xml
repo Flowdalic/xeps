@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Message Routing 2.0</title>
+  <abstract>Allow entities to activate a message routing algorithm which forks messages to all connected clients. This allows togehter with e.g. XEP-0313: Message Archive Management to shift the converstation state from the client to the server.</abstract>
+  <legal>
+    <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
+    <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
+    <warranty>## NOTE WELL: This Specification is provided on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</warranty>
+    <liability>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.</liability>
+    <conformance>This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<link url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).</conformance>
+  </legal>
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0297</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>NOT_YET_ASSIGNED (suggested: 'mamsub')</shortname>
+  <author>
+    <firstname>Florian</firstname>
+    <surname>Schmaus</surname>
+    <email>flo@geekplace.eu</email>
+    <jid>flo@geekplace.eu</jid>
+  </author>
+  <revision>
+    <version>0.0.1</version>
+    <date>2015-XX-XX</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <p>
+  This extension of &xep0313; allows XMPP clients to subscribe to MAM archives and to carbon copy/fork messages to all connected resources of the receiving XMPP entity, removing the need for &xep0280;. After a client is subscribed to an archive, it will receive notifications when a new &MESSAGE; was added to the archive, which include the added &MESSAGE;.
+  </p>
+</section1>
+<!--
+<section1 topic='Requirements' anchor='reqs'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+-->
+<section1 topic='Stream Feature' anchor='feature'>
+  <p>
+	The server returns a stream header to the client along with stream features, where the features include an &lt;mr2/&gt; element qualified by the 'urn:xmpp:mr2:0' namespace &VNOTE;.
+  </p>
+  <example caption='Server sends new stream header along with stream features'><![CDATA[
+S: <stream:stream
+       from='example.com'
+       xmlns='jabber:client'
+       xmlns:stream='http://etherx.jabber.org/streams'
+       version='1.0'>
+
+S: <stream:features>
+     <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
+     <mr2 xmlns='urn:xmpp:mr2:0'/>
+   </stream:features>]]></example>
+</section1>
+
+<section1 topic='Enabling Message Routing 2.0' anchor='enable'>
+  <p>
+	To enable use of message routing 2.0, the client sends an &lt;enable/&gt; nonza to the server.
+  </p>
+  <example caption='Client enables message routing 2.0'><![CDATA[
+C: <enable xmlns='urn:xmpp:mr2:0'/>]]></example>
+  <p>
+	Upon receiving the enable request, the server MUST reply with an &lt;enabled/&gt; nonza or a &lt;failed/&gt; nonza qualified by the 'urn:xmpp:mr2:0' namespace. The &lt;failed/&gt; element indicates that there was a problem creating a message routing 2.0 enabled stream. The &lt;enabled/&gt; nonza indicates successful creation of a message routing 2.0 enabled stream.
+  </p>
+  <example caption='Server enables message routing 2.0'><![CDATA[
+S: <enabled xmlns='urn:xmpp:sm:3'/>]]></example>
+  <p>
+	TODO: Now the server MUST use MR2.
+  </p>
+  <p>
+	The client MUST NOT attempt to negotiate message routing 2.0 until it is authenticated; i.e., it MUST NOT send an &lt;enable/&gt; element until after authentication (such as SASL, &xep0078; or &xep0220;) has been completed successfully. the client MUST enable message routing 2.0 before it has completed Resource Binding.
+  </p>
+  <p>
+	The server SHALL enforce this order and return a &lt;failed/&gt; element in response if the order is violated (see <link url='#errors'>Error Handling</link>).
+  </p>
+  <example caption='Server returns error if client attempts to enable message routing 2.0 before resource binding'><![CDATA[
+S: <failed xmlns='urn:xmpp:sm:3'>
+     <unexpected-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+   </failed>]]></example>
+</section1>
+
+<section1 topic='Message Routing 2.0' anchor='mr2'>
+<section2 topic='Receiving Messages to the Bare JID' anchor='inbound-bare'>
+  <p>When the server receives a &MESSAGE; that is not of type "groupchat" or "error" to a bare JID (localpart@domainpart), it delivers a copy to each resource using a Message Routing 2.0 enabled XMPP stream for the bare JID – in addition to delivering according to <cite>RFC 6121</cite> § 8.5.2. This process is sometimes called "forking".</p>
+
+  <example caption='Juliet sends Romeo an undirected message'><![CDATA[
+<message xmlns='jabber:client'
+         from='juliet@capulet.example/balcony'
+         to='romeo@montague.example'
+         type='chat'>
+  <body>Wherefore art thou, Romeo?</body>
+  <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+</message>]]></example>
+
+  <example caption='Message Forked to each of Romeo&apos;s Carbons-enabled resources'><![CDATA[
+<message xmlns='jabber:client'
+         from='juliet@capulet.example/balcony'
+         to='romeo@montague.example/garden'
+         type='chat'>
+  <body>Wherefore art thou, Romeo?</body>
+  <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+</message>
+
+<message xmlns='jabber:client'
+         from='juliet@capulet.example/balcony'
+         to='romeo@montague.example/home'
+         type='chat'>
+  <body>Wherefore art thou, Romeo?</body>
+  <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+</message>]]></example>
+
+  <p>The receiving server MUST deliver a copy to every Carbons-enabled resource, even if that resource normally would not receive &MESSAGE; stanzas addressed to the bare JID (e.g., resources which have broadcast &PRESENCE; with a negative priority). A Carbons-enabled resource MUST NOT receive more than one copy of the &MESSAGE;.</p>
+</section2> 
+<section2 topic='Receiving Messages to the Full JID' anchor='inbound-full'>
+  <p>When the server receives a &MESSAGE; of type "chat" addressed to a full JID (localpart@domainpart/resourcepart), it delivers the &MESSAGE; according to <cite>RFC 6121</cite> § 8.5.3, and delivers a forwarded copy to each Carbons-enabled resource for the matching bare JID recipient.</p>
+  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Carbons-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute MUST be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;received/&gt; element qualified by the namespace "urn:xmpp:carbons:2", which itself contains a &lt;forwarded/&gt; element qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE;.</p>
+  
+  <example caption='Juliet sends Romeo a directed message'><![CDATA[
+<message xmlns='jabber:client'
+         from='juliet@capulet.example/balcony'
+         to='romeo@montague.example/garden'
+         type='chat'>
+  <body>What man art thou that, thus bescreen'd in night, so stumblest on my counsel?</body>
+  <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+</message>
+]]></example>
+  <example caption='Server sends carbon to Romeo&apos;s other clients'><![CDATA[
+<message xmlns='jabber:client'
+         from='romeo@montague.example'
+         to='romeo@montague.example/home'
+         type='chat'>
+  <received xmlns='urn:xmpp:carbons:2'>
+    <forwarded xmlns='urn:xmpp:forward:0'>
+      <message xmlns='jabber:client'
+               from='juliet@capulet.example/balcony'
+               to='romeo@montague.example/garden'
+               type='chat'>
+        <body>What man art thou that, thus bescreen'd in night, so stumblest on my counsel?</body>
+        <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+      </message>
+    </forwarded>
+  </received>
+</message>
+]]></example>
+
+  <p>The receiving server MUST NOT send a forwarded copy to the full JID the original &MESSAGE; stanza was addressed to, as that recipient receives the original &MESSAGE; stanza.</p>
+</section2> 
+<section2 topic='Sending Messages' anchor='outbound'>
+  <p>When a client sends a &MESSAGE; of type "chat", its sending server delivers the &MESSAGE; according to <cite>RFC 6120</cite> and <cite>RFC 6121</cite>, and delivers a forwarded copy to each Carbons-enabled resource for the matching bare JID sender.</p>
+  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Carbons-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute SHOULD be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;sent/&gt; element qualified by the namespace "urn:xmpp:carbons:2", which itself contains a &lt;forwarded/&gt; qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE; stanza.</p>
+  <example caption='Romeo responds to Juliet'><![CDATA[
+<message xmlns='jabber:client'
+         from='romeo@montague.example/home'
+         to='juliet@capulet.example/balcony'
+         type='chat'>
+  <body>Neither, fair saint, if either thee dislike.</body>
+  <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+</message>]]></example>
+
+  <example caption='Romeo&apos;s other Carbons-enabled clients
+                    receive a copy'><![CDATA[
+<message xmlns='jabber:client'
+        from='romeo@montague.example'
+        to='romeo@montague.example/garden'
+        type='chat'>
+  <sent xmlns='urn:xmpp:carbons:2'>
+    <forwarded xmlns='urn:xmpp:forward:0'>
+      <message xmlns='jabber:client'
+               to='juliet@capulet.example/balcony'
+               from='romeo@montague.example/home'
+               type='chat'>
+        <body>Neither, fair saint, if either thee dislike.</body>
+        <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
+      </message>
+    </forwarded>
+  </sent>
+</message>]]></example>
+
+  <p>The sending server SHOULD NOT send a forwarded copy to the sending full JID if it is a Carbons-enabled resource.</p>
+
+</section2> 
+</section1>
+<section1 topic='Differences from similar standards' anchor='discussion'>
+  <p>
+	Unlike carbons:
+	<ul>
+	  <li>Does not provide a way to disable MR2 (no one needs that, only bloats spec)</li>
+	  <li>Is designed as stream feature, because it fundamentally changes and overrides RFC 6121 message routing (TODO section ref)</li>
+	  <li>Forks all messages types, but groupchat and error</li>
+	</ul>
+  </p>
+</section1>
+<!--
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+-->
+<section1 topic='Security Considerations' anchor='security'>
+  <p>
+    As the notifications defined in this document contain full &MESSAGE; stanzas, it is important for implementations to take care that the receiving entities of such notifications are allowed to see that information. This usually means they receiving entities share the same bare JID with the intended receiver. (TODO wording)
+  </p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>This document requires no interaction with &IANA;.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
+    <p>
+      The &REGISTRAR; includes 'urn:xmpp:mam:sub:0' in its registry of protocol namespaces (see &NAMESPACES;).
+    </p>
+  </section2>
+  <section2 topic='Protocol Versioning' anchor='registrar-versioning'>
+    &NSVER;
+  </section2>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+</xep>
