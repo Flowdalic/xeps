@@ -66,7 +66,7 @@
   <message-id xmlns='urn:xmpp:mid:0' client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
 </message>]]></example>
 	<p>
-	  The server MAY override the ID. If so, the "message-id" element MUST contain an "id" <em>and</em> a "client-id" attribute.
+	  The server MAY add an 'id' attribute to the message-id element. In that case, it MUST preserve the content of the 'client-id' attribute.
 	</p>
 	<example caption='A message stanza with the message ID extension.'><![CDATA[
 <message xmlns='jabber:client'
@@ -78,7 +78,7 @@
               client-id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
 </message>]]></example>
 	<p>
-	  Otherwise, if the server does not override the ID, he MAY omit the "client-id" attribute.
+	  Otherwise, if the server does not override the ID, it MAY omit the 'client-id' attribute.
 	</p>
   </section2>
 </section1>
@@ -104,6 +104,6 @@
   <p>REQUIRED for protocol specifications.</p>
 </section1>
 <section1 topic='Acknowledgements' anchor='ack'>
-  <p>Thanks to Thijs Alkemade for providing feedback.</p>
+  <p>Thanks to Thijs Alkemade and Georg Lukas for providing feedback.</p>
 </section1>
 </xep>
