@@ -87,6 +87,7 @@
 	<li>XMPP entities, which are routing stanzas, MUST NOT strip the message-id element from message stanzas.</li>
 	<li>The values of the 'id' attribute SHOULD be unpredictable.</li>
 	<li>Message ID generating entities, which encounter a &lt;message-id/&gt; element where 'id' and 'client-id' is already set, MUST ignore the existing value of 'id' and override it.</li>
+	<li>&MESSAGE; stanzas MUST posses at most one 'message-id' extension element in the direct child level of the stanza.</li>
   </ol>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
