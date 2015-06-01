@@ -7,7 +7,7 @@
 <xep>
 <header>
   <title>Nonzas (are not Stanzas)</title>
-  <abstract>This specification defines the term "Nonza" as every top level stream element that is not a Stanza.</abstract>
+  <abstract>This specification defines the term "Nonza", describing every top level stream element that is not a Stanza.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
@@ -22,8 +22,6 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -36,7 +34,7 @@
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2015-05-12</date>
+    <date>2015-06-01</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -48,7 +46,7 @@
 </section1>
 <section1 topic='Nonza Definition' anchor='nonza'>
   <p><strong>Nonza:</strong> A Nonza is every XML element found at the XMPP stream's top level which is not a Stanza. The top level of an XMPP stream is the child XML level beneath the last &lt;stream&gt; opening tag as defined in RFC 6120 § 4.2. "Opening a Stream", i.e. at depth=1 of the stream.</p>
-  <p><strong>Informal definition:</strong> A XMPP stream element is a Nonza, if its name is not 'message', 'iq' or 'presence'.</p>
+  <p><strong>Informal definition:</strong> A XMPP stream element is a Nonza, if its element name is not 'message', 'iq' or 'presence'.</p>
   <p>The term 'Nonza' originates from the beginning and ending letters of its definition and thus makes it easy to recall that definition: <strong>No</strong>t a Sta<strong>nza</strong>.</p>
 </section1>
 <section1 topic='Nonza Examples' anchor='nonza-examples'>

@@ -22,8 +22,6 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -36,13 +34,13 @@
   </author>
   <revision>
     <version>0.0.1</version>
-    <date>2015-05-12</date>
+    <date>2015-06-01</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>Unique and stable IDs for message stanzas, which are set by the XMPP service, are beneficial in various ways. They can be used together with &xep0313; to uniquely identify a message within an archive. They are also useful in the context of &xep0045; conferences, to identify a message reflected by a MUC service back to the originating entity. And they could be used together with &xep0280;, so that clients are able to retrieve the archive starting from a given message.</p>
+  <p>Unique and stable IDs for message stanzas, which are set by a XMPP service, are beneficial in various ways. They can be used together with &xep0313; to uniquely identify a message within an archive. They are also useful in the context of &xep0045; conferences, to identify a message reflected by a MUC service back to the originating entity. And they could be used together with &xep0280;, so that clients are able to retrieve the archive starting from a given message.</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>The herein defined messages IDs must be unique and stable within the scope of the generating XMPP entity.</p>
@@ -52,7 +50,7 @@
   <example caption='The message ID extension.'><![CDATA[
 <message-id xmlns='urn:xmpp:mid:0' id='de305d54-75b4-431b-adb2-eb6b9e546013'/>
 ]]></example>
-  The service generates the value of the id attribute. The value must be service local unique and stable, i.e. it MUST NOT change later for some reason. It is RECOMMENDED that the id generating service uses UUID (TODO RFC?) to generate the IDs.
+  The service generates the value of the id attribute. The value must be service local unique and stable, i.e. it MUST NOT change later for some reason. It is RECOMMENDED that the id generating service uses UUID (RFC 4122) to generate the IDs.
   </section2>
   <section2 topic='Client generated message IDs' anchor='client-id'>
 	<p>
