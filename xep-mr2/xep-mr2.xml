@@ -42,7 +42,7 @@
 </header>
 <section1 topic='Introduction' anchor='intro'>
   <p>
-  This extension of &xep0313; allows XMPP clients to subscribe to MAM archives and to carbon copy/fork messages to all connected resources of the receiving XMPP entity, removing the need for &xep0280;. After a client is subscribed to an archive, it will receive notifications when a new &MESSAGE; was added to the archive, which include the added &MESSAGE;.
+	This extension allows XMPP servers to dispatch incoming and outgonig messages to all connected resources of an XMPP entity. This allows all devices of a user to be aware of chats which are happening or happened on other devices of that user.
   </p>
 </section1>
 <!--
