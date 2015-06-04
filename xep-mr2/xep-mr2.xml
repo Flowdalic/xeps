@@ -106,7 +106,7 @@ S: <failed xmlns='urn:xmpp:sm:3'>
   <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
 </message>]]></example>
 
-  <example caption='Message Forked to each of Romeo&apos;s Carbons-enabled resources'><![CDATA[
+  <example caption='Message Forked to each of Romeo&apos;s Message Routing 2.0-enabled resources'><![CDATA[
 <message xmlns='jabber:client'
          from='juliet@capulet.example/balcony'
          to='romeo@montague.example/garden'
@@ -123,11 +123,11 @@ S: <failed xmlns='urn:xmpp:sm:3'>
   <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
 </message>]]></example>
 
-  <p>The receiving server MUST deliver a copy to every Carbons-enabled resource, even if that resource normally would not receive &MESSAGE; stanzas addressed to the bare JID (e.g., resources which have broadcast &PRESENCE; with a negative priority). A Carbons-enabled resource MUST NOT receive more than one copy of the &MESSAGE;.</p>
+  <p>The receiving server MUST deliver a copy to every Message Routing 2.0-enabled resource, even if that resource normally would not receive &MESSAGE; stanzas addressed to the bare JID (e.g., resources which have broadcast &PRESENCE; with a negative priority). A Message Routing 2.0-enabled resource MUST NOT receive more than one copy of the &MESSAGE;.</p>
 </section2> 
 <section2 topic='Receiving Messages to the Full JID' anchor='inbound-full'>
-  <p>When the server receives a &MESSAGE; of type "chat" addressed to a full JID (localpart@domainpart/resourcepart), it delivers the &MESSAGE; according to <cite>RFC 6121</cite> § 8.5.3, and delivers a forwarded copy to each Carbons-enabled resource for the matching bare JID recipient.</p>
-  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Carbons-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute MUST be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;received/&gt; element qualified by the namespace "urn:xmpp:carbons:2", which itself contains a &lt;forwarded/&gt; element qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE;.</p>
+  <p>When the server receives a &MESSAGE; of type "chat" addressed to a full JID (localpart@domainpart/resourcepart), it delivers the &MESSAGE; according to <cite>RFC 6121</cite> § 8.5.3, and delivers a forwarded copy to each Message Routing 2.0-enabled resource for the matching bare JID recipient.</p>
+  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Message Routing 2.0-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute MUST be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;received/&gt; element qualified by the namespace "urn:xmpp:mr2:0", which itself contains a &lt;forwarded/&gt; element qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE;.</p>
   
   <example caption='Juliet sends Romeo a directed message'><![CDATA[
 <message xmlns='jabber:client'
@@ -143,7 +143,7 @@ S: <failed xmlns='urn:xmpp:sm:3'>
          from='romeo@montague.example'
          to='romeo@montague.example/home'
          type='chat'>
-  <received xmlns='urn:xmpp:carbons:2'>
+  <received xmlns='urn:xmpp:mr2:0'>
     <forwarded xmlns='urn:xmpp:forward:0'>
       <message xmlns='jabber:client'
                from='juliet@capulet.example/balcony'
@@ -160,8 +160,8 @@ S: <failed xmlns='urn:xmpp:sm:3'>
   <p>The receiving server MUST NOT send a forwarded copy to the full JID the original &MESSAGE; stanza was addressed to, as that recipient receives the original &MESSAGE; stanza.</p>
 </section2> 
 <section2 topic='Sending Messages' anchor='outbound'>
-  <p>When a client sends a &MESSAGE; of type "chat", its sending server delivers the &MESSAGE; according to <cite>RFC 6120</cite> and <cite>RFC 6121</cite>, and delivers a forwarded copy to each Carbons-enabled resource for the matching bare JID sender.</p>
-  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Carbons-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute SHOULD be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;sent/&gt; element qualified by the namespace "urn:xmpp:carbons:2", which itself contains a &lt;forwarded/&gt; qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE; stanza.</p>
+  <p>When a client sends a &MESSAGE; of type "chat", its sending server delivers the &MESSAGE; according to <cite>RFC 6120</cite> and <cite>RFC 6121</cite>, and delivers a forwarded copy to each Message Routing 2.0-enabled resource for the matching bare JID sender.</p>
+  <p>Each forwarded copy is wrapped using &xep0297;. The wrapping message SHOULD maintain the same 'type' attribute value; the 'from' attribute MUST be the Message Routing 2.0-enabled user's bare JID (e.g., "localpart@domainpart"); and the 'to' attribute SHOULD be the full JID of the resource receiving the copy. The content of the wrapping message MUST contain a &lt;sent/&gt; element qualified by the namespace "urn:xmpp:mr2:0", which itself contains a &lt;forwarded/&gt; qualified by the namespace "urn:xmpp:forward:0" that contains the original &MESSAGE; stanza.</p>
   <example caption='Romeo responds to Juliet'><![CDATA[
 <message xmlns='jabber:client'
          from='romeo@montague.example/home'
@@ -171,13 +171,13 @@ S: <failed xmlns='urn:xmpp:sm:3'>
   <thread>0e3141cd80894871a68e6fe6b1ec56fa</thread>
 </message>]]></example>
 
-  <example caption='Romeo&apos;s other Carbons-enabled clients
+  <example caption='Romeo&apos;s other Message Routing 2.0-enabled clients
                     receive a copy'><![CDATA[
 <message xmlns='jabber:client'
         from='romeo@montague.example'
         to='romeo@montague.example/garden'
         type='chat'>
-  <sent xmlns='urn:xmpp:carbons:2'>
+  <sent xmlns='urn:xmpp:mr2:0'>
     <forwarded xmlns='urn:xmpp:forward:0'>
       <message xmlns='jabber:client'
                to='juliet@capulet.example/balcony'
@@ -190,7 +190,7 @@ S: <failed xmlns='urn:xmpp:sm:3'>
   </sent>
 </message>]]></example>
 
-  <p>The sending server SHOULD NOT send a forwarded copy to the sending full JID if it is a Carbons-enabled resource.</p>
+  <p>The sending server SHOULD NOT send a forwarded copy to the sending full JID if it is a Message Routing 2.0-enabled resource.</p>
 
 </section2> 
 </section1>
