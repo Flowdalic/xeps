@@ -77,7 +77,7 @@ C: <enable xmlns='urn:xmpp:mr2:0'/>]]></example>
 	Upon receiving the enable request, the server MUST reply with an &lt;enabled/&gt; nonza or a &lt;failed/&gt; nonza qualified by the 'urn:xmpp:mr2:0' namespace. The &lt;failed/&gt; element indicates that there was a problem creating a message routing 2.0 enabled stream. The &lt;enabled/&gt; nonza indicates successful creation of a message routing 2.0 enabled stream.
   </p>
   <example caption='Server enables message routing 2.0'><![CDATA[
-S: <enabled xmlns='urn:xmpp:sm:3'/>]]></example>
+S: <enabled xmlns='urn:xmpp:mr2:0'/>]]></example>
   <p>
 	TODO: Now the server MUST use MR2.
   </p>
@@ -88,7 +88,7 @@ S: <enabled xmlns='urn:xmpp:sm:3'/>]]></example>
 	The server SHALL enforce this order and return a &lt;failed/&gt; element in response if the order is violated (see <link url='#errors'>Error Handling</link>).
   </p>
   <example caption='Server returns error if client attempts to enable message routing 2.0 before resource binding'><![CDATA[
-S: <failed xmlns='urn:xmpp:sm:3'>
+S: <failed xmlns='urn:xmpp:mr2:0'>
      <unexpected-request xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
    </failed>]]></example>
 </section1>
