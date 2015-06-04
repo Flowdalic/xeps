@@ -26,7 +26,7 @@
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED (suggested: 'mamsub')</shortname>
+  <shortname>NOT_YET_ASSIGNED (suggested: 'mr2')</shortname>
   <author>
     <firstname>Florian</firstname>
     <surname>Schmaus</surname>
@@ -229,7 +229,7 @@ S: <failed xmlns='urn:xmpp:sm:3'>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
   <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
     <p>
-      The &REGISTRAR; includes 'urn:xmpp:mam:sub:0' in its registry of protocol namespaces (see &NAMESPACES;).
+      The &REGISTRAR; includes 'urn:xmpp:mr2:0' in its registry of protocol namespaces (see &NAMESPACES;).
     </p>
   </section2>
   <section2 topic='Protocol Versioning' anchor='registrar-versioning'>
