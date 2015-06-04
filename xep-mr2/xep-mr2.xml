@@ -201,13 +201,16 @@ S: <failed xmlns='urn:xmpp:mr2:0'>
 	  <li>Does not provide a way to disable MR2 (no one needs that, only bloats spec)</li>
 	  <li>Is designed as stream feature, because it fundamentally changes and overrides RFC 6121 message routing (TODO section ref)</li>
 	  <li>Forks all messages types, but groupchat and error</li>
+	  <li>Message Routing 2.0 state is kept accross resumptions, this avoids an extra roundtrip enabling it after stream resumption.
 	</ul>
   </p>
 </section1>
-<!--
 <section1 topic='Business Rules' anchor='rules'>
-  <p>OPTIONAL.</p>
+  <p>
+	The Message Routing 2.0 state is kept if the stream is resumed by means of &xep0198;. That is, clients are not required to enable Message Routing 2.0 if the stream is resumed. They MUST however, enable Message Routing 2.0 if stream resumption failed and they wish to use Message Routing 2.0.
+  </p>
 </section1>
+<!--
 <section1 topic='Implementation Notes' anchor='impl'>
   <p>OPTIONAL.</p>
 </section1>
