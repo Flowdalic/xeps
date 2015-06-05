@@ -212,6 +212,27 @@ S: <failed xmlns='urn:xmpp:mr2:0'>
   <p>
 	TODO should &xep0352; delay certain forked messages, e.g. the onces caused by a message send to a full JID?
   </p>
+    <section2 topic='Interaction with Chat States' anchor='bizrules-chatstates'>
+    <p>Note that &xep0085; recommends sending chat state
+    notifications as chat type messages, which means that they will be
+    subject to MR2-copying.  This is intentional.</p>
+    <p>Additionally, there are other considerations for clients that implement MR2s and <cite>XEP-0085</cite>:</p>
+    <ul>
+      <li>Upon receiving an inbound or outbound &lt;gone/&gt; chat state (as a carbon copy) for a given conversation, the client SHOULD visually indicate the conversation is terminated.</li>
+      <li>In order to prevent unwanted termination of conversations on other resources, clients SHOULD NOT send &lt;gone/&gt; chat states on logout, but instead SHOULD count on the broadcast of unavailable presence to convey the change in attention.</li>
+      <li>Upon receiving an outbound notification of any chat state other than &lt;gone/&gt;, the copied client MAY conclude that the sending client has taken responsibility for the conversation, and make appropriate user interface modifications.  For example, notifications could be suppressed on devices receiving the MR2 copies.</li>
+    </ul>
+  </section2>
+  <section2 topic='Handling of Errors' anchor='bizrules-errors'>
+    <p>When a receiving server attempts to deliver a forked message, and that message bounces with an error for any reason, the receiving server MUST NOT forward that error back to the original sender.  The receiving server SHOULD use the sent element in the bounce to determine that an error is from a forked message.</p>
+    <p>This rule is used to prevent some of the half-failure modes that have been an issue in other prototocols.</p> 
+  </section2>
+  <section2 topic='Auto-responses' anchor='bizrules-autoresponses'>
+    <p>Clients that automatically respond to messages for any reason (e.g., when in the "dnd" presence show state) MUST take adequate care when enabling MR2s in order to prevent storms or loops.  MR2 copies of messages MUST NOT be auto-replied to under any circumstances.  Forked inbound messages MUST NOT be auto-replied to unless the client has some way of ensuring no more than one auto-reply is sent from all of its user's resources.</p>
+  </section2>
+  <section2 topic='Mobile Considerations' anchor='bizrules-mobile'>
+    <p>Enabling this protocol on mobile devices needs to be undertaken with care. This protocol can result in additional bandwidth and power usage, possibly decreasing battery lifetime and increasing monetary costs.  Additional mechanisms for controlling the MR2-copying or forking of individual conversations might need to be added to deal with mobile clients in the future.</p>
+  </section2>
 </section1>
 <!--
 <section1 topic='Implementation Notes' anchor='impl'>
