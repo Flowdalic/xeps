@@ -14,13 +14,13 @@ distclean:
 	rm -rf $(FROM_XMPP_GIT)
 	TARGET=clean $(MAKE) $(XEPS)
 
-xmpp.css: xmpp/xmpp.css
+xmpp.css: xsf-xeps/xmpp.css
 	cp $^ $@
 
-prettify.css: xmpp/prettify.css
+prettify.css: xsf-xeps/prettify.css
 	cp $^ $@
 
-prettify.js: xmpp/prettify.js
+prettify.js: xsf-xeps/prettify.js
 	cp $^ $@
 
 $(XEPS): init

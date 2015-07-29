@@ -4,13 +4,13 @@ FROM_XMPP_GIT := xep.xsl xep.dtd xep.ent
 
 all: xep-muc-extensions.html
 
-xep.xsl: ../xmpp/extensions/xep.xsl
+xep.xsl: ../xsf-xeps/xep.xsl
 	cp $^ $@
 
-xep.dtd: ../xmpp/extensions/xep.dtd
+xep.dtd: ../xsf-xeps/xep.dtd
 	cp $^ $@
 
-xep.ent: ../xmpp/extensions/xep.ent
+xep.ent: ../xsf-xeps/xep.ent
 	cp $^ $@
 
 xep-muc-extensions.html: xep-muc-extensions.xml $(FROM_XMPP_GIT)
