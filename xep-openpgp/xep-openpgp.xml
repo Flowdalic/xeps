@@ -72,7 +72,7 @@
   entity). OpenPGP in return allows for end-to-end encrypted data to
   be exchanged between one, two or even multiple entities.</p>
   <p>This XEP is an alternative to similar XEPs, e.g. OMEMO, providing
-  <b>no</b> Perfect Forward Secrecy but thus, as advantage,
+  <em>no</em> Perfect Forward Secrecy but thus, as advantage,
   allowing users to rhead their archived converstaions, or, in gernal,
   their encrypted data, later on (as long as they still posses the
   according private key).</p>
