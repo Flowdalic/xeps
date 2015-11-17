@@ -25,9 +25,10 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>TODO PEP</spec>
-    <spec>TODO Private Data Storage</spec>
-	<spec>TODO Disco?</spec>
+    <spec>XEP-0030</spec>
+    <spec>XEP-0049</spec>
+    <spec>XEP-0082</spec>
+    <spec>XEP-0163</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -64,7 +65,7 @@
   that come with modern day OpenPGP usage. PEP provides a standardizes
   way to discovery OpenPGP public keys of other entities while, unlike
   the OpenPGP keyserver, establishing a strong relation between the
-  key and the user, and Private Data Storage allows for easy OpenPGP
+  key and the user, and Private XML Storage allows for easy OpenPGP
   key synchronization accross devices (of the same XMPP
   entity). OpenPGP in return allows for end-to-end encrypted data to
   be exchanged between one, two or even multiple entities.</p>
@@ -140,7 +141,7 @@
 	Base64. The string contains a signcrypt element. It SHOULD also be
 	encrypted to self.</p>
 	<example caption='The signcrypt extension.'><![CDATA[
-<signcrypt to='user@example.org' timestamp='TODO XEP-82 timestamp'>
+<signcrypt xmlns='urn:xmpp:openpgp:0' to='juliet@example.org' timestamp='2014-07-10T17:06:00+02:00'>
   <body>
     Secret Message
   </body>
@@ -162,7 +163,7 @@
   </section2>
   <section2 topic='Synchronizing the private key' anchor='synchro'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
-	update) the private key, Private Data Storage is used as
+	update) the private key, Private XML Storage is used as
 	synchronization mechanism. The private key MUST be a OpenPGP
 	symetric encrypted packet with a backup code (e.g.:
 	https://github.com/open-keychain/open-keychain/wiki/Backups)</p>
