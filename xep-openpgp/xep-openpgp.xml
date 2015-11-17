@@ -110,9 +110,17 @@
 </iq>]]></example>
   </section2>
   <section2 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
-  	Note that OpenPGP's ASCII armor is not used, instead the XMPP client
-	MUST encode the public key using Base64.
-	<example caption='Saving the public key in the PEP node.'><![CDATA[
+	<p>In order to annouce the public key, the client needs to store
+	it in a &xep0163; node. The key data is stored within a
+	&lt;pubkey/&gt; element which is a child element of the
+	&lt;pubkeys/&gt; qualified by the 'urn:xmpp:openpgp:0'
+	namespace. Note that OpenPGP's ASCII armor is not used, instead
+	the XMPP client MUST encode the public key using Base64. Client
+	SHOULD only try to store the public key if the Personal Eventing
+	Protocol service supports persistent-items, thus it SHOULD check
+	if the service reports the
+	'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
+	<example caption='Saving the public key in the Personal Eventing Protocol node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
   <pubsub>
      <publish node='urn:xmpp:openpgp:0'>
@@ -127,13 +135,16 @@
       </publish>
     </pubsub>
 </iq>]]></example>
-	<example caption='Requesting a OpenPGP public key from a XMPP entity.'><![CDATA[
+  <p>In order to discover the public key of an XMPP entity, clients
+  send a PubSub &IQ; request to the entity's bare JID of which it
+  wants to know the public key.</p>
+  <example caption='Requesting a OpenPGP public key from a XMPP entity.'><![CDATA[
 <iq from='romeo@example.org/orchard' to='juliet@example.org' type='get' id='2'>
   <pubsub>
     <items node='urn:xmpp:openpgp:0' max_items='1'/>
-   </pubsub>
+  </pubsub>
 </iq>]]></example>
-	<example caption='PEP result containing the requested public key.'><![CDATA[
+  <example caption='Personal Eventing Protocol result containing the requested public key.'><![CDATA[
 <iq from='juliet@example.org' to='romeo@example.org/orchard' type='result' id='2'>
   <pubsub>
     <publish node='urn:xmpp:openpgp:0'>
@@ -153,6 +164,9 @@
   may want to limit the results to the most recent item using the
   'max_items' attribute set to '1'. (Note: RSM would be an alternative
   but XEP-60 says it is not yet mandatory).</p>
+  <p>Some XMPP services may not provide the Personal Eventing Protocol feature required to
+  provide the mechanism described here. If so, they will return an
+  &IQ; error of type service-unavailable.</p>
   </section2>
   <section2 topic='Encrypted and signed data' anchor='signcrypt'>
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
@@ -183,10 +197,10 @@
 	encrypted data to prevent Surreptitious Forward Attacks. The XMPP
 	address found in the 'to' attribute SHOULD be without Resourcepart
 	(i.e. a bare JID). The 'timestamp' attribute contains the
-	timestamp when the &signcrypt; element was signed and
-	encrypted. Recipients are RECOMMENDED to verify the values of
-	these two elements for plausability or to display them to a user
-	for verification.</p>
+	timestamp when the &signcrypt; element was signed and encrypted in
+	the DateTime format as specified in &xep0082; § 3.2. Recipients
+	are RECOMMENDED to verify the values of these two elements for
+	plausability or to display them to a user for verification.</p>
 	<p>Child elements of signcryt can be any extension element. The
 	example uses the body element as defined in &rfc6121; § 5.2.3. Note
 	that this example uses the 'jabber:client' namespace, but beware
@@ -194,7 +208,7 @@
 	'jabber:server' namespace.</p>
 	<p>Recipients MUST verify that the signature corresponds to the
 	sending XMPP address's key. Thus the recipient may has to
-	retrieve the key from the PEP node as described above.</p>
+	retrieve the key from the Personal Eventing Protocol node as described above.</p>
   </section2>
   <section2 topic='Synchronizing the secret key' anchor='synchro'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
@@ -236,10 +250,11 @@
 <section1 topic='Rationale' anchor='rationale'>
   <p>This specificaiton leaves it open if the used OpenPGP key should
   be a primary key or a subkey. It's even possible to announce
-  multiple public keys in the PEP node. Implementations MUST be
-  prepared to find multiple public keys. The authors however believe
-  that for ease of use only one OpenPGP key specially crafted for the
-  XMPP uses case should be created.</p>
+  multiple public keys in the Personal Eventing Protocol
+  node. Implementations MUST be prepared to find multiple public
+  keys. The authors however believe that for ease of use only one
+  OpenPGP key specially crafted for the XMPP uses case should be
+  created.</p>
   <p>The &openpgp; and &signcrypt; elements are container for
   arbitrary signed and encrypted data and can thus act as building
   block for encrypting data for Message, IQ and Presence stanzas.</p>
