@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY signcrypt "&lt;signcrypt/&gt;">
+  <!ENTITY openpgp "&lt;openpgp/&gt;">
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
 ]>
@@ -129,37 +131,44 @@
   says it is not yet mandatory).</p>
   </section2>
   <section2 topic='Encrypted and signed data' anchor='signcrypt'>
-	<example caption='The openpgp extension within a message.'><![CDATA[
+	<example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='user@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
     <!-- BASE64_OPENPGP_BLOB -->
     WdC81xuET8kAK...
   </openpgp>
 </message>]]></example>
-	<p>BASE64_OPENPGP_BLOB is an UTF-8 encoded string which is
-	encrypted and signed using OpenPGP and then encoded with
-	Base64. The string contains a signcrypt element. It SHOULD also be
-	encrypted to self.</p>
-	<example caption='The signcrypt extension.'><![CDATA[
+	<p>The text content of the &openpgp; element (BASE64_OPENPGP_BLOB)
+	is a Base64 encoded OpenPGP packet (TODO correct term?) which is
+	an encrypted and signed UTF-8 encoded string. This string
+	represents a &signcrypt; extension element. It SHOULD also be
+	encrypted to self. Encryption is REQUIRED and signing the data is
+	RECOMMENDED.</p>
+	<example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0' to='juliet@example.org' timestamp='2014-07-10T17:06:00+02:00'>
-  <body>
+  <body xmlns='jaber:client'>
     Secret Message
   </body>
 </signcrypt>]]></example>
-	<p>The signcrypt element must posses at least one 'to' and exaclty
-	one 'timestamp' attribute. The 'to' element(s) MUST contain the
-	intended recipient's XMPP address of the signed and encrypted data
-	to prevent Surreptitous Forward Attacks. The XMPP address found in
-	the 'to' attribute SHOULD be without Resourcepart (i.e. a bare
-	JID). The 'timestamp' attribute contains the timestamp when the
-	signcrypt element was signed and encrypted. Recipients MUST verify
-	the values of these two elements for plausability</p>
-	<p>Child elements of signcryt can be anything. This specification
-	only defines the body element qualified by the urn:xmpp:openpgp:0
-	namespace, which is the same element as RFC 6121 5.2.3 but only in
-	a different namespace. Furthermore recipients MUST verify if the
-	signature corresponds to the sending XMPP address's by using the
-	information found in the PEP node as described above.</p>
+	
+	<p>The &signcrypt; element MUST posses at least one 'to' and
+	exaclty one 'timestamp' attribute. The 'to' element(s) MUST
+	contain the intended recipient's XMPP address of the signed and
+	encrypted data to prevent Surreptitous Forward Attacks. The XMPP
+	address found in the 'to' attribute SHOULD be without Resourcepart
+	(i.e. a bare JID). The 'timestamp' attribute contains the
+	timestamp when the &signcrypt; element was signed and
+	encrypted. Recipients are RECOMMENDED to verify the values of
+	these two elements for plausability or to display them to a user
+	for verification.</p>
+	<p>Child elements of signcryt can be any extension element. The
+	example uses the body element as defined in &rfc6121; § 5.2.3. Note
+	that this example uses the 'jabber:client' namespace, but beware
+	that the same 'body' element is also defined in the
+	'jabber:server' namespace.</p>
+	<p>Recipients MUST verify that the signature corresponds to the
+	sending XMPP address's key. Thus the recipient may has to
+	retrieve the key from the PEP node as described above.</p>
   </section2>
   <section2 topic='Synchronizing the private key' anchor='synchro'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
@@ -177,14 +186,18 @@
   prepared to find multiple public keys. The authors however believe
   that for ease of use only one OpenPGP key specially craftet for the
   XMPP uses case should be created.</p>
-  <p>The openpgp and signcrypt elements add as container for arbitrary
-  data and can thus act as building block for encrypting data for
-  Message, IQ and Presence stanzas.</p>
+  <p>The &openpgp; and &signcrypt; elements are container for arbitrary
+  signed and encrypted data and can thus act as building block for
+  encrypting data for Message, IQ and Presence stanzas.</p>
+  <p>Note that OpenPGP signed data already contains a timestamp as
+  per the OpenPGP specification. The &signcrypt; element never the less
+  contains a mandatory 'timestamp' attribute because not every OpenPGP
+  API may provide access to the embedded OpenPGP timestamp.</p>
   <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
 	<p>This specification addresses all relevant issues of
 	XEP-0027. It prevents reply attacks my including the recipient(s)
-	and a timestamp in the signcrypt element. It allows for both,
-	signing and encrypting of the signcrypt element. On the other
+	and a timestamp in the &signcrypt; element. It allows for both,
+	signing and encrypting of the &signcrypt; element. On the other
 	hand, the scope of the specification was intentionally limited to
 	OpenPGP only.</p>
 	<p>Features like signed presences, which is provided by XEP-0027,
