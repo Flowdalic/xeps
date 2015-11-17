@@ -234,7 +234,7 @@
   be a primary key or a subkey. It's even possible to announce
   multiple public keys in the PEP node. Implementations MUST be
   prepared to find multiple public keys. The authors however believe
-  that for ease of use only one OpenPGP key specially craftet for the
+  that for ease of use only one OpenPGP key specially crafted for the
   XMPP uses case should be created.</p>
   <p>The &openpgp; and &signcrypt; elements are container for
   arbitrary signed and encrypted data and can thus act as building
