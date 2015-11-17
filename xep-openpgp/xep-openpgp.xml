@@ -72,7 +72,7 @@
   entity). OpenPGP in return allows for end-to-end encrypted data to
   be exchanged between one, two or even multiple entities.</p>
   <p>This XEP is an alternative to similar XEPs, e.g. OMEMO, providing
-  (TODO emph) no Perfect Forward Secrecy but thus, as advantage,
+  <b>no</b> Perfect Forward Secrecy but thus, as advantage,
   allowing users to rhead their archived converstaions, or, in gernal,
   their encrypted data, later on (as long as they still posses the
   according private key).</p>
@@ -86,6 +86,28 @@
 <section1 topic='Use Cases' anchor='usecases'>
   <p>STRONGLY RECOMMENDED.</p>
   <section2 topic='Discovering Support' anchor='disco'>
+	<p>If an entity supports OpenPGP for XMPP as specified herin, it
+	MUST report that fact by including a service discovery feature of
+	'urn:xmpp:openpgp:0' in response to a &xep0030; information
+	request.</p>
+  <example caption="Service Discovery information request"><![CDATA[
+<iq type='get'
+    from='juliet@example.org/balcony'
+    to='romeo@example.org/orchard'
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+</iq>]]></example>
+  <example caption="Service Discovery information response"><![CDATA[
+<iq type='result'
+    from='romeo@example.org/orchard'
+    to='juliet@example.org/balcony'
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    ...
+    <feature var='urn:xmpp:openpgp:0'/>
+    ...
+  </query>
+</iq>]]></example>
   </section2>
   <section2 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
 	<example caption='Saving the public key in the PEP node.'><![CDATA[
@@ -106,7 +128,7 @@
 	<example caption='Requesting a OpenPGP public key from a XMPP entity.'><![CDATA[
 <iq from='romeo@example.org/orchard' to='juliet@example.org' type='get' id='2'>
   <pubsub>
-    <items node='urn:xmpp:openpgp:0'/>
+    <items node='urn:xmpp:openpgp:0' max_items='1'/>
    </pubsub>
 </iq>]]></example>
 	<example caption='PEP result containing the requested public key.'><![CDATA[
@@ -127,8 +149,8 @@
   <p>Note that the result may contain multiple pubkeys elements. Only
   the public keys found in the most recent MUST be used. Requestors
   may want to limit the results to the most recent item using the
-  'max_items' attribute (Note: RSM would be an alternative but XEP-60
-  says it is not yet mandatory).</p>
+  'max_items' attribute set to '1'. (Note: RSM would be an alternative
+  but XEP-60 says it is not yet mandatory).</p>
   </section2>
   <section2 topic='Encrypted and signed data' anchor='signcrypt'>
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
@@ -146,7 +168,7 @@
 	RECOMMENDED.</p>
 	<example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0' to='juliet@example.org' timestamp='2014-07-10T17:06:00+02:00'>
-  <body xmlns='jaber:client'>
+  <body xmlns='jabber:client'>
     Secret Message
   </body>
 </signcrypt>]]></example>
@@ -172,11 +194,39 @@
   </section2>
   <section2 topic='Synchronizing the private key' anchor='synchro'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
-	update) the private key, Private XML Storage is used as
-	synchronization mechanism. The private key MUST be a OpenPGP
-	symetric encrypted packet with a backup code (e.g.:
+	update) the private key, &xep0049; is used as synchronization
+	mechanism. The private key MUST be a OpenPGP symetric encrypted
+	packet with a backup code (e.g.:
 	https://github.com/open-keychain/open-keychain/wiki/Backups)</p>
-	<p>TODO Examples</p>
+	<p>In order to set a new private key, clients store the encrypted
+	backup key as Base64 encoded binary OpenPGP packet within an
+	&lt;privkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
+	namespace.</p>
+    <example caption='Client stores backup key in private XML storage.'><![CDATA[
+<iq type='set' id='priv1'>
+  <query xmlns='jabber:iq:private'>
+    <privkey xmlns='urn:xmpp:openpgp:0'/>
+      <!-- PRIVATE_OPENPGP_BLOG -->
+	  8afaqse73adf...
+    </privkey>
+  </query>
+</iq>]]></example>
+	<p>New clients then later can retrieve the stored backup key.</p>
+    <example caption='Client retrieves backup key from private XML storage.'><![CDATA[
+<iq type='get' id='priv2'>
+  <query xmlns='jabber:iq:private'>
+    <privkey xmlns='urn:xmpp:openpgp:0'/>
+  </query>
+  </iq>]]></example>
+    <example caption='Client Stores Private Data'><![CDATA[
+<iq type='result' id='priv2'>
+  <query xmlns='jabber:iq:private'>
+    <privkey xmlns='urn:xmpp:openpgp:0'>
+      <!-- PRIVATE_OPENPGP_BLOG -->
+	  8afaqse73adf...
+    </privkey>
+  </query>
+</iq>]]></example>	
   </section2>
 </section1>
 <section1 topic='Rationale' anchor='rationale'>
@@ -222,7 +272,9 @@
   <p>REQUIRED.</p>
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>REQUIRED.</p>
+  <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
+    <p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+  </section2>
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
   <p>REQUIRED for protocol specifications.</p>
