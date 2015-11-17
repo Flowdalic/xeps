@@ -11,7 +11,7 @@
   <title>OpenPGP for XMPP</title>
   <abstract>Secifies end-to-end encryption for data with the help of
   OpenPGP, annoucement, discovery and retrieval of public keys and a
-  mechanism to syncrhonize private keys over multiple
+  mechanism to synchronize secret keys over multiple
   devices.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2014 by the XMPP Standards Foundation (XSF).</copyright>
@@ -73,9 +73,9 @@
   be exchanged between one, two or even multiple entities.</p>
   <p>This XEP is an alternative to similar XEPs, e.g. OMEMO, providing
   <em>no</em> Perfect Forward Secrecy but thus, as advantage,
-  allowing users to rhead their archived converstaions, or, in gernal,
+  allowing users to read their archived converstaions, or, in gernal,
   their encrypted data, later on (as long as they still posses the
-  according private key).</p>
+  according secret key).</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
@@ -110,6 +110,8 @@
 </iq>]]></example>
   </section2>
   <section2 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
+  	Note that OpenPGP's ASCII armor is not used, instead the XMPP client
+	MUST encode the public key using Base64.
 	<example caption='Saving the public key in the PEP node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
   <pubsub>
@@ -117,7 +119,7 @@
         <item>
           <pubkeys xmlns='urn:xmpp:openpgp:0'>
             <pubkey>
-              <!-- BASE64_PUBLIC_KEY -->
+              <!-- BASE64_OPENPGP_PUBLIC_KEY -->
               YWJjMTIzIT8kK...
             </pubkey>
           </pubkeys>
@@ -138,7 +140,7 @@
       <item>
         <pubkeys xmlns='urn:xmpp:openpgp:0'>
           <pubkey>
-            <!-- BASE64_PUBLIC_KEY -->
+            <!-- BASE64_OPENPGP_PUBLIC_KEY -->
             YWJjMTIzIT8kK...
           </pubkey>
         </pubkeys>
@@ -156,13 +158,15 @@
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='user@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
-    <!-- BASE64_OPENPGP_BLOB -->
+    <!-- BASE64_OPENPGP_MESSAGE -->
     WdC81xuET8kAK...
   </openpgp>
 </message>]]></example>
-	<p>The text content of the &openpgp; element (BASE64_OPENPGP_BLOB)
-	is a Base64 encoded OpenPGP packet (TODO correct term?) which is
-	an encrypted and signed UTF-8 encoded string. This string
+	<p>The text content of the &openpgp; element (BASE64_OPENPGP_MESSAGE)
+	is a Base64 encoded OpenPGP message which is
+	an encrypted and signed UTF-8 encoded string. Note
+	that OpenPGP's ASCII armor is not used, instead the XMPP client
+	MUST encode the raw OpenPGP message using Base64. This string
 	represents a &signcrypt; extension element. It SHOULD also be
 	encrypted to self. Encryption is REQUIRED and signing the data is
 	RECOMMENDED.</p>
@@ -174,9 +178,9 @@
 </signcrypt>]]></example>
 	
 	<p>The &signcrypt; element MUST posses at least one 'to' and
-	exaclty one 'timestamp' attribute. The 'to' element(s) MUST
+	exactly one 'timestamp' attribute. The 'to' element(s) MUST
 	contain the intended recipient's XMPP address of the signed and
-	encrypted data to prevent Surreptitous Forward Attacks. The XMPP
+	encrypted data to prevent Surreptitious Forward Attacks. The XMPP
 	address found in the 'to' attribute SHOULD be without Resourcepart
 	(i.e. a bare JID). The 'timestamp' attribute contains the
 	timestamp when the &signcrypt; element was signed and
@@ -192,39 +196,39 @@
 	sending XMPP address's key. Thus the recipient may has to
 	retrieve the key from the PEP node as described above.</p>
   </section2>
-  <section2 topic='Synchronizing the private key' anchor='synchro'>
+  <section2 topic='Synchronizing the secret key' anchor='synchro'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
-	update) the private key, &xep0049; is used as synchronization
-	mechanism. The private key MUST be a OpenPGP symetric encrypted
-	packet with a backup code (e.g.:
+	update) the secret key, &xep0049; is used as synchronization
+	mechanism. The secret key MUST be a OpenPGP symmetrically encrypted
+	message with a backup code (e.g.:
 	https://github.com/open-keychain/open-keychain/wiki/Backups)</p>
-	<p>In order to set a new private key, clients store the encrypted
-	backup key as Base64 encoded binary OpenPGP packet within an
+	<p>In order to set a new secret key, clients store the encrypted
+	backup key as Base64 encoded raw OpenPGP message within an
 	&lt;privkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
 	namespace.</p>
     <example caption='Client stores backup key in private XML storage.'><![CDATA[
 <iq type='set' id='priv1'>
   <query xmlns='jabber:iq:private'>
     <privkey xmlns='urn:xmpp:openpgp:0'/>
-      <!-- PRIVATE_OPENPGP_BLOG -->
-	  8afaqse73adf...
+      <!-- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -->
+      8afaqse73adf...
     </privkey>
   </query>
 </iq>]]></example>
-	<p>New clients then later can retrieve the stored backup key.</p>
-    <example caption='Client retrieves backup key from private XML storage.'><![CDATA[
+	<p>New clients then later can retrieve the stored encrypted secret key.</p>
+    <example caption='Client retrieves encrypted secret key from private XML storage.'><![CDATA[
 <iq type='get' id='priv2'>
   <query xmlns='jabber:iq:private'>
-    <privkey xmlns='urn:xmpp:openpgp:0'/>
+    <secretkey xmlns='urn:xmpp:openpgp:0'/>
   </query>
   </iq>]]></example>
     <example caption='Client Stores Private Data'><![CDATA[
 <iq type='result' id='priv2'>
   <query xmlns='jabber:iq:private'>
-    <privkey xmlns='urn:xmpp:openpgp:0'>
-      <!-- PRIVATE_OPENPGP_BLOG -->
-	  8afaqse73adf...
-    </privkey>
+    <secretkey xmlns='urn:xmpp:openpgp:0'>
+      <!-- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -->
+      8afaqse73adf...
+    </secretkey>
   </query>
 </iq>]]></example>	
   </section2>
@@ -239,8 +243,8 @@
   <p>The &openpgp; and &signcrypt; elements are container for
   arbitrary signed and encrypted data and can thus act as building
   block for encrypting data for Message, IQ and Presence stanzas.</p>
-  <p>Note that OpenPGP signed data already contains a timestamp as per
-  the OpenPGP specification. The &signcrypt; element never the less
+  <p>Note that signed OpenPGP messages already contains a timestamp as per
+  the OpenPGP specification. The &signcrypt; element nevertheless
   contains a mandatory 'timestamp' attribute because not every OpenPGP
   API may provide access to the embedded OpenPGP timestamp.</p>
   <p>The method defined herin can be used to implement end-to-end
