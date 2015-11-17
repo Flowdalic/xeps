@@ -186,13 +186,15 @@
   prepared to find multiple public keys. The authors however believe
   that for ease of use only one OpenPGP key specially craftet for the
   XMPP uses case should be created.</p>
-  <p>The &openpgp; and &signcrypt; elements are container for arbitrary
-  signed and encrypted data and can thus act as building block for
-  encrypting data for Message, IQ and Presence stanzas.</p>
-  <p>Note that OpenPGP signed data already contains a timestamp as
-  per the OpenPGP specification. The &signcrypt; element never the less
+  <p>The &openpgp; and &signcrypt; elements are container for
+  arbitrary signed and encrypted data and can thus act as building
+  block for encrypting data for Message, IQ and Presence stanzas.</p>
+  <p>Note that OpenPGP signed data already contains a timestamp as per
+  the OpenPGP specification. The &signcrypt; element never the less
   contains a mandatory 'timestamp' attribute because not every OpenPGP
   API may provide access to the embedded OpenPGP timestamp.</p>
+  <p>The method defined herin can be used to implement end-to-end
+  encrypted Multi-User Chats (&xep0045;).</p>
   <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
 	<p>This specification addresses all relevant issues of
 	XEP-0027. It prevents reply attacks my including the recipient(s)
