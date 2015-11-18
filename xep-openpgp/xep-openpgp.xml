@@ -187,7 +187,7 @@
 	<example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0' to='juliet@example.org' timestamp='2014-07-10T17:06:00+02:00'>
   <body xmlns='jabber:client'>
-    Secret Message
+    This is a secret message.
   </body>
 </signcrypt>]]></example>
 	
@@ -275,20 +275,26 @@
 	may be added later on as add-on XEP to this.</p>
   </section2>
 </section1>
-<section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Accessibility Considerations' anchor='access'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Internationalization Considerations' anchor='i18n'>
-  <p>OPTIONAL.</p>
-</section1>
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+  <p>The scope of this XEP is intentionally define to just  specify a
+  way for XMPP entities to discover, announce and synchronize OpenPGP
+  keys, and how to exchange signed and encrypted data between two or
+  more parties. Everything else is outside its scope. For example, how
+  "secure' the key material on the endpoints is protected is up to the
+  implementation.</p>
+  <p>And while this XEP specifies a mechanism how to discover and
+  retrieve a public key, it does not define how the trust relation to
+  this key should be established. Even if key discovery and retrieval
+  over XMPP provides a stronger coupling between the possessing entity
+  (the XMPP address) and the key as compared to the OpenPGP keyserver,
+  how a XMPP server authenticates a remote server is a server policy,
+  which does vary from server to server. Implementation MUST provide a
+  way for the user to establish and assign trust to a public key. For
+  example by using a QR code shown on the other user's device's
+  screen.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
   <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
