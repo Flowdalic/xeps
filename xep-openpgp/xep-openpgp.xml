@@ -71,11 +71,15 @@
   key synchronization accross devices (of the same XMPP
   entity). OpenPGP in return allows for end-to-end encrypted data to
   be exchanged between one, two or even multiple entities.</p>
-  <p>This XEP is an alternative to similar XEPs, e.g. OMEMO, providing
-  <em>no</em> Perfect Forward Secrecy but thus, as advantage,
-  allowing users to read their archived converstaions, or, in gernal,
-  their encrypted data, later on (as long as they still posses the
-  according secret key).</p>
+  <p>Unlike to similar XEPs, e.g. OMEMO, this XEP <em>does not</em>
+  provide Perfect Forward Secrecy (PFS), but as advantage, allows
+  users to read their archived converstaions, or, in gernal, their
+  encrypted data, later on (as long as they still posses the according
+  secret key). Perfect Forward Secrecy and being able to decrypt
+  archived messages are mutually exclusive, i.e. one can not have
+  both. We therefore consider this XEP complementary to similar ones
+  which also provide end-to-end encryption but with a different
+  feature set.</p>
   <p>The method defined herin can be used to implement end-to-end
   encrypted Multi-User Chats (&xep0045;).</p>
 </section1>
