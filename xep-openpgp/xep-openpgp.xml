@@ -217,19 +217,20 @@
 	<p>To allow new XMPP clients to easily retrieve (and eventually
 	update) the secret key, &xep0049; is used as synchronization
 	mechanism. The secret key MUST be a OpenPGP symmetrically encrypted
-	message with a backup code (e.g.:
+	message with a backup code.</p>
+	<p>TODO describe format as per
 	https://github.com/open-keychain/open-keychain/wiki/Backups)</p>
 	<p>In order to set a new secret key, clients store the encrypted
 	backup key as Base64 encoded raw OpenPGP message within an
-	&lt;privkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
+	&lt;secretkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
 	namespace.</p>
     <example caption='Client stores backup key in private XML storage.'><![CDATA[
 <iq type='set' id='priv1'>
   <query xmlns='jabber:iq:private'>
-    <privkey xmlns='urn:xmpp:openpgp:0'/>
+    <secretkey xmlns='urn:xmpp:openpgp:0'/>
       <!-- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -->
       8afaqse73adf...
-    </privkey>
+    </secretkey>
   </query>
 </iq>]]></example>
 	<p>New clients then later can retrieve the stored encrypted secret key.</p>
