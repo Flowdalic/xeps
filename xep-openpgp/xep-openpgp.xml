@@ -172,7 +172,7 @@
   <section2 topic='Encrypted and signed data' anchor='signcrypt'>
 	<p>The &openpgp; extension element qualified by the
 	'urn:xmpp:openpgp:0' namespace is used in order to exchange
-	encrypted and signed data</p>
+	encrypted and signed data.</p>
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='user@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
