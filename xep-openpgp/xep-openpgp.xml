@@ -76,6 +76,8 @@
   allowing users to read their archived converstaions, or, in gernal,
   their encrypted data, later on (as long as they still posses the
   according secret key).</p>
+  <p>The method defined herin can be used to implement end-to-end
+  encrypted Multi-User Chats (&xep0045;).</p>
 </section1>
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
@@ -84,7 +86,6 @@
   <p>OPTIONAL.</p>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
-  <p>STRONGLY RECOMMENDED.</p>
   <section2 topic='Discovering Support' anchor='disco'>
 	<p>If an entity supports OpenPGP for XMPP as specified herin, it
 	MUST report that fact by including a service discovery feature of
@@ -111,14 +112,14 @@
   </section2>
   <section2 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
 	<p>In order to annouce the public key, the client needs to store
-	it in a &xep0163; node. The key data is stored within a
-	&lt;pubkey/&gt; element which is a child element of the
-	&lt;pubkeys/&gt; qualified by the 'urn:xmpp:openpgp:0'
-	namespace. Note that OpenPGP's ASCII armor is not used, instead
-	the XMPP client MUST encode the public key using Base64. Client
-	SHOULD only try to store the public key if the Personal Eventing
-	Protocol service supports persistent-items, thus it SHOULD check
-	if the service reports the
+	it in a &xep0163; node. The public key data, as specified in
+	&rfc4880;, is stored within a &lt;pubkey/&gt; element which is a
+	child element of the &lt;pubkeys/&gt; qualified by the
+	'urn:xmpp:openpgp:0' namespace. Note that OpenPGP's ASCII armor is
+	not used, instead the XMPP client MUST encode the public key using
+	Base64. Client SHOULD only try to store the public key if the
+	Personal Eventing Protocol service supports persistent-items, thus
+	it SHOULD check if the service reports the
 	'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
 	<example caption='Saving the public key in the Personal Eventing Protocol node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
@@ -169,6 +170,9 @@
   &IQ; error of type service-unavailable.</p>
   </section2>
   <section2 topic='Encrypted and signed data' anchor='signcrypt'>
+	<p>The &openpgp; extension element qualified by the
+	'urn:xmpp:openpgp:0' namespace is used in order to exchange
+	encrypted and signed data</p>
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='user@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
@@ -177,7 +181,7 @@
   </openpgp>
 </message>]]></example>
 	<p>The text content of the &openpgp; element (BASE64_OPENPGP_MESSAGE)
-	is a Base64 encoded OpenPGP message which is
+	is a Base64 encoded OpenPGP message which contains
 	an encrypted and signed UTF-8 encoded string. Note
 	that OpenPGP's ASCII armor is not used, instead the XMPP client
 	MUST encode the raw OpenPGP message using Base64. This string
@@ -190,7 +194,6 @@
     This is a secret message.
   </body>
 </signcrypt>]]></example>
-	
 	<p>The &signcrypt; element MUST posses at least one 'to' and
 	exactly one 'timestamp' attribute. The 'to' element(s) MUST
 	contain the intended recipient's XMPP address of the signed and
@@ -262,8 +265,6 @@
   the OpenPGP specification. The &signcrypt; element nevertheless
   contains a mandatory 'timestamp' attribute because not every OpenPGP
   API may provide access to the embedded OpenPGP timestamp.</p>
-  <p>The method defined herin can be used to implement end-to-end
-  encrypted Multi-User Chats (&xep0045;).</p>
   <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
 	<p>This specification addresses all relevant issues of
 	XEP-0027. It prevents reply attacks my including the recipient(s)
