@@ -217,7 +217,7 @@
 	sending XMPP address's key. Thus the recipient may has to
 	retrieve the key from the Personal Eventing Protocol node as described above.</p>
   </section2>
-  <section2 topic='Synchronizing the secret key' anchor='synchro'>
+  <section2 topic='Synchronizing the secret key' anchor='synchro-private-xml'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
 	update) the secret key, &xep0049; is used as synchronization
 	mechanism. The secret key MUST be a OpenPGP symmetrically encrypted
@@ -253,6 +253,12 @@
     </secretkey>
   </query>
 </iq>]]></example>	
+  </section2>
+  <section2 topic='Alternative: Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
+	<p>TODO: Basically same as when using Private XML Storage just
+	with a private PEP node. Where private PEP node means, a PEP node
+	in whitelist mode where only the bare JID of the users is
+	whitelisted.</p>
   </section2>
 </section1>
 <section1 topic='Rationale' anchor='rationale'>
