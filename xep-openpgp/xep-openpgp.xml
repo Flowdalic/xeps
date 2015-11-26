@@ -193,7 +193,9 @@
 	encrypted to self. Encryption is REQUIRED and signing the data is
 	RECOMMENDED.</p>
 	<example caption='The &signcrypt; extension element.'><![CDATA[
-<signcrypt xmlns='urn:xmpp:openpgp:0' to='juliet@example.org' timestamp='2014-07-10T17:06:00+02:00'>
+<signcrypt xmlns='urn:xmpp:openpgp:0'
+           to='juliet@example.org'
+           timestamp='2014-07-10T17:06:00+02:00'>
   <body xmlns='jabber:client'>
     This is a secret message.
   </body>
@@ -217,7 +219,39 @@
 	sending XMPP address's key. Thus the recipient may has to
 	retrieve the key from the Personal Eventing Protocol node as described above.</p>
   </section2>
-  <section2 topic='Synchronizing the secret key' anchor='synchro-private-xml'>
+  <section2 topic='Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
+	<p>TODO: Basically same as when using Private XML Storage just
+	with a private PEP node. Where private PEP node means, a PEP node
+	in whitelist mode where only the bare JID of the users is
+	whitelisted.</p>
+  </section2>
+</section1>
+<section1 topic='Rationale' anchor='rationale'>
+  <p>This specificaiton leaves it open if the used OpenPGP key should
+  be a primary key or a subkey. It's even possible to announce
+  multiple public keys in the Personal Eventing Protocol
+  node. Implementations MUST be prepared to find multiple public
+  keys. The authors however believe that for ease of use only one
+  OpenPGP key specially crafted for the XMPP uses case should be
+  created.</p>
+  <p>The &openpgp; and &signcrypt; elements are container for
+  arbitrary signed and encrypted data and can thus act as building
+  block for encrypting data for Message, IQ and Presence stanzas.</p>
+  <p>Note that signed OpenPGP messages already contains a timestamp as per
+  the OpenPGP specification. The &signcrypt; element nevertheless
+  contains a mandatory 'timestamp' attribute because not every OpenPGP
+  API may provide access to the embedded OpenPGP timestamp.</p>
+  <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
+	<p>This specification addresses all relevant issues of
+	XEP-0027. It prevents reply attacks my including the recipient(s)
+	and a timestamp in the &signcrypt; element. It allows for both,
+	signing and encrypting of the &signcrypt; element. On the other
+	hand, the scope of the specification was intentionally limited to
+	OpenPGP only.</p>
+	<p>Features like signed presences, which is provided by XEP-0027,
+	may be added later on as add-on XEP to this.</p>
+  </section2>
+  <section2 topic='Possible Alternative: Synchronizing the secret key via Private XML Storage' anchor='synchro-private-xml'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
 	update) the secret key, &xep0049; is used as synchronization
 	mechanism. The secret key MUST be a OpenPGP symmetrically encrypted
@@ -252,39 +286,7 @@
       8afaqse73adf...
     </secretkey>
   </query>
-</iq>]]></example>	
-  </section2>
-  <section2 topic='Alternative: Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
-	<p>TODO: Basically same as when using Private XML Storage just
-	with a private PEP node. Where private PEP node means, a PEP node
-	in whitelist mode where only the bare JID of the users is
-	whitelisted.</p>
-  </section2>
-</section1>
-<section1 topic='Rationale' anchor='rationale'>
-  <p>This specificaiton leaves it open if the used OpenPGP key should
-  be a primary key or a subkey. It's even possible to announce
-  multiple public keys in the Personal Eventing Protocol
-  node. Implementations MUST be prepared to find multiple public
-  keys. The authors however believe that for ease of use only one
-  OpenPGP key specially crafted for the XMPP uses case should be
-  created.</p>
-  <p>The &openpgp; and &signcrypt; elements are container for
-  arbitrary signed and encrypted data and can thus act as building
-  block for encrypting data for Message, IQ and Presence stanzas.</p>
-  <p>Note that signed OpenPGP messages already contains a timestamp as per
-  the OpenPGP specification. The &signcrypt; element nevertheless
-  contains a mandatory 'timestamp' attribute because not every OpenPGP
-  API may provide access to the embedded OpenPGP timestamp.</p>
-  <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
-	<p>This specification addresses all relevant issues of
-	XEP-0027. It prevents reply attacks my including the recipient(s)
-	and a timestamp in the &signcrypt; element. It allows for both,
-	signing and encrypting of the &signcrypt; element. On the other
-	hand, the scope of the specification was intentionally limited to
-	OpenPGP only.</p>
-	<p>Features like signed presences, which is provided by XEP-0027,
-	may be added later on as add-on XEP to this.</p>
+</iq>]]></example>
   </section2>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
