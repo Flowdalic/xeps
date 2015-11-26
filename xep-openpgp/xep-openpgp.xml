@@ -290,17 +290,17 @@
   </section2>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
-  <p>The scope of this XEP is intentionally define to just  specify a
-  way for XMPP entities to discover, announce and synchronize OpenPGP
-  keys, and how to exchange signed and encrypted data between two or
-  more parties. Everything else is outside its scope. For example, how
-  "secure' the key material on the endpoints is protected is up to the
-  implementation.</p>
+  <p>The scope of this XEP is intentionally limited, so that the
+  specification just defines way for XMPP entities to discover,
+  announce and synchronize OpenPGP keys, and how to exchange signed
+  and encrypted data between two or more parties. Everything else is
+  outside its scope. For example, how "secure' the key material on the
+  endpoints is protected, is up to the implementation.</p>
   <p>And while this XEP specifies a mechanism how to discover and
   retrieve a public key, it does not define how the trust relation to
   this key should be established. Even if key discovery and retrieval
   over XMPP provides a stronger coupling between the possessing entity
-  (the XMPP address) and the key as compared to the OpenPGP keyserver,
+  (the XMPP address) and the key, as compared to the OpenPGP keyservers,
   how a XMPP server authenticates a remote server is a server policy,
   which does vary from server to server. Implementation MUST provide a
   way for the user to establish and assign trust to a public key. For
