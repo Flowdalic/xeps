@@ -87,7 +87,10 @@
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
 <section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
+  <dl>
+	<di><dt>Public key PEP node</dt><dd>TOOD TODO TODO.</dd></di>
+	<di><dt>Secret key PEP node</dt><dd>TOOD TODO TODO.</dd></di>
+  </dl>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Discovering Support' anchor='disco'>
@@ -224,16 +227,32 @@
 	with a private PEP node. Where private PEP node means, a PEP node
 	in whitelist mode where only the bare JID of the users is
 	whitelisted.</p>
-	<p>In order to synchronize the secret key over a private PEP node,
-	clients first need to discover and verify the node for the correct
-	settings.</p>
-	<example caption='Client requests node'><![CDATA[
-	]]></example>
-	<example caption='Client requests node'><![CDATA[
-	]]></example>
-	<p>If the node does not exist, the client MUST create it with an
-	whitelist access model.</p>
-	<example caption='Client requests node'><![CDATA[
+	<section3 topic='Required PEP features'>
+	  <p>The users server MUST support PEP, persistent nodes and the whitelist access model</p>
+	  <section4 topic='Discovering support'>
+	  </section4>
+	</section3>
+	<section3 topic='Requesting information about the secret key PEP node' anchro='req-info-secret-pep-node'>
+	  <p>In order to synchronize the secret key over a private PEP node,
+	  clients first need to discover and verify the node for the correct
+	  settings.</p>
+	  <section4 topic='Client sends request'>
+		<example caption='Client requests node'><![CDATA[
+		]]></example>
+	  </section4>
+	  <section4 topic='PEP service success response'>
+		<example caption='Client requests node'><![CDATA[
+		]]></example>
+	  </section4>
+	  <section4 topic='PEP node does not exist response'>
+	  </section4>
+	  <section4 topic='PEP not supported'>
+	  </section4>
+	  <p>If the node does not exist, the client MUST create it with an
+	  whitelist access model.</p>
+	</section3>
+	<section3 topic='Creating the secret key PEP node'>
+	  <example caption='Client creates secret key PEP node'><![CDATA[
 <iq type='set'
     from='juliet@example.org/balcony'
     id='create-node'>
@@ -249,13 +268,14 @@
       </configure>
     </pubsub>
 </iq>]]></example>
-	<example caption='Service informs requesting entity of success'><![CDATA[
+	  <example caption='Service informs requesting entity of success'><![CDATA[
 <iq type='result'
     to='juliet@example.org/balcony'
     id='create-node'/>]]></example>
-	<p>The node is now created and the only affiliated entity is the
-	bare JID of the user, who created the node, with an affiliation as
-	'owner'. TODO is this correct?</p>
+	  <p>The node is now created and the only affiliated entity is the
+	  bare JID of the user, who created the node, with an affiliation as
+	  'owner'. TODO is this correct?</p>
+	</section3>
   </section2>
 </section1>
 <section1 topic='Rationale' anchor='rationale'>
