@@ -224,6 +224,38 @@
 	with a private PEP node. Where private PEP node means, a PEP node
 	in whitelist mode where only the bare JID of the users is
 	whitelisted.</p>
+	<p>In order to synchronize the secret key over a private PEP node,
+	clients first need to discover and verify the node for the correct
+	settings.</p>
+	<example caption='Client requests node'><![CDATA[
+	]]></example>
+	<example caption='Client requests node'><![CDATA[
+	]]></example>
+	<p>If the node does not exist, the client MUST create it with an
+	whitelist access model.</p>
+	<example caption='Client requests node'><![CDATA[
+<iq type='set'
+    from='juliet@example.org/balcony'
+    id='create-node'>
+    <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+      <create node='urn:xmpp:openpgp:secret-key:0'/>
+      <configure>
+        <x xmlns='jabber:x:data' type='submit'>
+          <field var='FORM_TYPE' type='hidden'>
+            <value>http://jabber.org/protocol/pubsub#node_config</value>
+          </field>
+          <field var='pubsub#access_model'><value>whitelist</value></field>
+        </x>
+      </configure>
+    </pubsub>
+</iq>]]></example>
+	<example caption='Service informs requesting entity of success'><![CDATA[
+<iq type='result'
+    to='juliet@example.org/balcony'
+    id='create-node'/>]]></example>
+	<p>The node is now created and the only affiliated entity is the
+	bare JID of the user, who created the node, with an affiliation as
+	'owner'. TODO is this correct?</p>
   </section2>
 </section1>
 <section1 topic='Rationale' anchor='rationale'>
