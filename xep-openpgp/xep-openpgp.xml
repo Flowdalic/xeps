@@ -202,7 +202,8 @@
   <body xmlns='jabber:client'>
     This is a secret message.
   </body>
-</signcrypt>]]></example>
+  </signcrypt>]]></example>
+
 	<p>The &signcrypt; element MUST posses at least one 'to' and
 	exactly one 'timestamp' attribute. The 'to' element(s) MUST
 	contain the intended recipient's XMPP address of the signed and
@@ -210,17 +211,33 @@
 	address found in the 'to' attribute SHOULD be without Resourcepart
 	(i.e. a bare JID). The 'timestamp' attribute contains the
 	timestamp when the &signcrypt; element was signed and encrypted in
-	the DateTime format as specified in &xep0082; § 3.2. Recipients
-	are RECOMMENDED to verify the values of these two elements for
-	plausability or to display them to a user for verification.</p>
-	<p>Child elements of signcryt can be any extension element. The
-	example uses the body element as defined in &rfc6121; § 5.2.3. Note
-	that this example uses the 'jabber:client' namespace, but beware
-	that the same 'body' element is also defined in the
-	'jabber:server' namespace.</p>
-	<p>Recipients MUST verify that the signature corresponds to the
-	sending XMPP address's key. Thus the recipient may has to
-	retrieve the key from the Personal Eventing Protocol node as described above.</p>
+	the DateTime format as specified in &xep0082; § 3.2.</p>
+
+	<p>The child elements of &signcrypt; can be seen as stanza
+	extension elements which are encrypted and (eventually)
+	signed. After the &signcrypt; element was verified they SHOULD be
+	processed similar as if they had been direct extensions elements
+	of the stanza. For example, direct child elements of &signcrypt;
+	could be &lt;body xmlns='jabber:client'/&gt;, &lt;active
+	xmlns='http://jabber.org/protocol/chatstates'/&gt; and &lt;html
+	xmlns='http://jabber.org/protocol/xhtml-im'/&gt;. But just as with
+	stanza extension elements, child elements of &signcrypt; can be
+	any extension element. The example uses the &lt;body/&gt; element
+	as defined in &rfc6121; § 5.2.3. Note that this example uses the
+	'jabber:client' namespace, but since the same &lt;body/&gt;
+	element is also defined in the 'jabber:server' namespace
+	recipients MUST accept both.</p>
+
+	<section3 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
+
+	  <p>Recipients MUST verify that the signature corresponds to the
+	  sending XMPP address's key. Thus the recipient may has to retrieve
+	  the key from the Personal Eventing Protocol node as described
+	  above. Furthermore recipients are RECOMMENDED to verify the values
+	  of the 'to' and 'timestamp' attributes for plausability or to
+	  display them to a user for verification.</p>
+
+	</section3>
   </section2>
   <section2 topic='Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
 	<p>TODO: Basically same as when using Private XML Storage just
@@ -286,9 +303,13 @@
   keys. The authors however believe that for ease of use only one
   OpenPGP key specially crafted for the XMPP uses case should be
   created.</p>
+
   <p>The &openpgp; and &signcrypt; elements are container for
   arbitrary signed and encrypted data and can thus act as building
-  block for encrypting data for Message, IQ and Presence stanzas.</p>
+  block for encrypting data for Message, IQ and Presence stanzas. For
+  example, future specifications may use &signcrypt; to implement
+  encrypted In-Band Bytestreams.</p>
+
   <p>Note that signed OpenPGP messages already contains a timestamp as per
   the OpenPGP specification. The &signcrypt; element nevertheless
   contains a mandatory 'timestamp' attribute because not every OpenPGP
