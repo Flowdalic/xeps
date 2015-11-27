@@ -294,36 +294,6 @@
 	  'owner'. TODO is this correct?</p>
 	</section3>
   </section2>
-</section1>
-<section1 topic='Rationale' anchor='rationale'>
-  <p>This specificaiton leaves it open if the used OpenPGP key should
-  be a primary key or a subkey. It's even possible to announce
-  multiple public keys in the Personal Eventing Protocol
-  node. Implementations MUST be prepared to find multiple public
-  keys. The authors however believe that for ease of use only one
-  OpenPGP key specially crafted for the XMPP uses case should be
-  created.</p>
-
-  <p>The &openpgp; and &signcrypt; elements are container for
-  arbitrary signed and encrypted data and can thus act as building
-  block for encrypting data for Message, IQ and Presence stanzas. For
-  example, future specifications may use &signcrypt; to implement
-  encrypted In-Band Bytestreams.</p>
-
-  <p>Note that signed OpenPGP messages already contains a timestamp as per
-  the OpenPGP specification. The &signcrypt; element nevertheless
-  contains a mandatory 'timestamp' attribute because not every OpenPGP
-  API may provide access to the embedded OpenPGP timestamp.</p>
-  <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
-	<p>This specification addresses all relevant issues of
-	XEP-0027. It prevents reply attacks my including the recipient(s)
-	and a timestamp in the &signcrypt; element. It allows for both,
-	signing and encrypting of the &signcrypt; element. On the other
-	hand, the scope of the specification was intentionally limited to
-	OpenPGP only.</p>
-	<p>Features like signed presences, which is provided by XEP-0027,
-	may be added later on as add-on XEP to this.</p>
-  </section2>
   <section2 topic='Possible Alternative: Synchronizing the secret key via Private XML Storage' anchor='synchro-private-xml'>
 	<p>To allow new XMPP clients to easily retrieve (and eventually
 	update) the secret key, &xep0049; is used as synchronization
@@ -361,6 +331,41 @@
   </query>
 </iq>]]></example>
   </section2>
+</section1>
+<section1 topic='Rationale' anchor='rationale'>
+  <p>This specificaiton leaves it open if the used OpenPGP key should
+  be a primary key or a subkey. It's even possible to announce
+  multiple public keys in the Personal Eventing Protocol
+  node. Implementations MUST be prepared to find multiple public
+  keys. The authors however believe that for ease of use only one
+  OpenPGP key specially crafted for the XMPP uses case should be
+  created.</p>
+
+  <p>The &openpgp; and &signcrypt; elements are container for
+  arbitrary signed and encrypted data and can thus act as building
+  block for encrypting data for Message, IQ and Presence stanzas. For
+  example, future specifications may use &signcrypt; to implement
+  encrypted In-Band Bytestreams.</p>
+
+  <p>Note that signed OpenPGP messages already contains a timestamp as per
+  the OpenPGP specification. The &signcrypt; element nevertheless
+  contains a mandatory 'timestamp' attribute because not every OpenPGP
+  API may provide access to the embedded OpenPGP timestamp.</p>
+  <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
+	<p>This specification addresses all relevant issues of
+	XEP-0027. It prevents reply attacks my including the recipient(s)
+	and a timestamp in the &signcrypt; element. It allows for both,
+	signing and encrypting of the &signcrypt; element. On the other
+	hand, the scope of the specification was intentionally limited to
+	OpenPGP only.</p>
+	<p>Features like signed presences, which is provided by XEP-0027,
+	may be added later on as add-on XEP to this.</p>
+  </section2>
+</section1>
+<section1 topic='Implementors Advice' anchor='implementors-advice'>
+  <p>TODO/DRAFT/WIP: Implementors should read STEED and "Why Johnny
+  can't encrypt". Mention a few leassons learned from there and how
+  they apply to this XEP.</p>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
   <p>The scope of this XEP is intentionally limited, so that the
