@@ -28,13 +28,13 @@
   <dependencies>
     <spec>XMPP Core</spec>
     <spec>XEP-0030</spec>
-    <spec>XEP-0049</spec>
+    <spec>XEP-0049 (TODO remove?)</spec>
     <spec>XEP-0082</spec>
     <spec>XEP-0163</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>opgp</shortname>
+  <shortname>ox</shortname>
   <author>
     <firstname>Florian</firstname>
     <surname>Schmaus</surname>
