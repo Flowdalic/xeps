@@ -195,7 +195,7 @@
 	'urn:xmpp:openpgp:0' namespace is used in order to exchange
 	encrypted and signed data.</p>
 	<example caption='The &openpgp; extension within a message.'><![CDATA[
-<message to='user@example.org'>
+<message to='juliet@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
     <!-- BASE64_OPENPGP_MESSAGE -->
     WdC81xuET8kAK...
@@ -212,11 +212,12 @@
 	<example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0'
            to='juliet@example.org'
-           timestamp='2014-07-10T17:06:00+02:00'>
+           timestamp='2014-07-10T17:06:00+02:00'
+           rpad='f0rm1l4n4-mT8y33j!Y%fRSrcd^ZE4Q7VDt1L%WEgR!kv'>
   <body xmlns='jabber:client'>
     This is a secret message.
   </body>
-  </signcrypt>]]></example>
+</signcrypt>]]></example>
 
 	<p>The &signcrypt; element MUST posses at least one 'to' and
 	exactly one 'timestamp' attribute. The 'to' element(s) MUST
@@ -225,7 +226,9 @@
 	address found in the 'to' attribute SHOULD be without Resourcepart
 	(i.e. a bare JID). The 'timestamp' attribute contains the
 	timestamp when the &signcrypt; element was signed and encrypted in
-	the DateTime format as specified in &xep0082; § 3.2.</p>
+	the DateTime format as specified in &xep0082; § 3.2. The
+	&signcrypt; element SHOULD furthermore contain a 'rpad' attribute
+	which value is a random-length random-content padding.</p>
 
 	<p>The child elements of &signcrypt; can be seen as stanza
 	extension elements which are encrypted and (eventually)
@@ -392,6 +395,10 @@
   the OpenPGP specification. The &signcrypt; element nevertheless
   contains a mandatory 'timestamp' attribute because not every OpenPGP
   API may provide access to the embedded OpenPGP timestamp.</p>
+
+  <p>The 'rpad' attribute of the &signcrypt; element exists to prevent
+  length-base side channel attacks.</p>
+
   <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
 	<p>This specification addresses all relevant issues of
 	XEP-0027. It prevents reply attacks my including the recipient(s)
@@ -407,6 +414,20 @@
   <p>TODO: Implementors should read STEED and "Why Johnny
   can't encrypt". Mention a few leassons learned from there and how
   they apply to this XEP.</p>
+
+  <p>Implementors should be aware that the size OpenPGP public and
+  secure keys is somewhere in the range of tenth of
+  kilobytes. Applying Base64 encoding on keys, as it is described
+  herin, further increases the size. The formular to determine the
+  Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
+  for the maximum stanza size of 10000 bytes, as specified in RFC 6120
+  § 13.12. 4., is usually exceeded. However all XMPP server
+  implementations the authors are aware of, follow the recommendation
+  of the RFC and do not blindly set the maximum stanza size to such a
+  low value, but use a much higher threshold. Therefore this should
+  hardly be an issue for implementations. Nevertheless implementors
+  are still adviced to handle &lt;policy-violation/&gt; error
+  responses when trying to transmit Base64 encoded keys.</p>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
   <p>The scope of this XEP is intentionally limited, so that the
@@ -415,6 +436,7 @@
   and encrypted data between two or more parties. Everything else is
   outside its scope. For example, how "secure' the key material on the
   endpoints is protected, is up to the implementation.</p>
+
   <p>And while this XEP specifies a mechanism how to discover and
   retrieve a public key, it does not define how the trust relation to
   this key should be established. Even if key discovery and retrieval
@@ -425,6 +447,19 @@
   way for the user to establish and assign trust to a public key. For
   example by using a QR code shown on the other user's device's
   screen.</p>
+
+  <p>Besides the protocol defined herin, OpenPGP implementations are
+  another big attack surface. Needless to say that the security of
+  encrypted data exchanged using this protocol depends on the security
+  of the used OpenPGP implementation. It is strongly RECOMMENED to use
+  existing implementations instead of writing your own. Reusing
+  existing maintained codebases increases the chances to discovery
+  vulnerabilities. OpenPGP implementations have suffered from various
+  vulnerabilities in the past which open up DoS attack vectors. For
+  example <link
+  url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-4402'>CVE-2013-4402</link>
+  and <link
+  url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-4617'>CVE-2014-4717</link>.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>This document requires no interaction with &IANA;.</p>
@@ -435,7 +470,7 @@
   </section2>
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
-  <p>REQUIRED for protocol specifications.</p>
+  <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
 </section1>
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
   <p>The first draft of this specification was worked out and written
