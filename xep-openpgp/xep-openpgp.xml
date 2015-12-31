@@ -28,9 +28,9 @@
   <dependencies>
     <spec>XMPP Core</spec>
     <spec>XEP-0030</spec>
-    <spec>XEP-0049 (TODO remove?)</spec>
     <spec>XEP-0082</spec>
     <spec>XEP-0163</spec>
+    <spec>XEP-0223</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -95,8 +95,8 @@
 <section1 topic='Glossary' anchor='glossary'>
   <dl>
 	<di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
-	<di><dt>Public key PEP node</dt><dd>TOOD TODO TODO.</dd></di>
-	<di><dt>Secret key PEP node</dt><dd>TOOD TODO TODO.</dd></di>
+	<di><dt>Public key PEP node</dt><dd>A PEP node containing an entities publicy OpenPGP key.</dd></di>
+	<di><dt>Secret key PEP node</dt><dd>A PEP node containing an entities encrypted secret OpenPGP key.</dd></di>
   </dl>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
@@ -256,15 +256,55 @@
 
 	</section3>
   </section2>
+
   <section2 topic='Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
-	<p>TODO: Basically same as when using Private XML Storage just
-	with a private PEP node. Where private PEP node means, a PEP node
-	in whitelist mode where only the bare JID of the users is
-	whitelisted.</p>
-	<section3 topic='Required PEP features'>
-	  <p>The user's server MUST support PEP, persistent nodes and the
-	  whitelist access model</p>
-	  <section4 topic='Discovering support'>
+
+    <p>A private PEP node is used to allow XMPP clients to synchronize
+    the used secret OpenPGP key. Where private PEP node means: A PEP
+    node in whitelist mode where only the bare JID of the key owner is
+    whitelisted as described in &xep0223;. The secret key is additionally encrypted.</p>
+
+    <section3 topic='Required PEP features'>
+      <p>The used PEP server MUST support PEP and the whitelist access
+       model. It SHOULD also support persitent items</p>
+      <section4 topic='Discovering support'>
+    <example caption='Account owner queries server regarding protocol support'><![CDATA[
+<iq from='juliet@capulet.lit/balcony'
+    to='juliet@capulet.lit'
+    id='disco1'
+    type='get'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+</iq>
+]]></example>
+
+    <p>The service discovery result must contain an PEP identity
+    '&lt;identity category='pubsub' type='pep'/&gt;, and the
+    'http://jabber.org/protocol/pubsub#access-whitelist'
+    feature. Ideally it also contains the
+    'http://jabber.org/protocol/pubsub#persistent-items' feature</p>
+
+        <example caption='Server communicates protocol support'><![CDATA[
+<iq from='juliet@capulet.lit'
+    to='juliet@capulet.lit/balcony'
+    id='disco1'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    <identity category='account' type='registered'/>
+    <identity category='pubsub' type='pep'/>
+    <feature var='http://jabber.org/protocol/pubsub#access-presence'/>
+    <feature var='http://jabber.org/protocol/pubsub#auto-create'/>
+    <feature var='http://jabber.org/protocol/pubsub#auto-subscribe'/>
+    <feature var='http://jabber.org/protocol/pubsub#config-node'/>
+    <feature var='http://jabber.org/protocol/pubsub#create-and-configure'/>
+    <feature var='http://jabber.org/protocol/pubsub#create-nodes'/>
+    <feature var='http://jabber.org/protocol/pubsub#filtered-notifications'/>
+    <feature var='http://jabber.org/protocol/pubsub#persistent-items'/>
+    <feature var='http://jabber.org/protocol/pubsub#publish'/>
+    <feature var='http://jabber.org/protocol/pubsub#retrieve-items'/>
+    <feature var='http://jabber.org/protocol/pubsub#subscribe'/>
+    ...
+  </query>
+</iq>]]></example>
 	  </section4>
 	</section3>
 	<section3 topic='Requesting information about the secret key PEP node' anchro='req-info-secret-pep-node'>
@@ -411,9 +451,20 @@
   </section2>
 </section1>
 <section1 topic='Implementors Advice' anchor='implementors-advice'>
-  <p>TODO: Implementors should read STEED and "Why Johnny
-  can't encrypt". Mention a few leassons learned from there and how
-  they apply to this XEP.</p>
+  <p>OpenPGP implementations have a sad history of being not very
+  userfriendly. Implementors should read <span class='ref'><link
+  url='http://g10code.com/steed.html'>STEED</link></span><note>Koch,
+  Werner, and Marcus Brinkman "STEED — Usable End-to-End Encryption",
+  White Paper, g10 GmbH, 2011-10-17. &lt;<link
+  url='http://g10code.com/steed.html'>http://g10code.com/steed.html</link>&gt;</note>
+  and <span class='ref'><link
+  url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>"Why
+  Johnny can't encrypt"</link></span><note>Whitten, Alma, and J. Doug
+  Tygar. "Why Johnny Can't Encrypt: A Usability Evaluation of PGP
+  5.0." Usenix Security. Vol. 1999. 1999. &lt;<link
+  url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf</link>&gt;</note>. Mention
+  a few leassons learned from there and how they apply to this
+  XEP.</p>
 
   <p>Implementors should be aware that the size OpenPGP public and
   secure keys is somewhere in the range of tenth of
