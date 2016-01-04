@@ -60,6 +60,7 @@
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
+
 <section1 topic='Introduction' anchor='intro'>
   <p>This XMPP extension protocol specifies end-to-end encryption of
   data with the help of OpenPGP.</p>
@@ -88,6 +89,7 @@
   similar ones which also provide end-to-end encryption but with a
   different feature set.</p>
 </section1>
+
 <section1 topic='Glossary' anchor='glossary'>
   <dl>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
@@ -97,9 +99,12 @@
 </section1>
 
 <section1 topic='OpenPGP encrypted and signed data' anchor='signcrypt'>
+  <section2 topic='Exchanging OpenPGP encrypted and signed data' anchor='exchange'>
+
     <p>The &openpgp; extension element qualified by the
     'urn:xmpp:openpgp:0' namespace is used in order to exchange
     encrypted and signed data.</p>
+
     <example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='juliet@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
@@ -107,14 +112,16 @@
     WdC81xuET8kAK...
   </openpgp>
 </message>]]></example>
-    <p>The text content of the &openpgp; element (BASE64_OPENPGP_MESSAGE)
-    is a Base64 encoded OpenPGP message which contains
-    an encrypted and signed UTF-8 encoded string. Note
-    that OpenPGP's ASCII armor is not used, instead the XMPP client
-    MUST encode the raw OpenPGP message using Base64. This string
-    represents a &signcrypt; extension element. It SHOULD also be
-    encrypted to self. Encryption is REQUIRED and signing the data is
-    RECOMMENDED.</p>
+
+    <p>The text content of the &openpgp; element
+    (BASE64_OPENPGP_MESSAGE) is a Base64 encoded OpenPGP message which
+    contains an encrypted and signed UTF-8 encoded string. Note that
+    OpenPGP's ASCII armor is not used, instead the XMPP client MUST
+    encode the raw OpenPGP message, as specified in &rfc4880;, using
+    Base64. This string represents a &signcrypt; extension element. It
+    SHOULD also be encrypted to self. Encryption is REQUIRED and
+    signing the data is RECOMMENDED.</p>
+
     <example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0'
            to='juliet@example.org'
@@ -141,31 +148,37 @@
     signed. After the &signcrypt; element was verified they SHOULD be
     processed similar as if they had been direct extensions elements
     of the stanza. For example, direct child elements of &signcrypt;
-    could be &lt;body xmlns='jabber:client'/&gt;, &lt;active
-    xmlns='http://jabber.org/protocol/chatstates'/&gt; and &lt;html
-    xmlns='http://jabber.org/protocol/xhtml-im'/&gt;. But just as with
-    stanza extension elements, child elements of &signcrypt; can be
-    any extension element. The example uses the &lt;body/&gt; element
-    as defined in &rfc6121; § 5.2.3. Note that this example uses the
-    'jabber:client' namespace, but since the same &lt;body/&gt;
-    element is also defined in the 'jabber:server' namespace
-    recipients MUST accept both.</p>
+    could be:</p>
 
-    <section2 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
+    <ul>
+      <li>&rfc6121;: § 5.2.3: &lt;body xmlns='jabber:client'/&gt; </li>
+      <li>&xep0085;: &lt;active xmlns='http://jabber.org/protocol/chatstates'/&gt;</li>
+      <li>&xep0071;: &lt;html xmlns='http://jabber.org/protocol/xhtml-im'/&gt;</li>
+    </ul>
 
-      <p>Recipients MUST verify that the signature corresponds to the
-      sending XMPP address's key. Thus the recipient may has to retrieve
-      the key from the Personal Eventing Protocol node as described
-      above. Furthermore recipients are RECOMMENDED to verify the values
-      of the 'to' and 'timestamp' attributes for plausability or to
-      display them to a user for verification.</p>
+    <p>But just as with stanza extension elements, child elements of
+    &signcrypt; can be any extension element. The example above uses
+    the &lt;body/&gt; element as defined in RFC 6121. Note that it
+    uses 'jabber:client' as namespace, but since the same
+    &lt;body/&gt; element is also defined in the 'jabber:server'
+    namespace, recipients MUST accept both.</p>
+  </section2>
+  <section2 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
 
-    </section2>
-    <section2 topic='Discovering Support' anchor='disco'>
-    <p>If an entity supports OpenPGP for XMPP as specified herin, it
-    MUST report that fact by including a service discovery feature of
-    'urn:xmpp:openpgp:0' in response to a &xep0030; information
-    request.</p>
+    <p>Recipients MUST verify that the signature corresponds to the
+    sending XMPP address's key. Thus the recipient may need retrieve
+    the key from the Personal Eventing Protocol node as described
+    above. Furthermore recipients are RECOMMENDED to verify the values
+    of the 'to' and 'timestamp' attributes for plausability or to
+    display them to a user for verification.</p>
+
+  </section2>
+  <section2 topic='Discovering Support' anchor='disco'>
+    <p>If an entity supports exchanging OpenPGP encrypted and signed
+    data over XMPP as specified herein, it MUST report that fact by
+    including a service discovery feature of 'urn:xmpp:openpgp:0' in
+    response to a &xep0030; information request.</p>
+
   <example caption="Service Discovery information request"><![CDATA[
 <iq type='get'
     from='juliet@example.org/balcony'
@@ -188,17 +201,19 @@
 </section1>
 
 <section1 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
-    <p>In order to annouce the public key, the client needs to store
-    it in a PEP node. The public key data, as specified in
-    &rfc4880;, is stored within a &lt;pubkey/&gt; element which is a
-    child element of the &lt;pubkeys/&gt; qualified by the
-    'urn:xmpp:openpgp:0' namespace. Note that OpenPGP's ASCII armor is
-    not used, instead the XMPP client MUST encode the public key using
-    Base64. Client SHOULD only try to store the public key if the
-    Personal Eventing Protocol service supports persistent-items, thus
-    it SHOULD check if the service reports the
-    'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
-    <example caption='Saving the public key in the Personal Eventing Protocol node.'><![CDATA[
+
+  <p>In order to annouce the public key, the client needs to store it
+  in a PEP node. The public key data, as specified in RFC 4880, is
+  stored within a &lt;pubkey/&gt; element which is a child element of
+  the &lt;pubkeys/&gt; element qualified by the 'urn:xmpp:openpgp:0'
+  namespace. Note that OpenPGP's ASCII armor is not used, instead the
+  XMPP client MUST encode the public key using Base64. Client SHOULD
+  only try to store the public key if the Personal Eventing Protocol
+  service supports persistent-items, thus it SHOULD check if the
+  service reports the
+  'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
+
+  <example caption='Saving the public key in the Personal Eventing Protocol node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
   <pubsub>
      <publish node='urn:xmpp:openpgp:0'>
@@ -213,9 +228,11 @@
       </publish>
     </pubsub>
 </iq>]]></example>
+
   <p>In order to discover the public key of an XMPP entity, clients
   send a PubSub &IQ; request to the entity's bare JID of which it
   wants to know the public key.</p>
+
   <example caption='Requesting a OpenPGP public key from a XMPP entity.'><![CDATA[
 <iq from='romeo@example.org/orchard'
     to='juliet@example.org'
