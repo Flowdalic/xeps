@@ -55,13 +55,14 @@
   </author>
   <revision>
     <version>0.0.1alpha1</version>
-    <date>2015-12-10</date>
+    <date>2016-01-04</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
 
 <section1 topic='Introduction' anchor='intro'>
+
   <p>This XMPP extension protocol specifies end-to-end encryption of
   data with the help of OpenPGP.</p>
 
@@ -88,17 +89,21 @@
   can not have both. We therefore consider this XEP complementary to
   similar ones which also provide end-to-end encryption but with a
   different feature set.</p>
+
 </section1>
 
 <section1 topic='Glossary' anchor='glossary'>
+
   <dl>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
     <di><dt>Public key PEP node</dt><dd>A PEP node containing an entities publicy OpenPGP key.</dd></di>
     <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entities encrypted secret OpenPGP key.</dd></di>
   </dl>
+
 </section1>
 
 <section1 topic='OpenPGP Encrypted and Signed Data' anchor='signcrypt'>
+
   <section2 topic='Exchanging OpenPGP Encrypted and Signed Data' anchor='exchange'>
 
     <p>The &openpgp; extension element qualified by the
@@ -163,6 +168,7 @@
     &lt;body/&gt; element is also defined in the 'jabber:server'
     namespace, recipients MUST accept both.</p>
   </section2>
+
   <section2 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
 
     <p>Recipients MUST verify that the signature corresponds to the
@@ -173,6 +179,7 @@
     display them to a user for verification.</p>
 
   </section2>
+
   <section2 topic='Discovering Support' anchor='disco'>
     <p>If an entity supports exchanging OpenPGP encrypted and signed
     data over XMPP as specified herein, it MUST report that fact by
@@ -197,7 +204,9 @@
     ...
   </query>
 </iq>]]></example>
+
   </section2>
+
 </section1>
 
 <section1 topic='Announcing and Discovering the Public Key via PEP' anchor='annoucing-discover-pubkey'>
@@ -237,6 +246,7 @@
 </iq>]]></example>
 
   </section2>
+
   <section2 topic='Discovering the Public Key via PEP' anchro='discover-pubkey'>
 
     <p>In order to discover the public key of an XMPP entity, clients
@@ -284,6 +294,7 @@
     service-unavailable.</p>
 
   </section2>
+
 </section1>
 
 <section1 topic='Synchronizing the Secret Key with a Private PEP Node' anchor='synchro-pep'>
@@ -299,7 +310,8 @@
        model. It SHOULD also support persitent items</p>
 
        <section3 topic='Discovering support'>
-    <example caption='Account owner queries server regarding protocol support'><![CDATA[
+
+         <example caption='Account owner queries server regarding protocol support'><![CDATA[
 <iq from='juliet@capulet.lit/balcony'
     to='juliet@capulet.lit'
     id='disco1'
@@ -308,11 +320,12 @@
 </iq>
 ]]></example>
 
-    <p>The service discovery result must contain an PEP identity
-    '&lt;identity category='pubsub' type='pep'/&gt;, and the
-    'http://jabber.org/protocol/pubsub#access-whitelist'
-    feature. Ideally it also contains the
-    'http://jabber.org/protocol/pubsub#persistent-items' feature</p>
+        <p>The service discovery result must contain an PEP identity
+        '&lt;identity category='pubsub' type='pep'/&gt;, and the
+        'http://jabber.org/protocol/pubsub#access-whitelist'
+        feature. Ideally it also contains the
+        'http://jabber.org/protocol/pubsub#persistent-items'
+        feature</p>
 
         <example caption='Server communicates protocol support'><![CDATA[
 <iq from='juliet@capulet.lit'
@@ -336,8 +349,11 @@
     ...
   </query>
 </iq>]]></example>
-      </section3>
+
+       </section3>
+
     </section2>
+
     <section2 topic='Requesting Information About the Secret Key PEP Node' anchro='req-info-secret-pep-node'>
 
       <p>In order to synchronize the secret key over a private PEP node,
@@ -461,27 +477,37 @@
   -->
 <section1 topic='Rationale and Additional Rules' anchor='rationale'>
 
-  <p>This specificaiton leaves it open if the used OpenPGP key should
-  be a primary key or a subkey. It is even possible to announce
-  multiple public keys in the Personal Eventing Protocol
-  node. Implementations MUST be prepared to find multiple public
-  keys. The authors however believe that for ease of use only one
-  OpenPGP key specially crafted for the XMPP uses case should be
-  created.</p>
+  <section2 topic='Key Handling' anchor='key-handling'>
 
-  <p>The &openpgp; and &signcrypt; elements are container elements for
-  arbitrary signed and encrypted data and can thus act as building
-  blocks for encrpyted data included in Message, IQ and Presence
-  stanzas. For example, future specifications may use &signcrypt; to
-  implement encrypted versions of &xep0047; or &xep0261;.</p>
+    <p>This specificaiton leaves it open if the used OpenPGP key
+    should be a primary key or a subkey. It is even possible to
+    announce multiple public keys in the Personal Eventing Protocol
+    node. Implementations MUST be prepared to find multiple public
+    keys. The authors however believe that for ease of use only one
+    OpenPGP key specially crafted for the XMPP uses case should be
+    created.</p>
 
-  <p>Note that signed OpenPGP messages already contains a timestamp as per
-  the OpenPGP specification. The &signcrypt; element nevertheless
-  contains a mandatory 'timestamp' attribute because not every OpenPGP
-  API may provide access to the embedded OpenPGP timestamp.</p>
+  </section2>
 
-  <p>The 'rpad' attribute of the &signcrypt; element exists to prevent
-  length-base side channel attacks.</p>
+  <section2 topic='&openpgp; and &signcrypt; Design' anchor='openpgp-signcrypt-design'>
+
+    <p>The &openpgp; and &signcrypt; elements are container elements
+    for arbitrary signed and encrypted data and can thus act as
+    building blocks for encrpyted data included in Message, IQ and
+    Presence stanzas. For example, future specifications may use
+    &signcrypt; to implement encrypted versions of &xep0047; or
+    &xep0261;.</p>
+
+    <p>Note that signed OpenPGP messages already contains a timestamp
+    as per the OpenPGP specification. The &signcrypt; element
+    nevertheless contains a mandatory 'timestamp' attribute because
+    not every OpenPGP API may provide access to the embedded OpenPGP
+    timestamp.</p>
+
+    <p>The 'rpad' attribute of the &signcrypt; element exists to
+    prevent length-base side channel attacks.</p>
+
+  </section2>
 
   <section2 topic='Addressing the Issues and Problems of XEP-0027' anchor='solving-xep0027-issues'>
     <p>This specification addresses all relevant issues of
@@ -492,6 +518,15 @@
     OpenPGP only.</p>
     <p>Features like signed presences, which is provided by XEP-0027,
     may be added later on as add-on XEP to this.</p>
+  </section2>
+
+  <section2 topic='OpenPGP Packet Format Version Restriction' anchor='openpgp-packet-format-version'>
+
+    <p>Implementations of this XEP must generate and accept only
+    version 4 (or higher) OpenPGP packets. Lower version OpenPGP
+    packets are insecure in many aspects(see for example RFC 4880 §
+    5.5.2.).</p>
+
   </section2>
 
 </section1>
@@ -529,12 +564,13 @@
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
+
   <p>The scope of this XEP is intentionally limited, so that the
   specification just defines way for XMPP entities to discover,
   announce and synchronize OpenPGP keys, and how to exchange signed
   and encrypted data between two or more parties. Everything else is
-  outside its scope. For example, how "secure' the key material on the
-  endpoints is protected, is up to the implementation.</p>
+  outside its scope. For example, how "secure' the key material is
+  protected on the endpoints is up to the implementation.</p>
 
   <p>And while this XEP specifies a mechanism how to discover and
   retrieve a public key, it does not define how the trust relation to
