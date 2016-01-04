@@ -98,8 +98,8 @@
   </dl>
 </section1>
 
-<section1 topic='OpenPGP encrypted and signed data' anchor='signcrypt'>
-  <section2 topic='Exchanging OpenPGP encrypted and signed data' anchor='exchange'>
+<section1 topic='OpenPGP Encrypted and Signed Data' anchor='signcrypt'>
+  <section2 topic='Exchanging OpenPGP Encrypted and Signed Data' anchor='exchange'>
 
     <p>The &openpgp; extension element qualified by the
     'urn:xmpp:openpgp:0' namespace is used in order to exchange
@@ -200,20 +200,27 @@
   </section2>
 </section1>
 
-<section1 topic='Announcing the public key via PEP' anchor='annoucing-pubkey'>
+<section1 topic='Announcing and Discovering the Public Key via PEP' anchor='annoucing-discover-pubkey'>
 
-  <p>In order to annouce the public key, the client needs to store it
-  in a PEP node. The public key data, as specified in RFC 4880, is
-  stored within a &lt;pubkey/&gt; element which is a child element of
-  the &lt;pubkeys/&gt; element qualified by the 'urn:xmpp:openpgp:0'
-  namespace. Note that OpenPGP's ASCII armor is not used, instead the
-  XMPP client MUST encode the public key using Base64. Client SHOULD
-  only try to store the public key if the Personal Eventing Protocol
-  service supports persistent-items, thus it SHOULD check if the
-  service reports the
-  'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
+  <p>Parties interested in exchanging encrypted data between each
+  other via OpenPGP need to know the public key(s) of the
+  recipients. The following section specifies a mechanism to announce
+  and discover publicy keys.</p>
 
-  <example caption='Saving the public key in the Personal Eventing Protocol node.'><![CDATA[
+  <section2 topic='Annoucning the Public Key via PEP' anchor='annoucning-pubkey'>
+
+    <p>In order to annouce the public key, the client needs to store it
+    in a PEP node. The public key data, as specified in RFC 4880, is
+    stored within a &lt;pubkey/&gt; element which is a child element of
+    the &lt;pubkeys/&gt; element qualified by the 'urn:xmpp:openpgp:0'
+    namespace. Note that OpenPGP's ASCII armor is not used, instead the
+    XMPP client MUST encode the public key using Base64. Client SHOULD
+    only try to store the public key if the Personal Eventing Protocol
+    service supports persistent-items, thus it SHOULD check if the
+    service reports the
+    'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
+
+    <example caption='Saving the public key in the PEP node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
   <pubsub>
      <publish node='urn:xmpp:openpgp:0'>
@@ -229,11 +236,14 @@
     </pubsub>
 </iq>]]></example>
 
-  <p>In order to discover the public key of an XMPP entity, clients
-  send a PubSub &IQ; request to the entity's bare JID of which it
-  wants to know the public key.</p>
+  </section2>
+  <section2 topic='Discovering the Public Key via PEP' anchro='discover-pubkey'>
 
-  <example caption='Requesting a OpenPGP public key from a XMPP entity.'><![CDATA[
+    <p>In order to discover the public key of an XMPP entity, clients
+     send a PubSub &IQ; request to the entity's bare JID of which it
+    wants to know the public key.</p>
+
+    <example caption='Requesting a OpenPGP public key from an XMPP entity.'><![CDATA[
 <iq from='romeo@example.org/orchard'
     to='juliet@example.org'
     type='get'
@@ -243,7 +253,7 @@
            max_items='1'/>
   </pubsub>
 </iq>]]></example>
-  <example caption='Personal Eventing Protocol result containing the requested public key.'><![CDATA[
+    <example caption='Personal Eventing Protocol result containing the requested public key.'><![CDATA[
 <iq from='juliet@example.org'
     to='romeo@example.org/orchard'
     type='result'
@@ -260,18 +270,23 @@
       </item>
     </publish>
   </pubsub>
-</iq>]]></example>
-  <p>Note that the result may contain multiple pubkeys elements. Only
-  the public keys found in the most recent MUST be used. Requestors
-  may want to limit the results to the most recent item using the
-  'max_items' attribute set to '1'. (Note: RSM would be an alternative
-  but XEP-60 says it is not yet mandatory).</p>
-  <p>Some XMPP services may not provide the Personal Eventing Protocol feature required to
-  provide the mechanism described here. If so, they will return an
-  &IQ; error of type service-unavailable.</p>
+  </iq>]]></example>
+
+    <p>Note that the result may contain multiple pubkeys elements. Only
+    the public keys found in the most recent MUST be used. Requestors
+    may want to limit the results to the most recent item using the
+    'max_items' attribute set to '1'. (Note: RSM would be an alternative
+    but XEP-60 says it is not yet mandatory).</p>
+
+    <p>Some XMPP services may not provide the Personal Eventing
+    Protocol feature required to provide the mechanism described
+    here. If so, they will return an &IQ; error of type
+    service-unavailable.</p>
+
+  </section2>
 </section1>
 
-<section1 topic='Synchronizing the secret key with a private PEP node' anchor='synchro-pep'>
+<section1 topic='Synchronizing the Secret Key with a Private PEP Node' anchor='synchro-pep'>
 
     <p>A private PEP node is used to allow XMPP clients to synchronize
     the used secret OpenPGP key. Where private PEP node means: A PEP
@@ -279,9 +294,11 @@
     whitelisted as described in &xep0223;. The secret key is additionally encrypted.</p>
 
     <section2 topic='Required PEP features'>
+
       <p>The used PEP server MUST support PEP and the whitelist access
        model. It SHOULD also support persitent items</p>
-      <section3 topic='Discovering support'>
+
+       <section3 topic='Discovering support'>
     <example caption='Account owner queries server regarding protocol support'><![CDATA[
 <iq from='juliet@capulet.lit/balcony'
     to='juliet@capulet.lit'
@@ -321,11 +338,14 @@
 </iq>]]></example>
       </section3>
     </section2>
-    <section2 topic='Requesting information about the secret key PEP node' anchro='req-info-secret-pep-node'>
+    <section2 topic='Requesting Information About the Secret Key PEP Node' anchro='req-info-secret-pep-node'>
+
       <p>In order to synchronize the secret key over a private PEP node,
       clients first need to discover and verify the node for the correct
       settings.</p>
-      <section3 topic='Client sends request'>
+
+      <section3 topic='Client Sends Request'>
+
   <example caption='Requesting the user&apos;s secret key.'><![CDATA[
 <iq from='romeo@example.org/orchard'
     to='juliet@example.org'
@@ -336,8 +356,10 @@
            max_items='1'/>
   </pubsub>
 </iq>]]></example>
+
       </section3>
-      <section3 topic='PEP service success response'>
+      <section3 topic='PEP Service Success Response'>
+
   <example caption='Personal Eventing Protocol result containing the requested public key.'><![CDATA[
 <iq from='juliet@example.org'
     to='romeo@example.org/orchard'
@@ -354,15 +376,21 @@
     </publish>
   </pubsub>
 </iq>]]></example>
+
       </section3>
-      <section3 topic='PEP node does not exist response'>
+      <section3 topic='PEP Node Does Not Exist Response'>
+
+        <p>If the node does not exist, the client MUST create it with
+        an whitelist access model.</p>
+
       </section3>
-      <section3 topic='PEP not supported'>
+
+      <section3 topic='PEP Not Supported'>
       </section3>
-      <p>If the node does not exist, the client MUST create it with an
-      whitelist access model.</p>
+
     </section2>
-    <section2 topic='Creating the secret key PEP node'>
+    <section2 topic='Creating the Secret Key PEP Node'>
+
       <example caption='Client creates secret key PEP node'><![CDATA[
 <iq type='set'
     from='juliet@example.org/balcony'
@@ -385,9 +413,11 @@
 <iq type='result'
     to='juliet@example.org/balcony'
     id='create-node'/>]]></example>
+
       <p>The node is now created and the only affiliated entity is the
       bare JID of the user, who created the node, with an affiliation as
-      'owner'. TODO is this correct?</p>
+      'owner'.</p>
+
     </section2>
 </section1>
   <!--
@@ -429,9 +459,10 @@
 </iq>]]></example>
   </section2>
   -->
-<section1 topic='Rationale' anchor='rationale'>
+<section1 topic='Rationale and Additional Rules' anchor='rationale'>
+
   <p>This specificaiton leaves it open if the used OpenPGP key should
-  be a primary key or a subkey. It's even possible to announce
+  be a primary key or a subkey. It is even possible to announce
   multiple public keys in the Personal Eventing Protocol
   node. Implementations MUST be prepared to find multiple public
   keys. The authors however believe that for ease of use only one
@@ -452,7 +483,7 @@
   <p>The 'rpad' attribute of the &signcrypt; element exists to prevent
   length-base side channel attacks.</p>
 
-  <section2 topic='Addressing the issues and problems of XEP-0027' anchor='solving-xep0027-issues'>
+  <section2 topic='Addressing the Issues and Problems of XEP-0027' anchor='solving-xep0027-issues'>
     <p>This specification addresses all relevant issues of
     XEP-0027. It prevents reply attacks my including the recipient(s)
     and a timestamp in the &signcrypt; element. It allows for both,
@@ -462,7 +493,9 @@
     <p>Features like signed presences, which is provided by XEP-0027,
     may be added later on as add-on XEP to this.</p>
   </section2>
+
 </section1>
+
 <section1 topic='Implementors Advice' anchor='implementors-advice'>
   <p>OpenPGP implementations have a sad history of being not very
   userfriendly. Implementors should read <span class='ref'><link
@@ -492,7 +525,9 @@
   hardly be an issue for implementations. Nevertheless implementors
   are still adviced to handle &lt;policy-violation/&gt; error
   responses when trying to transmit Base64 encoded keys.</p>
+
 </section1>
+
 <section1 topic='Security Considerations' anchor='security'>
   <p>The scope of this XEP is intentionally limited, so that the
   specification just defines way for XMPP entities to discover,
@@ -524,24 +559,39 @@
   url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-4402'>CVE-2013-4402</link>
   and <link
   url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-4617'>CVE-2014-4717</link>.</p>
+
 </section1>
+
 <section1 topic='IANA Considerations' anchor='iana'>
+
   <p>This document requires no interaction with &IANA;.</p>
+
 </section1>
+
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+
   <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
-    <p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+
+	<p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+
   </section2>
+
 </section1>
+
 <section1 topic='XML Schema' anchor='schema'>
+
   <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
+
 </section1>
+
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
+
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
   authors, consisting of members of the XMPP Standards Foundation and
   the OpenKeychain project, at the GSOC Mentors Summit 2015. The
   authors would like to thank Google for making it possible by
   bringing the right people together.</p>
+
 </section1>
 </xep>
