@@ -434,61 +434,30 @@
       bare JID of the user, who created the node, with an affiliation as
       'owner'.</p>
 
+      <p>In order to set a new secret key, clients store the encrypted
+      backup key as Base64 encoded raw OpenPGP message within an
+      &lt;secretkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
+      namespace. The key is encrypted as specified in
+      https://github.com/open-keychain/open-keychain/wiki/Backups</p>
+
       <p>TODO: Describe encryption format of secret key in node
-      (Dominink)</p>
+      (Dominink). </p>
 
     </section2>
+
 </section1>
-  <!--
-  <section2 topic='Possible Alternative: Synchronizing the secret key via Private XML Storage' anchor='synchro-private-xml'>
-    <p>To allow new XMPP clients to easily retrieve (and eventually
-    update) the secret key, &xep0049; is used as synchronization
-    mechanism. The secret key MUST be a OpenPGP symmetrically encrypted
-    message with a backup code.</p>
-    <p>TODO describe format as per
-    https://github.com/open-keychain/open-keychain/wiki/Backups)</p>
-    <p>In order to set a new secret key, clients store the encrypted
-    backup key as Base64 encoded raw OpenPGP message within an
-    &lt;secretkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
-    namespace.</p>
-    <example caption='Client stores backup key in private XML storage.'><![CDATA[
-<iq type='set' id='priv1'>
-  <query xmlns='jabber:iq:private'>
-    <secretkey xmlns='urn:xmpp:openpgp:0'/>
-      <!-\- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -/->
-      8afaqse73adf...
-    </secretkey>
-  </query>
-</iq>]]></example>
-    <p>New clients then later can retrieve the stored encrypted secret key.</p>
-    <example caption='Client retrieves encrypted secret key from private XML storage.'><![CDATA[
-<iq type='get' id='priv2'>
-  <query xmlns='jabber:iq:private'>
-    <secretkey xmlns='urn:xmpp:openpgp:0'/>
-  </query>
-  </iq>]]></example>
-    <example caption='Client Stores Private Data'><![CDATA[
-<iq type='result' id='priv2'>
-  <query xmlns='jabber:iq:private'>
-    <secretkey xmlns='urn:xmpp:openpgp:0'>
-      <!-\- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -/->
-      8afaqse73adf...
-    </secretkey>
-  </query>
-</iq>]]></example>
-  </section2>
-  -->
+
 <section1 topic='Rationale and Additional Rules' anchor='rationale'>
 
   <section2 topic='Key Handling' anchor='key-handling'>
 
-    <p>This specificaiton leaves it open if the used OpenPGP key
-    should be a primary key or a subkey. It is even possible to
-    announce multiple public keys in the Personal Eventing Protocol
-    node. Implementations MUST be prepared to find multiple public
-    keys. The authors however believe that for ease of use only one
-    OpenPGP key specially crafted for the XMPP uses case should be
-    created.</p>
+    <p>This specification intentionally does not specify if the used
+    OpenPGP key should be a primary key or a subkey. It is even
+    possible to announce multiple public keys in the Personal Eventing
+    Protocol node. Implementations MUST be prepared to find multiple
+    public keys. The authors however believe that for ease of use only
+    one OpenPGP key specially crafted for the XMPP uses case should be
+    created, announced and used.</p>
 
   </section2>
 
@@ -513,21 +482,26 @@
   </section2>
 
   <section2 topic='Addressing the Issues and Problems of XEP-0027' anchor='solving-xep0027-issues'>
-    <p>This specification addresses all relevant issues of
-    XEP-0027. It prevents reply attacks my including the recipient(s)
+
+    <p>This specification addresses all relevant issues of &xep0027;
+    (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
+    4</link>, <link
+    url='https://xmpp.org/extensions/xep-0027.html#issues'>§
+    5</link>). It prevents reply attacks my including the recipient(s)
     and a timestamp in the &signcrypt; element. It allows for both,
-    signing and encrypting of the &signcrypt; element. On the other
-    hand, the scope of the specification was intentionally limited to
-    OpenPGP only.</p>
+    signing and encrypting of the &signcrypt; element. The scope of
+    the specification was deliberately limited to OpenPGP.</p>
+
     <p>Features like signed presences, which is provided by XEP-0027,
     may be added later on as add-on XEP to this.</p>
+
   </section2>
 
   <section2 topic='OpenPGP Packet Format Version Restriction' anchor='openpgp-packet-format-version'>
 
     <p>Implementations of this XEP must generate and accept only
     version 4 (or higher) OpenPGP packets. Lower version OpenPGP
-    packets are insecure in many aspects(see for example RFC 4880 §
+    packets are insecure in many aspects (see for example RFC 4880 §
     5.5.2.).</p>
 
   </section2>
@@ -535,34 +509,59 @@
 </section1>
 
 <section1 topic='Implementors Advice' anchor='implementors-advice'>
-  <p>OpenPGP implementations have a sad history of being not very
-  userfriendly. Implementors should read <span class='ref'><link
-  url='http://g10code.com/steed.html'>STEED</link></span><note>Koch,
-  Werner, and Marcus Brinkman "STEED — Usable End-to-End Encryption",
-  White Paper, g10 GmbH, 2011-10-17. &lt;<link
-  url='http://g10code.com/steed.html'>http://g10code.com/steed.html</link>&gt;</note>
-  and <span class='ref'><link
-  url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>"Why
-  Johnny can't encrypt"</link></span><note>Whitten, Alma, and J. Doug
-  Tygar. "Why Johnny Can't Encrypt: A Usability Evaluation of PGP
-  5.0." Usenix Security. Vol. 1999. 1999. &lt;<link
-  url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf</link>&gt;</note>. Mention
-  a few leassons learned from there and how they apply to this
-  XEP.</p>
 
-  <p>Implementors should be aware that the size OpenPGP public and
-  secure keys is somewhere in the range of tenth of
-  kilobytes. Applying Base64 encoding on keys, as it is described
-  herin, further increases the size. The formular to determine the
-  Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
-  for the maximum stanza size of 10000 bytes, as specified in RFC 6120
-  § 13.12. 4., is usually exceeded. However all XMPP server
-  implementations the authors are aware of, follow the recommendation
-  of the RFC and do not blindly set the maximum stanza size to such a
-  low value, but use a much higher threshold. Therefore this should
-  hardly be an issue for implementations. Nevertheless implementors
-  are still adviced to handle &lt;policy-violation/&gt; error
-  responses when trying to transmit Base64 encoded keys.</p>
+  <section2 topic='Design Principles and Techniques' anchor='design-and-techniques'>
+
+    <p>OpenPGP implementations have a sad history of being not very
+    userfriendly which results in users either not using OpenPGP or in
+    users wrongly using OpenPGP. Implementors of this XEP, and
+    additional future XEPs based on this XEP, therefore should read
+    <span class='ref'><link
+    url='http://g10code.com/steed.html'>STEED</link></span><note>Koch,
+    Werner, and Marcus Brinkman "STEED — Usable End-to-End
+    Encryption", White Paper, g10 GmbH, 2011-10-17. &lt;<link
+    url='http://g10code.com/steed.html'>http://g10code.com/steed.html</link>&gt;</note>
+    and <span class='ref'><link
+    url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>"Why
+    Johnny can't encrypt"</link></span><note>Whitten, Alma, and
+    J. Doug Tygar. "Why Johnny Can't Encrypt: A Usability Evaluation
+    of PGP 5.0." Usenix Security. Vol. 1999. 1999. &lt;<link
+    url='https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf'>https://www.cs.berkeley.edu/~tygar/papers/Why_Johnny_Cant_Encrypt/OReilly.pdf</link>&gt;</note>. Implementors
+    of this XEP are encouraged to provide the concepts described in
+    STEED:</p>
+
+    <ul>
+      <li>Automatic key generation</li>
+      <li>Automatic key distribution</li>
+      <li>Opportunistic encryption</li>
+      <li>Trust upon first contact</li>
+    </ul>
+
+    <p>Furthermore implementors should design the user interface for
+    effective security by following the design principles and
+    techniques for security mentioned in "Why Johnny Can't
+    Encrypt".</p>
+
+  </section2>
+
+  <section2 topic='Stanza Size' anchor='stanza-size'>
+
+    <p>Implementors should be aware that the size OpenPGP public and
+    secure keys is somewhere in the range of tenth of
+    kilobytes. Applying Base64 encoding on keys, as it is described
+    herin, further increases the size. The formular to determine the
+    Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
+    for the maximum stanza size of 10000 bytes, as specified in RFC
+    6120 § 13.12. 4., is usually exceeded. However all XMPP server
+    implementations the authors are aware of, follow the
+    recommendation of the RFC and do not blindly set the maximum
+    stanza size to such a low value, but use a much higher
+    threshold. Therefore this should hardly be an issue for
+    implementations. Nevertheless implementors are still adviced to
+    handle &lt;policy-violation/&gt; error responses when trying to
+    transmit Base64 encoded keys.</p>
+
+  </section2>
 
 </section1>
 
@@ -586,7 +585,7 @@
   example by using a QR code shown on the other user's device's
   screen.</p>
 
-  <p>Besides the protocol defined herin, OpenPGP implementations are
+  <p>Besides the protocol defined herein, OpenPGP implementations are
   another big attack surface. Needless to say that the security of
   encrypted data exchanged using this protocol depends on the security
   of the used OpenPGP implementation. It is strongly RECOMMENED to use
