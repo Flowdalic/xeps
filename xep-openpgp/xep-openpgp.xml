@@ -434,6 +434,9 @@
       bare JID of the user, who created the node, with an affiliation as
       'owner'.</p>
 
+      <p>TODO: Describe encryption format of secret key in node
+      (Dominink)</p>
+
     </section2>
 </section1>
   <!--
