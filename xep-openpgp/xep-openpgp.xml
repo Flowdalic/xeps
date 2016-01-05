@@ -15,7 +15,8 @@
   devices.</abstract>
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2015 by the XMPP Standards Foundation (XSF).</copyright>
-    <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP Standards Foundation.</permissions>
+    <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP 
+Standards Foundation.</permissions>
     <warranty>## NOTE WELL: This Specification is provided on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</warranty>
     <liability>In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall the XMPP Standards Foundation or any author of this Specification be liable for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising out of the use or inability to use the Specification (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if the XMPP Standards Foundation or such author has been advised of the possibility of such damages.</liability>
     <conformance>This XMPP Extension Protocol has been contributed in full conformance with the XSF's Intellectual Property Rights Policy (a copy of which may be found at &lt;<link url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt; or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201 USA).</conformance>
@@ -68,8 +69,8 @@
 
   <p>XMPP provides the mechanisms to solve a lot of issues that come
   with modern day OpenPGP usage. For example, based on &xep0163; this
-  specification describes a standardized way to discovery OpenPGP
-  public keys of other entities. But unlike the OpenPGP keyserver(s),
+  specification describes a standardized way to discover OpenPGP
+  public keys of other entities. But unlike the OpenPGP keyservers,
   this process establishes a strong relation between the key and the
   key's owning entity (usually a human user). A similar mechanism
   described herein allows to synchronize the secret key accross
@@ -80,11 +81,11 @@
   (multi-end-to-multi-end encryption). Therefore this XEP can be used
   to implement end-to-end encrypted &xep0045;.</p>
 
-  <p>Unlike to similar XEPs, e.g. OMEMO, this XEP <em>does not</em>
-  provide Perfect Forward Secrecy (PFS), but as advantage in return,
-  allows users to read their archived converstaions (respectively
-  their encrypted data) later on. Of course only as long as they still
-  posses the according secret key. Perfect Forward Secrecy and being
+  <p>Unlike similar XEPs, e.g. OMEMO, this XEP <em>does not</em>
+  provide Perfect Forward Secrecy (PFS), but as an advantage in return,
+  allows users to read their archived conversations (respectively
+  their encrypted data) later on. Of course, only as long as they still
+  posses the according secret key. PFS and being
   able to decrypt archived messages are mutually exclusive, i.e. one
   can not have both. We therefore consider this XEP complementary to
   similar ones which also provide end-to-end encryption but with a
@@ -96,8 +97,8 @@
 
   <dl>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
-    <di><dt>Public key PEP node</dt><dd>A PEP node containing an entities publicy OpenPGP key.</dd></di>
-    <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entities encrypted secret OpenPGP key.</dd></di>
+    <di><dt>Public key PEP node</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
+    <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
   </dl>
 
 </section1>
@@ -121,10 +122,10 @@
     <p>The text content of the &openpgp; element
     (BASE64_OPENPGP_MESSAGE) is a Base64 encoded OpenPGP message which
     contains an encrypted and signed UTF-8 encoded string. Note that
-    OpenPGP's ASCII armor is not used, instead the XMPP client MUST
-    encode the raw OpenPGP message, as specified in &rfc4880;, using
-    Base64. This string represents a &signcrypt; extension element. It
-    SHOULD also be encrypted to self. Encryption is REQUIRED and
+    OpenPGP's ASCII armor, as specified in &rfc4880;, is not used,
+    instead the XMPP client MUST encode the raw OpenPGP message using
+    Base64. This string represents a &signcrypt; extension element. The
+    OpenPGP message SHOULD also be encrypted to self. Encryption is REQUIRED and
     signing the data is RECOMMENDED.</p>
 
     <example caption='The &signcrypt; extension element.'><![CDATA[
@@ -171,12 +172,15 @@
 
   <section2 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
 
-    <p>Recipients MUST verify that the signature corresponds to the
-    sending XMPP address's key. Thus the recipient may need retrieve
-    the key from the Personal Eventing Protocol node as described
-    above. Furthermore recipients are RECOMMENDED to verify the values
-    of the 'to' and 'timestamp' attributes for plausability or to
-    display them to a user for verification.</p>
+    <p>Recipients MUST verify that the signature is valid, that
+    the signature's key corresponds to the sender's key, and that
+    one email address (as part of a User ID) of the sender's key corresponds
+    to the sender's XMPP address. Thus, the recipient may need to retrieve
+    the key from the Personal Eventing Protocol node as described above.
+    The 'to' value(s) contained in &signcrypt; MUST correspond to the outer 'to'
+    of the XMPP &message;. Furthermore, recipients are RECOMMENDED
+    to verify the 'timestamp' attribute for plausibility or to
+    display it to a user for verification.</p>
 
   </section2>
 
@@ -214,11 +218,11 @@
   <p>Parties interested in exchanging encrypted data between each
   other via OpenPGP need to know the public key(s) of the
   recipients. The following section specifies a mechanism to announce
-  and discover publicy keys.</p>
+  and discover public keys.</p>
 
   <section2 topic='Annoucning the Public Key via PEP' anchor='annoucning-pubkey'>
 
-    <p>In order to annouce the public key, the client needs to store it
+    <p>In order to announce the public key, the client needs to store it
     in a PEP node. The public key data, as specified in RFC 4880, is
     stored within a &lt;pubkey/&gt; element which is a child element of
     the &lt;pubkeys/&gt; element qualified by the 'urn:xmpp:openpgp:0'
@@ -250,7 +254,7 @@
   <section2 topic='Discovering the Public Key via PEP' anchro='discover-pubkey'>
 
     <p>In order to discover the public key of an XMPP entity, clients
-     send a PubSub &IQ; request to the entity's bare JID of which it
+    send a PubSub &IQ; request to the entity's bare JID of which it
     wants to know the public key.</p>
 
     <example caption='Requesting a OpenPGP public key from an XMPP entity.'><![CDATA[
@@ -282,8 +286,8 @@
   </pubsub>
   </iq>]]></example>
 
-    <p>Note that the result may contain multiple pubkeys elements. Only
-    the public keys found in the most recent MUST be used. Requestors
+    <p>Note that the result may contain multiple pubkey elements. Only
+    the public keys found in the most recent MUST be used. Requesters
     may want to limit the results to the most recent item using the
     'max_items' attribute set to '1'. (Note: RSM would be an alternative
     but XEP-60 says it is not yet mandatory).</p>
@@ -307,7 +311,7 @@
     <section2 topic='Required PEP features'>
 
       <p>The used PEP server MUST support PEP and the whitelist access
-       model. It SHOULD also support persitent items</p>
+       model. It SHOULD also support persistent items</p>
 
        <section3 topic='Discovering support'>
 
@@ -320,7 +324,7 @@
 </iq>
 ]]></example>
 
-        <p>The service discovery result must contain an PEP identity
+        <p>The service discovery result must contain a PEP identity
         '&lt;identity category='pubsub' type='pep'/&gt;, and the
         'http://jabber.org/protocol/pubsub#access-whitelist'
         feature. Ideally it also contains the
@@ -435,13 +439,13 @@
       'owner'.</p>
 
       <p>In order to set a new secret key, clients store the encrypted
-      backup key as Base64 encoded raw OpenPGP message within an
+      secret key as Base64 encoded raw OpenPGP message within an
       &lt;secretkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
       namespace. The key is encrypted as specified in
       https://github.com/open-keychain/open-keychain/wiki/Backups</p>
 
       <p>TODO: Describe encryption format of secret key in node
-      (Dominink). </p>
+      (Dominik). </p>
 
     </section2>
 
@@ -456,7 +460,7 @@
     possible to announce multiple public keys in the Personal Eventing
     Protocol node. Implementations MUST be prepared to find multiple
     public keys. The authors however believe that for ease of use only
-    one OpenPGP key specially crafted for the XMPP uses case should be
+    one OpenPGP key specially crafted for the XMPP use case should be
     created, announced and used.</p>
 
   </section2>
@@ -465,7 +469,7 @@
 
     <p>The &openpgp; and &signcrypt; elements are container elements
     for arbitrary signed and encrypted data and can thus act as
-    building blocks for encrpyted data included in Message, IQ and
+    building blocks for encrypted data included in Message, IQ and
     Presence stanzas. For example, future specifications may use
     &signcrypt; to implement encrypted versions of &xep0047; or
     &xep0261;.</p>
@@ -487,7 +491,7 @@
     (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
     4</link>, <link
     url='https://xmpp.org/extensions/xep-0027.html#issues'>§
-    5</link>). It prevents reply attacks my including the recipient(s)
+    5</link>). It prevents replay attacks my including the recipient's address
     and a timestamp in the &signcrypt; element. It allows for both,
     signing and encrypting of the &signcrypt; element. The scope of
     the specification was deliberately limited to OpenPGP.</p>
@@ -547,17 +551,17 @@
   <section2 topic='Stanza Size' anchor='stanza-size'>
 
     <p>Implementors should be aware that the size OpenPGP public and
-    secure keys is somewhere in the range of tenth of
+    secret keys is somewhere in the range of tenth of
     kilobytes. Applying Base64 encoding on keys, as it is described
-    herin, further increases the size. The formular to determine the
+    herein, further increases the size. The formula to determine the
     Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
     for the maximum stanza size of 10000 bytes, as specified in RFC
     6120 § 13.12. 4., is usually exceeded. However all XMPP server
-    implementations the authors are aware of, follow the
+    implementations, the authors are aware of, follow the
     recommendation of the RFC and do not blindly set the maximum
     stanza size to such a low value, but use a much higher
-    threshold. Therefore this should hardly be an issue for
-    implementations. Nevertheless implementors are still adviced to
+    threshold. Therefore, this should hardly be an issue for
+    implementations. Nevertheless, implementors are still advised to
     handle &lt;policy-violation/&gt; error responses when trying to
     transmit Base64 encoded keys.</p>
 
@@ -571,7 +575,7 @@
   specification just defines way for XMPP entities to discover,
   announce and synchronize OpenPGP keys, and how to exchange signed
   and encrypted data between two or more parties. Everything else is
-  outside its scope. For example, how "secure' the key material is
+  outside its scope. For example, how 'secure' the key material is
   protected on the endpoints is up to the implementation.</p>
 
   <p>And while this XEP specifies a mechanism how to discover and
@@ -582,18 +586,15 @@
   how a XMPP server authenticates a remote server is a server policy,
   which does vary from server to server. Implementation MUST provide a
   way for the user to establish and assign trust to a public key. For
-  example by using a QR code shown on the other user's device's
-  screen.</p>
+  example by using a QR code shown on the recipient's device screen.</p>
 
   <p>Besides the protocol defined herein, OpenPGP implementations are
   another big attack surface. Needless to say that the security of
   encrypted data exchanged using this protocol depends on the security
   of the used OpenPGP implementation. It is strongly RECOMMENED to use
-  existing implementations instead of writing your own. Reusing
-  existing maintained codebases increases the chances to discovery
-  vulnerabilities. OpenPGP implementations have suffered from various
-  vulnerabilities in the past which open up DoS attack vectors. For
-  example <link
+  existing implementations instead of writing your own. OpenPGP
+  implementations have suffered from various vulnerabilities in the past
+  which opened up DoS attack vectors. For example <link
   url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-4402'>CVE-2013-4402</link>
   and <link
   url='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-4617'>CVE-2014-4717</link>.</p>
