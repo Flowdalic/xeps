@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY signcrypt "&lt;signcrypt/&gt;">
+  <!ENTITY sign "&lt;sign/&gt;">
+  <!ENTITY crypt "&lt;crypt/&gt;">
   <!ENTITY openpgp "&lt;openpgp/&gt;">
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
@@ -96,6 +98,8 @@ Standards Foundation.</permissions>
 <section1 topic='Glossary' anchor='glossary'>
 
   <dl>
+	<di><dt>OpenPGP element</dt><dd>An XMPP extension element: &openpgp; qualified by the 'urn:xmpp:openpgp:0' namespace</dd></di>
+	<di><dt>OpenPGP content elements</dt><dd>An element embedded via OpenPGP in a &openpgp; element. Either one of &signcrypt;, &sign; or &crypt;, qualified by the 'urn:xmpp:openpgp:0' namespace..</dd></di>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
     <di><dt>Public key PEP node</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
     <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
@@ -119,14 +123,21 @@ Standards Foundation.</permissions>
   </openpgp>
 </message>]]></example>
 
-    <p>The text content of the &openpgp; element
-    (BASE64_OPENPGP_MESSAGE) is a Base64 encoded OpenPGP message which
-    contains an encrypted and signed UTF-8 encoded string. Note that
-    OpenPGP's ASCII armor, as specified in &rfc4880;, is not used,
-    instead the XMPP client MUST encode the raw OpenPGP message using
-    Base64. This string represents a &signcrypt; extension element. The
-    OpenPGP message SHOULD also be encrypted to self. Encryption is REQUIRED and
-    signing the data is RECOMMENDED.</p>
+    <p>The text content &openpgp; (BASE64_OPENPGP_MESSAGE) is a Base64
+    encoded OpenPGP message which contains an encrypted and/or signed
+    UTF-8 encoded string. Note that OpenPGP's ASCII armor is not used,
+    instead the XMPP client MUST encode the raw OpenPGP message, as
+    specified in &rfc4880;, using Base64. This string MUST represent
+    exactly one OpenPGP content element, that is either a &signcrypt;,
+    a &sign; or a &crypt; extension element qualified by the
+    'urn:xmpp:openpgp:0' namespace.</p>
+
+	<p>In case of a &signcrypt; element, the OpenPGP message embedded
+	in the &openpgp; element MUST be encrypted and signed, and SHOULD
+	also be encrypted to self. In case of a &sign; element, the
+	OpenPGP message MUST be signed and MUST NOT be encrypted. In case
+	of &crypt; the OpenPGP message MUST NOT be signed, but MUST be
+	encrypted.</p>
 
     <example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0'
@@ -138,23 +149,25 @@ Standards Foundation.</permissions>
   </body>
 </signcrypt>]]></example>
 
-    <p>The &signcrypt; element MUST posses at least one 'to' and
+    <p>OpenPGP content elements MUST posses at least one 'to' and
     exactly one 'timestamp' attribute. The 'to' element(s) MUST
-    contain the intended recipient's XMPP address of the signed and
+    contain the intended recipient's XMPP address of the signed and/or
     encrypted data to prevent Surreptitious Forward Attacks. The XMPP
     address found in the 'to' attribute SHOULD be without Resourcepart
     (i.e. a bare JID). The 'timestamp' attribute contains the
     timestamp when the &signcrypt; element was signed and encrypted in
     the DateTime format as specified in &xep0082; § 3.2. The
-    &signcrypt; element SHOULD furthermore contain a 'rpad' attribute
-    which value is a random-length random-content padding.</p>
+    &signcrypt; and &crypt; elements SHOULD furthermore contain a
+    'rpad' attribute which value is a random-length random-content
+    padding.</p>
 
-    <p>The child elements of &signcrypt; can be seen as stanza
-    extension elements which are encrypted and (eventually)
-    signed. After the &signcrypt; element was verified they SHOULD be
-    processed similar as if they had been direct extensions elements
-    of the stanza. For example, direct child elements of &signcrypt;
-    could be:</p>
+    <p>The child elements of &signcrypt;, &sign; and &crypt; can be
+    seen as stanza extension elements which are encrypted and/or
+    signed. After the &openpgp; element and the including &signcrypt;,
+    &sign; or &crypt; element was verified they SHOULD be processed
+    similar as if they had been direct extensions elements of the
+    stanza. For example, direct child elements found in either
+    &signcrypt;, &sign; and &crypt; could be:</p>
 
     <ul>
       <li>&rfc6121;: § 5.2.3: &lt;body xmlns='jabber:client'/&gt; </li>
@@ -170,7 +183,7 @@ Standards Foundation.</permissions>
     namespace, recipients MUST accept both.</p>
   </section2>
 
-  <section2 topic='Verification of &signcrypt;' anchor='signcrypt-verificaton'>
+  <section2 topic='Verification of &openpgp; content' anchor='openpgp-verificaton'>
 
     <p>Recipients MUST verify that the signature is valid, that
     the signature's key corresponds to the sender's key, and that
@@ -178,7 +191,7 @@ Standards Foundation.</permissions>
     to the sender's XMPP address. Thus, the recipient may need to retrieve
     the key from the Personal Eventing Protocol node as described above.
     The 'to' value(s) contained in &signcrypt; MUST correspond to the outer 'to'
-    of the XMPP &message;. Furthermore, recipients are RECOMMENDED
+    of the XMPP &MESSAGE;. Furthermore, recipients are RECOMMENDED
     to verify the 'timestamp' attribute for plausibility or to
     display it to a user for verification.</p>
 
