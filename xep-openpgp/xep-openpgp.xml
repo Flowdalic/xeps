@@ -522,15 +522,15 @@
 
   </section2>
 
-  <section2 topic='Only use &signcrypt; in the IM use case' anchor='signcrypt-im-use-case'>
+  <section2 topic='In the IM use case, always use &signcrypt;' anchor='signcrypt-im-use-case'>
 
     <p>Only &signcrypt; MUST be used for the Instant Messaging (IM)
     use case. Encrypted but unsigned messages (&crypt;) do not provide
     an advantage over unencrypted ones since the sender can not be
-    verified. As result of this rule, the user interface of XMPP based IM
-    clients implementing the protocol defined herein must not provide an
-    option for the user to select between sign+crypt, sign or crypt
-    for ease of use.</p>
+    verified. As result of this rule, the user interface of XMPP based
+    IM clients implementing the protocol defined herein must not
+    provide an option for the user to select between sign+crypt, sign
+    or crypt. This also increases the usability.</p>
 
   </section2>
 
