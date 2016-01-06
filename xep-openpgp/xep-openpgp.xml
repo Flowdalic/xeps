@@ -98,8 +98,8 @@ Standards Foundation.</permissions>
 <section1 topic='Glossary' anchor='glossary'>
 
   <dl>
-	<di><dt>OpenPGP element</dt><dd>An XMPP extension element: &openpgp; qualified by the 'urn:xmpp:openpgp:0' namespace</dd></di>
-	<di><dt>OpenPGP content elements</dt><dd>An element embedded via OpenPGP in a &openpgp; element. Either one of &signcrypt;, &sign; or &crypt;, qualified by the 'urn:xmpp:openpgp:0' namespace..</dd></di>
+    <di><dt>OpenPGP element</dt><dd>An XMPP extension element: &openpgp; qualified by the 'urn:xmpp:openpgp:0' namespace</dd></di>
+    <di><dt>OpenPGP content elements</dt><dd>An element embedded via OpenPGP in a &openpgp; element. Either one of &signcrypt;, &sign; or &crypt;, qualified by the 'urn:xmpp:openpgp:0' namespace..</dd></di>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
     <di><dt>Public key PEP node</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
     <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
@@ -132,12 +132,12 @@ Standards Foundation.</permissions>
     a &sign; or a &crypt; extension element qualified by the
     'urn:xmpp:openpgp:0' namespace.</p>
 
-	<p>In case of a &signcrypt; element, the OpenPGP message embedded
-	in the &openpgp; element MUST be encrypted and signed, and SHOULD
-	also be encrypted to self. In case of a &sign; element, the
-	OpenPGP message MUST be signed and MUST NOT be encrypted. In case
-	of &crypt; the OpenPGP message MUST NOT be signed, but MUST be
-	encrypted.</p>
+    <p>In case of a &signcrypt; element, the OpenPGP message embedded
+    in the &openpgp; element MUST be encrypted and signed, and SHOULD
+    also be encrypted to self. In case of a &sign; element, the
+    OpenPGP message MUST be signed and MUST NOT be encrypted. In case
+    of &crypt; the OpenPGP message MUST NOT be signed, but MUST be
+    encrypted.</p>
 
     <example caption='The &signcrypt; extension element.'><![CDATA[
 <signcrypt xmlns='urn:xmpp:openpgp:0'
@@ -624,7 +624,7 @@ Standards Foundation.</permissions>
 
   <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
 
-	<p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+    <p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
 
   </section2>
 
