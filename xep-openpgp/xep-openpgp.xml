@@ -540,6 +540,21 @@
 
   </section2>
 
+  <section2 topic='In the IM use case, provide a hint' anchor='hint-im-use-case'>
+
+    <p>In the IM use case every &MESSAGE; equiped with &openpgp; SHOULD include an unencrypted &lt;body/&gt; explaining the actual message is encrypted.</p>
+
+    <example caption='A message with a hint.'><![CDATA[
+<message to='juliet@example.org'>
+  <body>This message is encrypted using OpenPGP.</body>
+  <openpgp xmlns='urn:xmpp:openpgp:0'>
+    <!-- BASE64_OPENPGP_MESSAGE -->
+    WdC81xuET8kAK...
+  </openpgp>
+</message>]]></example>
+
+  </section2>
+
 </section1>
 
 <section1 topic='Implementors Advice' anchor='implementors-advice'>
@@ -655,7 +670,7 @@
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Emmanuel Gil Peyrot for his feedback.</p>
+  <p>Thanks to Emmanuel Gil Peyrot and Sergei Golovan for their feedback.</p>
 
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
