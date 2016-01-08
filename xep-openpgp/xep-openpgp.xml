@@ -34,6 +34,7 @@
     <spec>XEP-0082</spec>
     <spec>XEP-0163</spec>
     <spec>XEP-0223</spec>
+    <spec>XEP-0334</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -540,13 +541,19 @@
 
   </section2>
 
-  <section2 topic='In the IM use case, provide a hint' anchor='hint-im-use-case'>
+  <section2 topic='In the IM use case, provide hints' anchor='hint-im-use-case'>
 
-    <p>In the IM use case every &MESSAGE; equiped with &openpgp; SHOULD include an unencrypted &lt;body/&gt; explaining the actual message is encrypted.</p>
+    <p>In the IM use case every &MESSAGE; equiped with &openpgp;
+    SHOULD include an unencrypted &lt;body/&gt; explaining the actual
+    message is encrypted. Furthermore the message SHOULD contain a
+    'store' hint as defined in &xep0334; <link
+    url='https://xmpp.org/extensions/xep-0334.html#sect-idp1502160'>§
+    4.4</link></p>
 
-    <example caption='A message with a hint.'><![CDATA[
+    <example caption='An encrypted and signed message with hints.'><![CDATA[
 <message to='juliet@example.org'>
   <body>This message is encrypted using OpenPGP.</body>
+  <store xmlns='urn:xmpp:hints'/>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
     <!-- BASE64_OPENPGP_MESSAGE -->
     WdC81xuET8kAK...
