@@ -12,8 +12,8 @@
 <xep>
 <header>
   <title>OpenPGP for XMPP</title>
-  <abstract>Secifies end-to-end encryption of data with the help of
-  OpenPGP, annoucement, discovery and retrieval of public keys and a
+  <abstract>Specifies end-to-end encryption of data with the help of
+  OpenPGP, announcement, discovery and retrieval of public keys and a
   mechanism to synchronize secret keys over multiple
   devices.</abstract>
   <legal>
@@ -77,7 +77,7 @@ Standards Foundation.</permissions>
   public keys of other entities. But unlike the OpenPGP keyservers,
   this process establishes a strong relation between the key and the
   key's owning entity (usually a human user). A similar mechanism
-  described herein allows to synchronize the secret key accross
+  described herein allows to synchronize the secret key across
   multiple devices.</p>
 
   <p>OpenPGP in return allows for end-to-end encrypted data to be
@@ -89,7 +89,7 @@ Standards Foundation.</permissions>
   provide Perfect Forward Secrecy (PFS), but as an advantage in return,
   allows users to read their archived conversations (respectively
   their encrypted data) later on. Of course, only as long as they still
-  posses the according secret key. PFS and being
+  possess the according secret key. PFS and being
   able to decrypt archived messages are mutually exclusive, i.e. one
   can not have both. We therefore consider this XEP complementary to
   similar ones which also provide end-to-end encryption but with a
@@ -155,7 +155,7 @@ Standards Foundation.</permissions>
   </payload>
 </signcrypt>]]></example>
 
-    <p>OpenPGP content elements MUST posses at least one 'to' and
+    <p>OpenPGP content elements MUST possess at least one 'to' and
     exactly one 'time' element as direct child elements. The 'to'
     element(s) MUST have a 'jid' attribute which contains the intended
     recipient's XMPP address of the signed and/or encrypted data to
@@ -168,7 +168,7 @@ Standards Foundation.</permissions>
     SHOULD furthermore contain a 'rpad' element which text content is
     a random-length random-content padding.</p>
 
-    <p>OpenPGP content elements MUST posses exactly one &payload;
+    <p>OpenPGP content elements MUST possess exactly one &payload;
     element. The child elements of &payload; can be seen as stanza
     extension elements which are encrypted and/or signed. After the
     &openpgp; element and the including &signcrypt;, &sign; or &crypt;
@@ -235,14 +235,14 @@ Standards Foundation.</permissions>
 
 </section1>
 
-<section1 topic='Announcing and Discovering the Public Key via PEP' anchor='annoucing-discover-pubkey'>
+<section1 topic='Announcing and Discovering the Public Key via PEP' anchor='announcing-discover-pubkey'>
 
   <p>Parties interested in exchanging encrypted data between each
   other via OpenPGP need to know the public key(s) of the
   recipients. The following section specifies a mechanism to announce
   and discover public keys.</p>
 
-  <section2 topic='Annoucning the Public Key via PEP' anchor='annoucning-pubkey'>
+  <section2 topic='Announcing the Public Key via PEP' anchor='annoucning-pubkey'>
 
     <p>In order to announce the public key, the client needs to store it
     in a PEP node. The public key data, as specified in RFC 4880, is
@@ -273,7 +273,7 @@ Standards Foundation.</permissions>
 
   </section2>
 
-  <section2 topic='Discovering the Public Key via PEP' anchro='discover-pubkey'>
+  <section2 topic='Discovering the Public Key via PEP' anchor='discover-pubkey'>
 
     <p>In order to discover the public key of an XMPP entity, clients
     send a PubSub &IQ; request to the entity's bare JID of which it
@@ -380,7 +380,7 @@ Standards Foundation.</permissions>
 
     </section2>
 
-    <section2 topic='Requesting Information About the Secret Key PEP Node' anchro='req-info-secret-pep-node'>
+    <section2 topic='Requesting Information About the Secret Key PEP Node' anchor='req-info-secret-pep-node'>
 
       <p>In order to synchronize the secret key over a private PEP node,
       clients first need to discover and verify the node for the correct
@@ -590,7 +590,7 @@ Standards Foundation.</permissions>
   <section2 topic='Design Principles and Techniques' anchor='design-and-techniques'>
 
     <p>OpenPGP implementations have a sad history of being not very
-    userfriendly which results in users either not using OpenPGP or in
+    user-friendly which results in users either not using OpenPGP or in
     users wrongly using OpenPGP. Implementors of this XEP, and
     additional future XEPs based on this XEP, therefore should read
     <span class='ref'><link
