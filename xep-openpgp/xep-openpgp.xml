@@ -176,7 +176,7 @@
     &crypt; could be:</p>
 
     <ul>
-      <li>&rfc6121;: § 5.2.3: &lt;body xmlns='jabber:client'/&gt; </li>
+      <li>Message bodies (&rfc6121; § 5.2.3): &lt;body xmlns='jabber:client'/&gt; </li>
       <li>&xep0085;: &lt;active xmlns='http://jabber.org/protocol/chatstates'/&gt;</li>
       <li>&xep0071;: &lt;html xmlns='http://jabber.org/protocol/xhtml-im'/&gt;</li>
     </ul>
@@ -189,7 +189,7 @@
     namespace, recipients MUST accept both.</p>
   </section2>
 
-  <section2 topic='Verification of &openpgp; content' anchor='openpgp-verificaton'>
+  <section2 topic='Verification of &openpgp; Content' anchor='openpgp-verificaton'>
 
     <p>Recipients MUST verify that the signature is valid, that the
     signature's key corresponds to the sender's key, and that one
