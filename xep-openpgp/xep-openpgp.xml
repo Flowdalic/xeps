@@ -99,7 +99,7 @@
 
   <dl>
     <di><dt>OpenPGP element</dt><dd>An XMPP extension element: &openpgp; qualified by the 'urn:xmpp:openpgp:0' namespace</dd></di>
-    <di><dt>OpenPGP content elements</dt><dd>An element embedded via OpenPGP in a &openpgp; element. Either one of &signcrypt;, &sign; or &crypt;, qualified by the 'urn:xmpp:openpgp:0' namespace..</dd></di>
+    <di><dt>OpenPGP content element</dt><dd>An element embedded via OpenPGP in a &openpgp; element. Either one of &signcrypt;, &sign; or &crypt;, qualified by the 'urn:xmpp:openpgp:0' namespace.</dd></di>
     <di><dt>PEP</dt><dd>Personal Eventing Protocol (XEP-0163)</dd></di>
     <di><dt>Public key PEP node</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
     <di><dt>Secret key PEP node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
