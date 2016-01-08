@@ -466,26 +466,30 @@ Standards Foundation.</permissions>
       namespace. These secret key backups are created as follows:</p>
 
       <ol>
-        <li>All secret keys that should be included in the
-            backup MUST be concatenated in their transferable key format 
-            (RFC 4880 <link url='http://tools.ietf.org/html/rfc4880#section-11.1'>§ 11.1</link>).
+        <li>All secret keys that should be included in the backup MUST
+        be concatenated in their transferable key format (RFC 4880
+        <link url='http://tools.ietf.org/html/rfc4880#section-11.1'>§
+        11.1</link>).
         </li>
-        <li>A backup code is generated from secure random:
-            The backup code consists of 24 upper case characters
-            from the Latin alphabet and numbers without <code>O</code> and <code>0</code>
-	    (alphabet: <code>123456789ABCDEFGHIJKLMNPQRSTUVWXYZ</code>) grouped into
-            4-character chunks, e.g., <code>TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW</code>.
-            The characters MUST be generated from secure random,
-            such as /dev/urandom.).
+        <li>A backup code is generated from secure random: The backup
+        code consists of 24 upper case characters from the Latin
+        alphabet and numbers without 'O' ("LATIN CAPITAL LETTER O")
+        and '0' ("DIGIT ZERO") (alphabet:
+        <tt>123456789ABCDEFGHIJKLMNPQRSTUVWXYZ</tt>) grouped into
+        4-character chunks, e.g.,
+        <tt>TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW</tt>.  The characters MUST
+        be generated from secure random, such as
+        <tt>/dev/urandom</tt>.
         </li>
         <li>The whole backup code including the dashes is directly
-            used as a string to encrypt the concatenated transferable keys
-            as an OpenPGP message (more precisely: It is used as the
-            symmetric-key for a Symmetric-Key Encrypted Session Key Packet according to
-            RFC 4880 <link url='http://tools.ietf.org/html/rfc4880#section-5.3'>§ 5.3</link>;
-            the symmetric-key is thus 29 characters long including the dashes).
-            The encryption algorithm MUST be one of the standardized
-            OpenPGP symmetric algorithms, e.g, AES-128.
+        used as a string to encrypt the concatenated transferable keys
+        as an OpenPGP message. More precisely: It is used as the
+        symmetric-key for a Symmetric-Key Encrypted Session Key Packet
+        according to RFC 4880 <link
+        url='http://tools.ietf.org/html/rfc4880#section-5.3'>§
+        5.3</link>; the symmetric-key is thus 29 characters long
+        including the dashes.  The encryption algorithm MUST be one of
+        the standardized OpenPGP symmetric algorithms, e.g, AES-128.
         </li>
       </ol>
 
