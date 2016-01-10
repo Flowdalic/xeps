@@ -209,12 +209,14 @@ Standards Foundation.</permissions>
   </section2>
 
   <section2 topic='Discovering Support' anchor='disco'>
-    <p>If an entity supports exchanging OpenPGP encrypted and signed
-    data over XMPP as specified herein, it MUST report that fact by
-    including a service discovery feature of 'urn:xmpp:openpgp:0' in
-    response to a &xep0030; information request.</p>
 
-  <example caption="Service Discovery information request"><![CDATA[
+    <p>If an entity supports exchanging OpenPGP encrypted and/or
+    signed data over XMPP as specified herein, it MUST advertise that
+    fact by announcing a &xep0030; feature of 'urn:xmpp:openpgp:0'.
+    request. It thus includes this feature in response to a service
+    discovery request.</p>
+
+    <example caption="Service Discovery information request"><![CDATA[
 <iq type='get'
     from='juliet@example.org/balcony'
     to='romeo@example.org/orchard'
