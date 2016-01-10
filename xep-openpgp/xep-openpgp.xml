@@ -193,7 +193,7 @@ Standards Foundation.</permissions>
     namespace, recipients MUST accept both.</p>
   </section2>
 
-  <section2 topic='Verification of &openpgp; Content' anchor='openpgp-verificaton'>
+  <section2 topic='Verification of &openpgp; Content' anchor='openpgp-verification'>
 
     <p>Recipients MUST verify that the signature is valid, that the
     signature's key corresponds to the sender's key, and that one
@@ -602,6 +602,18 @@ Standards Foundation.</permissions>
     implementations. Nevertheless, implementors are still advised to
     handle &lt;policy-violation/&gt; error responses when trying to
     transmit Base64 encoded keys.</p>
+
+  </section2>
+
+  <section2 topic='XMPP Address Normalization' anchor='xmpp-address-normalization'>
+
+    <p>The format of XMPP addresses, sometimes called JIDs, is well
+    defined. Thus they need to be normalized, as defined in
+    &rfc6122;. When implementations are required to compare XMPP
+    addresses for equality, as it is the case in <link
+    url='#openpgp-verification'>"Verification of &openpgp;
+    Content"</link>, then they also have to compare the normalized
+    versions of the addresses.</p>
 
   </section2>
 
