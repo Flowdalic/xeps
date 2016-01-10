@@ -126,8 +126,10 @@ Standards Foundation.</permissions>
 </message>]]></example>
 
     <p>The text content &openpgp; (BASE64_OPENPGP_MESSAGE) is a Base64
-    encoded OpenPGP message which contains an encrypted and/or signed
-    UTF-8 encoded string. Note that OpenPGP's ASCII armor is not used,
+    encoded, as specified in &rfc4648; <link
+    url='https://tools.ietf.org/html/rfc4648#section-4'>§ 4</link>,
+    OpenPGP message which contains an encrypted and/or signed UTF-8
+    encoded string. Note that OpenPGP's ASCII armor is not used,
     instead the XMPP client MUST encode the raw OpenPGP message, as
     specified in &rfc4880;, using Base64. This string MUST represent
     exactly one OpenPGP content element, that is either a &signcrypt;,
