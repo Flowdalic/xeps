@@ -497,53 +497,7 @@ Standards Foundation.</permissions>
 
 </section1>
 
-<section1 topic='Rationale and Additional Rules' anchor='rationale'>
-
-  <section2 topic='Key Handling' anchor='key-handling'>
-
-    <p>This specification intentionally does not specify if the used
-    OpenPGP key should be a primary key or a subkey. It is even
-    possible to announce multiple public keys in the Personal Eventing
-    Protocol node. Implementations MUST be prepared to find multiple
-    public keys. The authors however believe that for ease of use only
-    one OpenPGP key specially crafted for the XMPP use case should be
-    created, announced and used.</p>
-
-  </section2>
-
-  <section2 topic='OpenPGP Element and Content Element Design' anchor='openpgp-element-design'>
-
-    <p>The &openpgp; and OpenPGP content elements are container
-    elements for arbitrary signed and encrypted data and can thus act
-    as building blocks for encrypted data included in Message, IQ and
-    Presence stanzas. For example, future specifications may use them
-    to implement encrypted versions of &xep0047; or &xep0261;.</p>
-
-    <p>Note that signed OpenPGP messages already contain a timestamp
-    as per the OpenPGP specification. OpenPGP content elements
-    nevertheless require the 'time' element because not every OpenPGP
-    API may provide access to the embedded OpenPGP timestamp.</p>
-
-    <p>The 'rpad' element of the OpenPGP content elements exists to
-    prevent length-base side channel attacks.</p>
-
-  </section2>
-
-  <section2 topic='Addressing the Issues and Problems of XEP-0027' anchor='solving-xep0027-issues'>
-
-    <p>This specification addresses all relevant issues of &xep0027;
-    (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
-    4</link>, <link
-    url='https://xmpp.org/extensions/xep-0027.html#issues'>§
-    5</link>). It prevents replay attacks my including the recipient's
-    address and a timestamp in the OpenPGP content element. It allows
-    for both, signing and encrypting of the element. The scope of the
-    specification was deliberately limited to OpenPGP.</p>
-
-    <p>Features like signed presences, which is provided by XEP-0027,
-    may be added later on as add-on XEP to this.</p>
-
-  </section2>
+<section1 topic='Buisness Rules' anchor='rules'>
 
   <section2 topic='OpenPGP Packet Format Version Restriction' anchor='openpgp-packet-format-version'>
 
@@ -641,6 +595,56 @@ Standards Foundation.</permissions>
     implementations. Nevertheless, implementors are still advised to
     handle &lt;policy-violation/&gt; error responses when trying to
     transmit Base64 encoded keys.</p>
+
+  </section2>
+
+</section1>
+
+<section1 topic='Rationale' anchor='rationale'>
+
+  <section2 topic='Key Handling' anchor='key-handling'>
+
+    <p>This specification intentionally does not specify if the used
+    OpenPGP key should be a primary key or a subkey. It is even
+    possible to announce multiple public keys in the Personal Eventing
+    Protocol node. Implementations MUST be prepared to find multiple
+    public keys. The authors however believe that for ease of use only
+    one OpenPGP key specially crafted for the XMPP use case should be
+    created, announced and used.</p>
+
+  </section2>
+
+  <section2 topic='OpenPGP Element and Content Element Design' anchor='openpgp-element-design'>
+
+    <p>The &openpgp; and OpenPGP content elements are container
+    elements for arbitrary signed and encrypted data and can thus act
+    as building blocks for encrypted data included in Message, IQ and
+    Presence stanzas. For example, future specifications may use them
+    to implement encrypted versions of &xep0047; or &xep0261;.</p>
+
+    <p>Note that signed OpenPGP messages already contain a timestamp
+    as per the OpenPGP specification. OpenPGP content elements
+    nevertheless require the 'time' element because not every OpenPGP
+    API may provide access to the embedded OpenPGP timestamp.</p>
+
+    <p>The 'rpad' element of the OpenPGP content elements exists to
+    prevent length-base side channel attacks.</p>
+
+  </section2>
+
+  <section2 topic='Addressing the Issues and Problems of XEP-0027' anchor='solving-xep0027-issues'>
+
+    <p>This specification addresses all relevant issues of &xep0027;
+    (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
+    4</link>, <link
+    url='https://xmpp.org/extensions/xep-0027.html#issues'>§
+    5</link>). It prevents replay attacks my including the recipient's
+    address and a timestamp in the OpenPGP content element. It allows
+    for both, signing and encrypting of the element. The scope of the
+    specification was deliberately limited to OpenPGP.</p>
+
+    <p>Features like signed presences, which is provided by XEP-0027,
+    may be added later on as add-on XEP to this.</p>
 
   </section2>
 
