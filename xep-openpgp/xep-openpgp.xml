@@ -477,9 +477,14 @@ Standards Foundation.</permissions>
         and '0' ("DIGIT ZERO") (alphabet:
         <tt>123456789ABCDEFGHIJKLMNPQRSTUVWXYZ</tt>) grouped into
         4-character chunks, e.g.,
-        <tt>TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW</tt>.  The characters MUST
-        be generated from secure random, such as
-        <tt>/dev/urandom</tt>.
+        <tt>TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW</tt>. The characters MUST be
+        generated from cryptographically secure random. For example
+        <link
+        url='https://lwn.net/Articles/606141/'><tt>getrandom(2)</tt></link>,
+        <link
+        url='https://docs.oracle.com/javase/8/docs/api/java/security/SecureRandom.html'><tt>SecureRandom</tt></link>
+        or <tt>/dev/urandom</tt>. More information about the
+        randomness requirements for security can be found in &rfc4086;
         </li>
         <li>The whole backup code including the dashes is directly
         used as a string to encrypt the concatenated transferable keys
