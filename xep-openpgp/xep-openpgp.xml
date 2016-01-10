@@ -607,6 +607,7 @@ Standards Foundation.</permissions>
 
   <section2 topic='XMPP Address Normalization' anchor='xmpp-address-normalization'>
 
+    <!-- TODO s/6122/7622/ after https://github.com/xsf/xeps/pull/138 -->
     <p>The format of XMPP addresses, sometimes called JIDs, is well
     defined. Thus they need to be normalized, as defined in
     &rfc6122;. When implementations are required to compare XMPP
