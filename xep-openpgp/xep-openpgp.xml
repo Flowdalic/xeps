@@ -601,8 +601,12 @@ Standards Foundation.</permissions>
     recommendation of the RFC and do not blindly set the maximum
     stanza size to such a low value, but use a much higher
     threshold. Therefore, this should hardly be an issue for
-    implementations. Nevertheless, implementors are still advised to
-    handle &lt;policy-violation/&gt; error responses when trying to
+    implementations. Nevertheless, it is advised to keep the size of
+    OpenPGP keys small by removing all signatures except the most
+    recent self-signature on each User ID before exporting the key
+    (cf. GnuPG's <tt>--export-options export-minimal</tt>).
+    In addition, implementors are advised to handle
+    &lt;policy-violation/&gt; error responses when trying to
     transmit Base64 encoded keys.</p>
 
   </section2>
