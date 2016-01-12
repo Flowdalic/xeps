@@ -616,7 +616,7 @@ Standards Foundation.</permissions>
     <!-- TODO s/6122/7622/ after https://github.com/xsf/xeps/pull/138 -->
     <p>The format of XMPP addresses, sometimes called JIDs, is well
     defined. Thus they need to be normalized, as defined in
-    &rfc6122;. When implementations are required to compare XMPP
+    &rfc7622;. When implementations are required to compare XMPP
     addresses for equality, as it is the case in <link
     url='#openpgp-verification'>"Verification of &openpgp;
     Content"</link>, then they also have to compare the normalized
