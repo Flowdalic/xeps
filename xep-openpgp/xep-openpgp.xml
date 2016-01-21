@@ -131,10 +131,10 @@ Standards Foundation.</permissions>
     OpenPGP message which contains an encrypted and/or signed UTF-8
     encoded string. Note that OpenPGP's ASCII armor is not used,
     instead the XMPP client MUST encode the raw OpenPGP message, as
-    specified in &rfc4880;, using Base64. This string MUST represent
-    exactly one OpenPGP content element, that is either a &signcrypt;,
-    a &sign; or a &crypt; extension element qualified by the
-    'urn:xmpp:openpgp:0' namespace.</p>
+    specified in &rfc4880;, using Base64. This string MUST correspond
+    to exactly one OpenPGP content element, that is either a
+    &signcrypt;, a &sign; or a &crypt; extension element qualified by
+    the 'urn:xmpp:openpgp:0' namespace.</p>
 
     <p>In case of a &signcrypt; element, the OpenPGP message embedded
     in the &openpgp; element MUST be encrypted and signed, and SHOULD
@@ -591,7 +591,7 @@ Standards Foundation.</permissions>
   <section2 topic='Stanza Size' anchor='stanza-size'>
 
     <p>Implementors should be aware that the size OpenPGP public and
-    secret keys is somewhere in the range of tenth of
+    secret keys is somewhere in the range of tens of
     kilobytes. Applying Base64 encoding on keys, as it is described
     herein, further increases the size. The formula to determine the
     Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
@@ -732,7 +732,8 @@ Standards Foundation.</permissions>
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan and Marc Laporte for their feedback.</p>
+  <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan, Marc Laporte and
+  Georg Lukas for their feedback.</p>
 
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
