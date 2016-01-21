@@ -5,6 +5,7 @@
   <!ENTITY crypt "&lt;crypt/&gt;">
   <!ENTITY openpgp "&lt;openpgp/&gt;">
   <!ENTITY payload "&lt;payload/&gt;">
+  <!ENTITY rfc3629 "<span class='ref'><link url='http://tools.ietf.org/html/rfc3629'>RFC 3629</link></span> <note>RFC 3629: UTF-8, a transformation format of ISO 10646 &lt;<link url='http://tools.ietf.org/html/rfc3629'>http://tools.ietf.org/html/rfc3629</link>&gt;.</note>" >
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
 ]>
@@ -120,21 +121,21 @@ Standards Foundation.</permissions>
     <example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='juliet@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
-    <!-- BASE64_OPENPGP_MESSAGE -->
+    [BASE64_OPENPGP_MESSAGE]
     WdC81xuET8kAK...
   </openpgp>
 </message>]]></example>
 
-    <p>The text content &openpgp; (BASE64_OPENPGP_MESSAGE) is a Base64
-    encoded, as specified in &rfc4648; <link
-    url='https://tools.ietf.org/html/rfc4648#section-4'>§ 4</link>,
-    OpenPGP message which contains an encrypted and/or signed UTF-8
-    encoded string. Note that OpenPGP's ASCII armor is not used,
-    instead the XMPP client MUST encode the raw OpenPGP message, as
-    specified in &rfc4880;, using Base64. This string MUST correspond
-    to exactly one OpenPGP content element, that is either a
-    &signcrypt;, a &sign; or a &crypt; extension element qualified by
-    the 'urn:xmpp:openpgp:0' namespace.</p>
+    <p>The text content &openpgp; is a Base64 encoded (&rfc4648; <link
+    url='https://tools.ietf.org/html/rfc4648#section-4'>§ 4</link>)
+    OpenPGP message as specified in &rfc4880; which contains an
+    encrypted and/or signed UTF-8 (&rfc3629;) encoded string. This
+    string MUST correspond to exactly one OpenPGP content element,
+    that is, it represents either a &signcrypt;, a &sign; or a &crypt;
+    extension element qualified by the 'urn:xmpp:openpgp:0'
+    namespace. Note that OpenPGP's ASCII armor is not used, instead
+    the XMPP client MUST encode the raw bytes of OpenPGP message using
+    Base64.</p>
 
     <p>In case of a &signcrypt; element, the OpenPGP message embedded
     in the &openpgp; element MUST be encrypted and signed, and SHOULD
@@ -266,7 +267,7 @@ Standards Foundation.</permissions>
         <item>
           <pubkeys xmlns='urn:xmpp:openpgp:0'>
             <pubkey>
-              <!-- BASE64_OPENPGP_PUBLIC_KEY -->
+              [BASE64_OPENPGP_PUBLIC_KEY]
               YWJjMTIzIT8kK...
             </pubkey>
           </pubkeys>
@@ -303,7 +304,7 @@ Standards Foundation.</permissions>
       <item>
         <pubkeys xmlns='urn:xmpp:openpgp:0'>
           <pubkey>
-            <!-- BASE64_OPENPGP_PUBLIC_KEY -->
+            [BASE64_OPENPGP_PUBLIC_KEY]
             YWJjMTIzIT8kK...
           </pubkey>
         </pubkeys>
@@ -415,7 +416,7 @@ Standards Foundation.</permissions>
     <publish node='urn:xmpp:openpgp:secret-key:0'>
       <item>
         <secretkey xmlns='urn:xmpp:openpgp:0'>
-            <!-- BASE64_OPENPGP_ENCRYPTED_SECRET_KEY -->
+            [BASE64_OPENPGP_ENCRYPTED_SECRET_KEY]
             8afaqse73adf...
         </secretkey>
       </item>
@@ -543,7 +544,7 @@ Standards Foundation.</permissions>
   <body>This message is encrypted using OpenPGP.</body>
   <store xmlns='urn:xmpp:hints'/>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
-    <!-- BASE64_OPENPGP_MESSAGE -->
+    [BASE64_OPENPGP_MESSAGE]
     WdC81xuET8kAK...
   </openpgp>
 </message>]]></example>
