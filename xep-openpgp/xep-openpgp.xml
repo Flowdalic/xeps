@@ -671,7 +671,7 @@ Standards Foundation.</permissions>
     (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
     4</link>, <link
     url='https://xmpp.org/extensions/xep-0027.html#issues'>§
-    5</link>). It prevents replay attacks my including the recipient's
+    5</link>). It prevents replay attacks by including the recipient's
     address and a timestamp in the OpenPGP content element. It allows
     for both, signing and encrypting of the element. The scope of the
     specification was deliberately limited to OpenPGP.</p>
