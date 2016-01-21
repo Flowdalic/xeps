@@ -184,8 +184,7 @@ Standards Foundation.</permissions>
     &openpgp; element and the including &signcrypt;, &sign; or &crypt;
     element was verified, they SHOULD be processed similar as if they
     had been direct extensions elements of the stanza. For example,
-    direct child elements found in either &signcrypt;, &sign; and
-    &crypt; could be:</p>
+    direct child elements found in &payload; could be:</p>
 
     <ul>
       <li>Message bodies (&rfc6121; § 5.2.3): &lt;body xmlns='jabber:client'/&gt; </li>
