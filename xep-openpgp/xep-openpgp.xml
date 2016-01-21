@@ -168,7 +168,7 @@ Standards Foundation.</permissions>
     Theory and Applications of Cryptographic Techniques: Advances in
     Cryptology (EUROCRYPT '02), Lars R. Knudsen
     (Ed.). Springer-Verlag, London, UK, UK, 83-107. &lt;<link
-    url='http://dl.acm.org/citation.cfm?id=715701'>http://dl.acm.org/citation.cfm?id=715701</link>&gt;</note>.
+    url='https://www.iacr.org/archive/eurocrypt2002/23320080/adr.pdf'>https://www.iacr.org/archive/eurocrypt2002/23320080/adr.pdf</link>&gt;</note>.
     The XMPP address found in the 'to' element's 'jid' attribute
     SHOULD be without Resourcepart (i.e. a bare JID). The 'time'
     element MUST have a 'stamp' attribute which contains the timestamp
