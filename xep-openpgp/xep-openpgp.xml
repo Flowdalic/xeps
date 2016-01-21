@@ -162,14 +162,21 @@ Standards Foundation.</permissions>
     exactly one 'time' element as direct child elements. The 'to'
     element(s) MUST have a 'jid' attribute which contains the intended
     recipient's XMPP address of the signed and/or encrypted data to
-    prevent Surreptitious Forward Attacks. The XMPP address found in
-    the 'to' element's 'jid' attribute SHOULD be without Resourcepart
-    (i.e. a bare JID). The 'time' element MUST have a 'stamp'
-    attribute which contains the timestamp when the OpenPGP content
-    element was signed and/or encrypted in the DateTime format as
-    specified in &xep0082; § 3.2. The &signcrypt; and &crypt; elements
-    SHOULD furthermore contain a 'rpad' element which text content is
-    a random-length random-content padding.</p>
+    prevent Surreptitious Forward Attacks<note>Jee Hea An, Yevgeniy
+    Dodis, and Tal Rabin. 2002. On the Security of Joint Signature and
+    Encryption. In Proceedings of the International Conference on the
+    Theory and Applications of Cryptographic Techniques: Advances in
+    Cryptology (EUROCRYPT '02), Lars R. Knudsen
+    (Ed.). Springer-Verlag, London, UK, UK, 83-107. &lt;<link
+    url='http://dl.acm.org/citation.cfm?id=715701'>http://dl.acm.org/citation.cfm?id=715701</link>&gt;</note>.
+    The XMPP address found in the 'to' element's 'jid' attribute
+    SHOULD be without Resourcepart (i.e. a bare JID). The 'time'
+    element MUST have a 'stamp' attribute which contains the timestamp
+    when the OpenPGP content element was signed and/or encrypted in
+    the DateTime format as specified in &xep0082; § 3.2. The
+    &signcrypt; and &crypt; elements SHOULD furthermore contain a
+    'rpad' element which text content is a random-length
+    random-content padding.</p>
 
     <p>OpenPGP content elements MUST possess exactly one &payload;
     element. The child elements of &payload; can be seen as stanza
