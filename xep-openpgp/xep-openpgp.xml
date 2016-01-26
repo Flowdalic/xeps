@@ -671,10 +671,12 @@ Standards Foundation.</permissions>
     (<link url='https://xmpp.org/extensions/xep-0027.html#security'>§
     4</link>, <link
     url='https://xmpp.org/extensions/xep-0027.html#issues'>§
-    5</link>). It prevents replay attacks by including the recipient's
-    address and a timestamp in the OpenPGP content element. It allows
-    for both, signing and encrypting of the element. The scope of the
-    specification was deliberately limited to OpenPGP.</p>
+    5</link>). It mitigates replay attacks by including the
+    recipient's address and a timestamp in the OpenPGP content
+    element<note>Full Replay attack prevention would require a
+    counter based approach.</note>. It allows for both, signing and
+    encrypting of the element. The scope of the specification was
+    deliberately limited to OpenPGP.</p>
 
     <p>Features like signed presences, which is provided by XEP-0027,
     may be added later on as add-on XEP to this.</p>
