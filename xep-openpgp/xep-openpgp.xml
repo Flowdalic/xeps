@@ -203,9 +203,11 @@ Standards Foundation.</permissions>
   <section2 topic='Verification of &openpgp; Content' anchor='openpgp-verification'>
 
     <p>Recipients MUST verify that the signature is valid, that the
-    signature's key corresponds to the sender's key, and that one
-    email address (as part of a User ID) of the sender's key
-    corresponds to the sender's XMPP address. Thus, the recipient may
+    signature's key corresponds to the sender's key, and that the
+    sender's key has a User ID containing the sender's XMPP
+    address in the form "xmpp:juliet@example.org" (for details see
+    <link url='#openpgp-user-ids'>"OpenPGP User IDs"</link>). Thus,
+    the recipient may
     need to retrieve the key from the Personal Eventing Protocol node
     as described above. At least one of the XMPP addresses found in
     the 'to' elements contained in OpenPGP content element MUST
@@ -513,7 +515,7 @@ Standards Foundation.</permissions>
 
 </section1>
 
-<section1 topic='Buisness Rules' anchor='rules'>
+<section1 topic='Business Rules' anchor='rules'>
 
   <section2 topic='OpenPGP Packet Format Version Restriction' anchor='openpgp-packet-format-version'>
 
@@ -682,6 +684,36 @@ Standards Foundation.</permissions>
     may be added later on as add-on XEP to this.</p>
 
   </section2>
+
+  <section2 topic='Not using OpenPGP ASCII Armor' anchor='openpgp-ascii-armor'>
+
+    <p>We decided against OpenPGP ASCII Armor (which contains an
+    additional checksum) and in favor for Base64, because
+    encoding should be part of the network application rather than the
+    crypto layer. Also XMPP, needs no additional error correction of payload.
+    In "MIME Security with OpenPGP" (<link
+    url='http://tools.ietf.org/html/rfc3156'>&rfc3156;</link>), ASCII Armor
+    has only been chosen to be backwards compatible with legacy applications
+    supporting non-MIME OpenPGP emails only.</p>
+
+  </section2>
+
+  <section2 topic='OpenPGP User IDs' anchor='openpgp-user-ids'>
+
+    <p>OpenPGP User IDs normally consist of a name - email address pair, e.g.,
+    "Juliet &lt;juliet@example.org&gt;" (&rfc4880; <link
+    url='http://tools.ietf.org/html/rfc4880#section-5.11'>§ 5.11</link>).
+    For this XEP, we require User IDs of the format "xmpp:juliet@example.org".
+    First, it is required to have at least one User ID indicating the use
+    of this OpenPGP key. When doing certification of keys (key signing),
+    the partner must know what User ID she actually certifies.
+    Second, this format uses the standardized URI from XEP-0147 to indicate
+    that this User ID corresponds to a key that is used for XMPP.
+    Third, having the Real Name inside provides no additional security
+    or guideline if this key should be certified. The XMPP address
+    is the only trust anchor here.</p>
+
+    </section2>
 
 </section1>
 
