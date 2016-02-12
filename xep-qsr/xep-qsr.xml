@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Quick Stream Resumption</title>
+
+  <abstract>This specification introduces a quick stream resumption
+  (QSR) mechanism, based on Stream Management (XEP-0198), allowing
+  XMPP entities to quickly resume an XMPP stream.</abstract>
+
+  <legal>
+    <copyright>This XMPP Extension Protocol is copyright (c) 1999 -
+    2016 by the XMPP Standards Foundation (XSF).</copyright>
+
+	<permissions>Permission is hereby granted, free of charge, to any
+	person obtaining a copy of this specification (the
+	&quot;Specification&quot;), to make use of the Specification
+	without restriction, including without limitation the rights to
+	implement the Specification in a software program, deploy the
+	Specification in a network service, and copy, modify, merge,
+	publish, translate, distribute, sublicense, or sell copies of the
+	Specification, and to permit persons to whom the Specification is
+	furnished to do so, subject to the condition that the foregoing
+	copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Specification. Unless
+	separate permission is granted, modified works that are
+	redistributed shall not contain misleading information regarding
+	the authors, title, number, or publisher of the Specification, and
+	shall not claim endorsement of the modified works by the authors,
+	any organization or project to which the authors belong, or the
+	XMPP Standards Foundation.</permissions>
+
+	<warranty>## NOTE WELL: This Specification is provided on an
+	&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	KIND, express or implied, including, without limitation, any
+	warranties or conditions of TITLE, NON-INFRINGEMENT,
+	MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event
+	shall the XMPP Standards Foundation or the authors of this
+	Specification be liable for any claim, damages, or other
+	liability, whether in an action of contract, tort, or otherwise,
+	arising from, out of, or in connection with the Specification or
+	the implementation, deployment, or other use of the
+	Specification. ##</warranty>
+
+	<liability>In no event and under no legal theory, whether in tort
+	(including negligence), contract, or otherwise, unless required by
+	applicable law (such as deliberate and grossly negligent acts) or
+	agreed to in writing, shall the XMPP Standards Foundation or any
+	author of this Specification be liable for damages, including any
+	direct, indirect, special, incidental, or consequential damages of
+	any character arising out of the use or inability to use the
+	Specification (including but not limited to damages for loss of
+	goodwill, work stoppage, computer failure or malfunction, or any
+	and all other commercial damages or losses), even if the XMPP
+	Standards Foundation or such author has been advised of the
+	possibility of such damages.</liability>
+
+	<conformance>This XMPP Extension Protocol has been contributed in
+	full conformance with the XSF's Intellectual Property Rights
+	Policy (a copy of which may be found at &lt;<link
+	url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt;
+	or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201
+	USA).</conformance>
+  </legal>
+
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0198</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>qsr</shortname>
+  <author>
+    <firstname>Florian</firstname>
+    <surname>Schmaus</surname>
+    <email>flo@geekplace.eu</email>
+    <jid>flo@geekplace.eu</jid>
+  </author>
+  <revision>
+    <version>0.0.1</version>
+    <date>2016-02-12</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>This XEP specifies a quick stream resumption (QSR) mechanism,
+  based on &xep0198;, allowing XMPP entities to quickly resume an XMPP
+  stream. This can be seen as the complementary part to &xep0305;
+  allowing for fast XMPP session (re-)establishment.</p>
+
+  <p>Compared to the existing stream resumption mechanism of XEP-0198,
+  the approach defined herin reduces the round trips required to
+  reduce a stream to exactly <em>one</em>. This is achieved by
+  requiring only a secure token to resume a stream and removing all
+  unneccesary steps for XMPP session establishment.</p>
+  
+</section1>
+
+<section1 topic='Glossary' anchor='glossary'>
+
+  <dl>
+	<di>
+	  <dt>QSR</dt>
+	  <dd>Quick Stream Resumption.</dd>
+	</di>
+    <di>
+	  <dt>Quick Stream Resumption Token (QSR Token)</dt>
+	  <dd>A cryptograpically-secure random token with at least 128
+	  bits of entropy.</dd>
+	</di>
+  </dl>
+
+</section1>
+
+<!--
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+-->
+
+<section1 topic='Obtaining a Quick Stream Resumption Token' anchor='obtain'>
+
+  <p>If an entity supports QSR, then the &lt;enabled/&gt; element send
+  as postivie reply upon a request to enable Stream Management MUST
+  contain an 'tok' attribute qualified by the 'urn:xmpp:qsr:0'
+  namespace containing a Quick Stream Resumption token. The element
+  MAY also contains a 'location' attribute qualified by the
+  'urn:xmpp:qsr:0' namespace to specify the server's preferred IP
+  address or hostname (optionally with a port) for quick stream
+  resumption.</p>
+
+	<example caption='A &lt;enabled/&gt; with a QSR token'><![CDATA[
+<enabled
+  xmlns='urn:xmpp:sm:3'
+  xmlns:qsr='urn:xmpp:qsr:0'
+  qsr:tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'/>]]></example>
+
+	<example caption='A &lt;enabled/&gt; with a QSR token and location'><![CDATA[
+<enabled
+  xmlns='urn:xmpp:sm:3'
+  xmlns:qsr='urn:xmpp:qsr:0'
+  qsr:tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
+  qsr:location='qsr.example.org'/>]]></example>
+
+</section1>
+
+<section1 topic='Quick Stream Resumption' anchor='resume'>
+
+    <section2 topic='Determing the Host for Resumption' anchor='host'>
+
+	<p>The entity first needs to determine a host for
+	resumption. Since it is desireable to perform TLS instantanously,
+	the lookup mechanism order is as follows:</p>
+
+	<ol>
+	  <li>The host specified in the optional 'location' attribute
+	  qualified by the 'urn:xmpp:qsr:0' namespace found in the
+	  &lt;enabled/&gt; element of XEP-0198.
+	  </li>
+	  <li>The host determined by means of &xep0368;</li>
+	  <li>Standard host lookup mechanisms</li>
+	</ol>
+
+	<p>Note that the hosts announced by the 'location' attribute
+	qualified by the 'urn:xmpp:qsr:0' namespace MUST be connected to
+	with TLS enabled from the beginning, i.e. STARTTLS MUST NOT be
+	used.</p>
+
+  </section2>
+
+  <section2 topic='Performing Quick Stream Resumption' anchor='perform'>
+
+	<p>After the host on which the quick stream resumption should be
+	performed was determined, the entity connects to, and establishes
+	TLS by either</p>
+
+	<ol>
+	  <li>establishing a TLS session right away, or</li>
+	  <li>performing STARTTLS (&rfc6120; § 5).</li>
+	</ol>
+
+	<p>Quickly resuming a stream MUST be performed over TLS secured
+	sesions only. After the connection has been secured, the
+	initiating entity sends a &lt;stream&gt; open followed by a
+	&lt;quick-resume/&gt; Nonza qualified by the 'urn:xmpp:qsr:0'
+	namespace which MUST contain the QSR token in the 'tok' attribute
+	and the squence number of the last handled stanza in the 'h'
+	attribute.</p>
+
+	<p>Note that the initiating entity SHOULD pipeline the quick
+	stream resumption request together with then intial &lt;stream&gt;
+	open, which means that it does not wait for the counterpart to
+	announce the &lt;qsr/&gt; stream feature.</p>
+	
+	<example caption='Initiating entity requests quick stream resumption'><![CDATA[
+<stream:stream
+ from='juliet@im.example.com'
+ to='im.example.com'
+ version='1.0'
+ xml:lang='en'
+ xmlns='jabber:client'
+ xmlns:stream='http://etherx.jabber.org/streams'>
+<quick-resume
+  xmlns='urn:xmpp:qsr:0'
+  tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
+  h='42'/>]]></example>
+
+	<p>On success, server replies with &lt;quick-resumed/&gt; which MUST
+	contains a <b>new</b> QSR token found in the 'tok' attribute and the last handled stanza squence in the 'h' attribute.</p>
+  
+	<example caption='Server acknowledges quick stream resumption'><![CDATA[
+<stream:stream
+  from='im.example.com'
+  id='t7AMCin9zjMNwQKDnplntZPIDEI='
+  to='juliet@im.example.com'
+  version='1.0'
+  xml:lang='en'
+  xmlns='jabber:client'
+  xmlns:stream='http://etherx.jabber.org/streams'>
+<stream:features>
+ <qsr xmlns='urn:xmpp:qsr:0'/>
+</stream:features>
+<quick-resumed
+  xmlns='urn:xmpp:qsr:0'
+  tok='006b1a29-c549-41c7-a12c-2a931822f8c0'
+  h='21'/>]]></example>
+
+  </section2>
+  
+</section1>
+
+<section1 topic='Security Considerations' anchor='security'>
+
+  <p>It is of vital importance that the Quick Stream Resumption Token
+  is generated by a cryptographically secure random generator. See
+  &rfc4086; for more information about Randomness Requirements for
+  Security</p>
+
+</section1>
+
+<section1 topic='IANA Considerations' anchor='iana'>
+
+  <p>REQUIRED.</p>
+
+</section1>
+
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+
+  <p>REQUIRED.</p>
+
+</section1>
+
+<section1 topic='XML Schema' anchor='schema'>
+
+  <p>REQUIRED for protocol specifications.</p>
+
+</section1>
+
+</xep>
