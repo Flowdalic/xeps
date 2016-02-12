@@ -202,8 +202,7 @@
 	  <li>performing STARTTLS (&rfc6120; § 5).</li>
 	</ol>
 
-	<p>Quickly resuming a stream MUST be performed over TLS secured
-	sessions only. After the connection has been secured, the
+	<p>After the connection has been secured, the
 	initiating entity sends an XMPP &lt;stream&gt; open element
 	followed by a &lt;quick-resume/&gt; Nonza qualified by the
 	'urn:xmpp:qsr:0' namespace which MUST contain the QSR token in the
@@ -216,6 +215,11 @@
 	the service supports this feature. Servers MUST announce that they
 	support QSR by including an &lt;qsr/&gt; element qualified by the
 	'urn:xmpp:qsr:0' namespace in their stream features.</p>
+
+	<p>QSR MUST only be performed over TLS secured sessions. What
+	follows is that the QSR feature MUST only be announced after
+	STARTTLS has been successfully performed or on streams where TLS
+	was established from the beginning.</p>
 
 	<example caption='Initiating entity requests quick stream resumption'><![CDATA[
 <stream:stream
