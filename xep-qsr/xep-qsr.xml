@@ -9,8 +9,8 @@
   <title>Quick Stream Resumption</title>
 
   <abstract>This specification introduces a quick stream resumption
-  (QSR) mechanism, based on Stream Management (XEP-0198), allowing
-  XMPP entities to quickly resume an XMPP stream.</abstract>
+  mechanism, based on Stream Management (XEP-0198), allowing XMPP
+  entities to quickly resume an XMPP stream.</abstract>
 
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 -
@@ -100,11 +100,12 @@
   stream. This can be seen as the complementary part to &xep0305;
   allowing for fast XMPP session (re-)establishment.</p>
 
-  <p>Compared to the existing stream resumption mechanism of XEP-0198,
-  the approach defined herin reduces the round trips required to
-  reduce a stream to exactly <em>one</em>. This is achieved by
-  requiring only a secure token to resume a stream and removing all
-  unneccesary steps for XMPP session establishment.</p>
+  <p>Compared to the existing stream resumption mechanism of XEP-0198
+  <link url='http://xmpp.org/extensions/xep-0198.html#resumption'>§
+  5</link>, the approach defined herein reduces the round trips
+  required to resume a stream to exactly <em>one</em>. This is
+  achieved by requiring only a secure token to resume a stream and
+  removing all unnecessary steps for XMPP session establishment.</p>
   
 </section1>
 
@@ -115,10 +116,10 @@
 	  <dt>QSR</dt>
 	  <dd>Quick Stream Resumption.</dd>
 	</di>
-    <di>
+	<di>
 	  <dt>Quick Stream Resumption Token (QSR Token)</dt>
-	  <dd>A cryptograpically-secure random token with at least 128
-	  bits of entropy.</dd>
+	  <dd>A string token with at least 128 bits of entropy generated
+	  by a cryptographically secure random number generator.</dd>
 	</di>
   </dl>
 
@@ -132,9 +133,9 @@
 
 <section1 topic='Obtaining a Quick Stream Resumption Token' anchor='obtain'>
 
-  <p>If an entity supports QSR, then the &lt;enabled/&gt; Nonza send
-  as postivie reply upon a request to enable Stream Management MUST
-  contain an 'tok' attribute qualified by the 'urn:xmpp:qsr:0'
+  <p>If an entity supports QSR, then the &lt;enabled/&gt; Nonza which
+  is send as positive reply upon a request to enable Stream Management
+  MUST contain an 'tok' attribute qualified by the 'urn:xmpp:qsr:0'
   namespace containing a QSR Token. The Nonza MAY also contain a
   'location' attribute qualified by the 'urn:xmpp:qsr:0' namespace to
   specify the server's preferred IP address or hostname (optionally
@@ -157,25 +158,36 @@
 
 <section1 topic='Quick Stream Resumption' anchor='qsr'>
 
-    <section2 topic='Determing the Host for Resumption' anchor='host'>
+  <p>In order to resume an XMPP stream in an quick and efficient
+  manner, the entity trying to do so must posses a valid QSR token,
+  then first determine the host for resumption, and after that perform
+  the QSR resumption.</p>
 
-	<p>The entity first needs to determine a host for
-	resumption. Since it is desireable to perform TLS instantanously,
-	the lookup mechanism order is as follows:</p>
+  <section2 topic='Determing the Host for Resumption' anchor='host'>
+
+	<p>The lookup mechanism order to determine the host for QSR
+	resumption is as follows:</p>
 
 	<ol>
 	  <li>The host specified in the optional 'location' attribute
 	  qualified by the 'urn:xmpp:qsr:0' namespace found in the
 	  &lt;enabled/&gt; element of XEP-0198.
 	  </li>
-	  <li>The host determined by means of &xep0368;</li>
-	  <li>Standard host lookup mechanisms</li>
+	  <li>The hosts determined by means of &xep0368;.</li>
+	  <li>Standard host lookup mechanisms.</li>
 	</ol>
 
 	<p>Note that the hosts announced by the 'location' attribute
 	qualified by the 'urn:xmpp:qsr:0' namespace MUST be connected to
-	with TLS enabled from the beginning, i.e. STARTTLS MUST NOT be
-	used.</p>
+	using Transport Layer Security (TLS, see &rfc5246;) from the
+	beginning, i.e. &lt;starttls/&gt; MUST NOT be used, instead the
+	TLS Handshake is performed right after establising the
+	connection.</p>
+
+	<p>The order prefers hosts which allow connections where TLS is
+	enabled from the beginning. This is desirable in order to reduce
+	the required round trips by skipping the &lt;starttls/&gt;
+	step.</p>
 
   </section2>
 
@@ -191,18 +203,20 @@
 	</ol>
 
 	<p>Quickly resuming a stream MUST be performed over TLS secured
-	sesions only. After the connection has been secured, the
-	initiating entity sends a &lt;stream&gt; open followed by a
-	&lt;quick-resume/&gt; Nonza qualified by the 'urn:xmpp:qsr:0'
-	namespace which MUST contain the QSR token in the 'tok' attribute
-	and the squence number of the last handled stanza in the 'h'
-	attribute.</p>
+	sessions only. After the connection has been secured, the
+	initiating entity sends an XMPP &lt;stream&gt; open element
+	followed by a &lt;quick-resume/&gt; Nonza qualified by the
+	'urn:xmpp:qsr:0' namespace which MUST contain the QSR token in the
+	'tok' attribute and the sequence number of the last by Stream
+	Management handled stanza in the 'h' attribute.</p>
 
 	<p>Note that the initiating entity SHOULD pipeline the quick
-	stream resumption request together with then intial &lt;stream&gt;
-	open, which means that it does not wait for the counterpart to
-	announce the &lt;qsr/&gt; stream feature.</p>
-	
+	stream resumption request together with then initial
+	&lt;stream&gt; open element since it already has determined that
+	the service supports this feature. Servers MUST announce that they
+	support QSR by including an &lt;qsr/&gt; element qualified by the
+	'urn:xmpp:qsr:0' namespace in their stream features.</p>
+
 	<example caption='Initiating entity requests quick stream resumption'><![CDATA[
 <stream:stream
  from='juliet@im.example.com'
@@ -216,9 +230,11 @@
   tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
   h='42'/>]]></example>
 
-	<p>On success, server replies with &lt;quick-resumed/&gt; which MUST
-	contains a <b>new</b> QSR token found in the 'tok' attribute and the last handled stanza squence in the 'h' attribute.</p>
-  
+	<p>On success the server replies with &lt;quick-resumed/&gt; Nonza
+	which MUST contain a <em>new</em> QSR Token found in the 'tok'
+	attribute and the squence number of the last by Stream Mangement
+	handled stanza in the 'h' attribute.</p>
+
 	<example caption='Server acknowledges quick stream resumption'><![CDATA[
 <stream:stream
   from='im.example.com'
@@ -236,8 +252,29 @@
   tok='006b1a29-c549-41c7-a12c-2a931822f8c0'
   h='21'/>]]></example>
 
+	<p>After the &lt;quick-resumed/&gt; was received both entities
+	MUST consider the resumed stream to re-established. This includes
+	all previous negoationed stream features like &xep0138;. It does
+	however not include the specific state of the features: For
+	example in case of stream compression, the dictionary used by the
+	compression mechanism of the resumed stream MUST NOT be considered
+	to be restored afer quick stream resumption.</p>
+
+	<p>If the server is unable to resume the stream quickly it MUST
+	reply with a &lt;failed/&gt; Nonza qualified by the 'urn:xmpp:qsr:0'
+	namespace.</p>
+
+	<example caption='Server indicates quick stream resumption failure'><![CDATA[
+<failed
+  xmlns='urn:xmpp:qsr:0'/>]]></example>
+
+	<p>Quick stream resumption errors SHOULD be considered
+	recoverable, the initiating entity MAY continue with normal
+	session establishment; however, misuse of stream management MAY
+	result in termination of the stream.</p>
+
   </section2>
-  
+
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
@@ -251,19 +288,20 @@
 
 <section1 topic='IANA Considerations' anchor='iana'>
 
-  <p>REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 
 </section1>
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
 
-  <p>REQUIRED.</p>
+  <p>The &REGISTRAR; includes 'urn:xmpp:qsr:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+
 
 </section1>
 
 <section1 topic='XML Schema' anchor='schema'>
 
-  <p>REQUIRED for protocol specifications.</p>
+  <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
 
 </section1>
 
