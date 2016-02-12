@@ -132,22 +132,21 @@
 
 <section1 topic='Obtaining a Quick Stream Resumption Token' anchor='obtain'>
 
-  <p>If an entity supports QSR, then the &lt;enabled/&gt; element send
+  <p>If an entity supports QSR, then the &lt;enabled/&gt; Nonza send
   as postivie reply upon a request to enable Stream Management MUST
   contain an 'tok' attribute qualified by the 'urn:xmpp:qsr:0'
-  namespace containing a Quick Stream Resumption token. The element
-  MAY also contains a 'location' attribute qualified by the
-  'urn:xmpp:qsr:0' namespace to specify the server's preferred IP
-  address or hostname (optionally with a port) for quick stream
-  resumption.</p>
+  namespace containing a QSR Token. The Nonza MAY also contain a
+  'location' attribute qualified by the 'urn:xmpp:qsr:0' namespace to
+  specify the server's preferred IP address or hostname (optionally
+  with a port) for quick stream resumption.</p>
 
-	<example caption='A &lt;enabled/&gt; with a QSR token'><![CDATA[
+	<example caption='An &lt;enabled/&gt; Nonza with a QSR token'><![CDATA[
 <enabled
   xmlns='urn:xmpp:sm:3'
   xmlns:qsr='urn:xmpp:qsr:0'
   qsr:tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'/>]]></example>
 
-	<example caption='A &lt;enabled/&gt; with a QSR token and location'><![CDATA[
+	<example caption='An &lt;enabled/&gt; Nonza with a QSR token and location'><![CDATA[
 <enabled
   xmlns='urn:xmpp:sm:3'
   xmlns:qsr='urn:xmpp:qsr:0'
@@ -156,7 +155,7 @@
 
 </section1>
 
-<section1 topic='Quick Stream Resumption' anchor='resume'>
+<section1 topic='Quick Stream Resumption' anchor='qsr'>
 
     <section2 topic='Determing the Host for Resumption' anchor='host'>
 
