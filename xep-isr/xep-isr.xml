@@ -105,8 +105,7 @@
   5</link>, the approach defined herein reduces the round trips
   required to resume a stream to exactly <em>one</em> (besides the
   round trips required by the TLS handshake). This is achieved by
-  using only a secure token to resume a stream and removing all
-  unnecessary steps for XMPP session establishment.</p>
+  using only a secure token to resume the stream.</p>
   
 </section1>
 
@@ -134,13 +133,16 @@
 
 <section1 topic='Obtaining a Instant Stream Resumption Token' anchor='obtain'>
 
-  <p>If an entity supports ISR, then the &lt;enabled/&gt; Nonza which
-  is send as positive reply upon a request to enable Stream Management
-  MUST contain an 'tok' attribute qualified by the 'urn:xmpp:isr:0'
-  namespace containing a ISR Token. The Nonza MAY also contain a
-  'location' attribute qualified by the 'urn:xmpp:isr:0' namespace to
-  specify the server's preferred IP address or hostname (optionally
-  with a port) for instant stream resumption.</p>
+  <p>If an entity supports ISR, then the &lt;enabled/&gt;
+  Nonza<note>XEP-0360: Nonzas (are not Stanzas) &lt;<link
+  url='https://xmpp.org/extensions/xep-0360.html'>https://xmpp.org/extensions/xep-0360.html</link>&gt;.</note>,
+  which is send as positive reply upon a request to enable Stream
+  Management, MUST contain an 'tok' attribute qualified by the
+  'urn:xmpp:isr:0' namespace containing a ISR Token. The Nonza MAY
+  also contain a 'location' attribute qualified by the
+  'urn:xmpp:isr:0' namespace which specifies the preferred IP address
+  or hostname, and a TCP port number of the host which should be used
+  for instant stream resumption.</p>
 
 	<example caption='An &lt;enabled/&gt; Nonza with a ISR token'><![CDATA[
 <enabled
@@ -153,16 +155,16 @@
   xmlns='urn:xmpp:sm:3'
   xmlns:isr='urn:xmpp:isr:0'
   isr:tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
-  isr:location='isr.example.org'/>]]></example>
+  isr:location='isr.example.org:5222'/>]]></example>
 
 </section1>
 
 <section1 topic='Instant Stream Resumption' anchor='isr'>
 
-  <p>In order to resume an XMPP stream in an instant and efficient
-  manner, the entity trying to do so must posses a valid ISR token,
-  then first determine the host for resumption, and after that perform
-  the ISR resumption.</p>
+  <p>In order to instantaneously resume an XMPP stream the entity
+  trying to do so must posses a valid ISR token. If it then needs to
+  perform ISR, it first determines the host for resumption, and after
+  that, tries to perform the instant stream resumption.</p>
 
   <section2 topic='Determing the Host for Resumption' anchor='host'>
 
@@ -175,7 +177,7 @@
 	  &lt;enabled/&gt; element of XEP-0198.
 	  </li>
 	  <li>The hosts determined by means of &xep0368;.</li>
-	  <li>The host announced in the 'location' attribute of XEP-0198's &lt;enabled/&gt; element.</li>
+	  <li>The host announced in the 'location' attribute of the &lt;enabled/&gt; Nonza defined in XEP-0198.</li>
 	  <li>Standard host lookup mechanisms.</li>
 	</ol>
 
@@ -218,11 +220,6 @@
 	support ISR by including an &lt;isr/&gt; element qualified by the
 	'urn:xmpp:isr:0' namespace in their stream features.</p>
 
-	<p>ISR MUST only be performed over TLS secured sessions. What
-	follows is that the ISR feature MUST only be announced after
-	STARTTLS has been successfully performed or on streams where TLS
-	was established from the beginning.</p>
-
 	<example caption='Initiating entity requests instant stream resumption'><![CDATA[
 <stream:stream
  from='juliet@im.example.com'
@@ -231,14 +228,19 @@
  xml:lang='en'
  xmlns='jabber:client'
  xmlns:stream='http://etherx.jabber.org/streams'>
-<instant-resume
+<inst-resume
   xmlns='urn:xmpp:isr:0'
   tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
   h='42'/>]]></example>
 
+	<p>ISR MUST only be performed over TLS secured sessions. What
+	follows is that the ISR feature MUST only be announced after
+	STARTTLS has been successfully performed or on streams where TLS
+	was established from the beginning.</p>
+
 	<section3 topic='Successful Stream Resumption' anchor='isr-success'>
 
-	  <p>On success the server replies with &lt;instant-resumed/&gt;
+	  <p>On success the server replies with &lt;inst-resumed/&gt;
 	  Nonza which MUST contain a <em>new</em> ISR Token found in the
 	  'tok' attribute and the sequence number of the last by Stream
 	  Mangement handled stanza in the 'h' attribute.</p>
@@ -255,12 +257,12 @@
 <stream:features>
  <isr xmlns='urn:xmpp:isr:0'/>
 </stream:features>
-<instant-resumed
+<inst-resumed
   xmlns='urn:xmpp:isr:0'
   tok='006b1a29-c549-41c7-a12c-2a931822f8c0'
   h='21'/>]]></example>
 
-	  <p>After the &lt;instant-resumed/&gt; was received both entities
+	  <p>After the &lt;inst-resumed/&gt; was received both entities
 	  MUST consider the resumed stream to re-established. This
 	  includes all previously negotiated stream features like
 	  &xep0138;. It does however not include the specific state of the
