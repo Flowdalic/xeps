@@ -168,7 +168,7 @@
 
   <section2 topic='Determing the Host for Resumption' anchor='host'>
 
-	<p>The lookup mechanism order to determine the host for ISR
+	<p>The lookup mechanism order to determine host candidates for ISR
 	resumption is as follows:</p>
 
 	<ol>
@@ -180,6 +180,9 @@
 	  <li>The host announced in the 'location' attribute of the &lt;enabled/&gt; Nonza defined in XEP-0198.</li>
 	  <li>Standard host lookup mechanisms.</li>
 	</ol>
+
+	<p>The host candidates retrieved by those mechanisms SHOULD be
+	tried by the initiating entity in this order.</p>
 
 	<p>Note that the hosts announced by the 'location' attribute
 	qualified by the 'urn:xmpp:isr:0' namespace MUST be connected to
