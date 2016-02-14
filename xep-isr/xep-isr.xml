@@ -95,17 +95,18 @@
 
 <section1 topic='Introduction' anchor='intro'>
 
-  <p>This XEP specifies an instant stream resumption (ISR) mechanism,
-  based on &xep0198;, allowing XMPP entities to instantaneously resume
-  an XMPP stream. This can be seen as the complementary part to
-  &xep0305; allowing for fast XMPP session (re-)establishment.</p>
+  <p>This XEP specifies an instant stream resumption mechanism based
+  on &xep0198;, allowing XMPP entities to instantaneously resume an
+  XMPP stream. This can be seen as the complementary part to &xep0305;
+  allowing for fast XMPP session (re-)establishment.</p>
 
-  <p>Compared to the existing stream resumption mechanism of XEP-0198
-  <link url='http://xmpp.org/extensions/xep-0198.html#resumption'>§
+  <p>Compared to the existing stream resumption mechanism of <link
+  url='http://xmpp.org/extensions/xep-0198.html#resumption'>XEP-0198 §
   5</link>, the approach defined herein reduces the round trips
-  required to resume a stream to exactly <em>one</em>. This is
-  achieved by requiring only a secure token to resume a stream and
-  removing all unnecessary steps for XMPP session establishment.</p>
+  required to resume a stream to exactly <em>one</em> (besides the
+  round trips required by the TLS handshake). This is achieved by
+  using only a secure token to resume a stream and removing all
+  unnecessary steps for XMPP session establishment.</p>
   
 </section1>
 
@@ -174,6 +175,7 @@
 	  &lt;enabled/&gt; element of XEP-0198.
 	  </li>
 	  <li>The hosts determined by means of &xep0368;.</li>
+	  <li>The host announced in the 'location' attribute of XEP-0198's &lt;enabled/&gt; element.</li>
 	  <li>Standard host lookup mechanisms.</li>
 	</ol>
 
@@ -191,7 +193,7 @@
 
   </section2>
 
-  <section2 topic='Performing Instant Stream Resumption' anchor='perform'>
+  <section2 topic='Performing Instant Stream Resumption' anchor='resume'>
 
 	<p>After the host on which the instant stream resumption should be
 	performed was determined, the entity connects to, and establishes
@@ -234,12 +236,14 @@
   tok='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
   h='42'/>]]></example>
 
-	<p>On success the server replies with &lt;instant-resumed/&gt; Nonza
-	which MUST contain a <em>new</em> ISR Token found in the 'tok'
-	attribute and the squence number of the last by Stream Mangement
-	handled stanza in the 'h' attribute.</p>
+	<section3 topic='Successful Stream Resumption' anchor='isr-success'>
 
-	<example caption='Server acknowledges instant stream resumption'><![CDATA[
+	  <p>On success the server replies with &lt;instant-resumed/&gt;
+	  Nonza which MUST contain a <em>new</em> ISR Token found in the
+	  'tok' attribute and the squence number of the last by Stream
+	  Mangement handled stanza in the 'h' attribute.</p>
+
+	  <example caption='Server acknowledges instant stream resumption'><![CDATA[
 <stream:stream
   from='im.example.com'
   id='t7AMCin9zjMNwQKDnplntZPIDEI='
@@ -256,26 +260,42 @@
   tok='006b1a29-c549-41c7-a12c-2a931822f8c0'
   h='21'/>]]></example>
 
-	<p>After the &lt;instant-resumed/&gt; was received both entities
-	MUST consider the resumed stream to re-established. This includes
-	all previous negoationed stream features like &xep0138;. It does
-	however not include the specific state of the features: For
-	example in case of stream compression, the dictionary used by the
-	compression mechanism of the resumed stream MUST NOT be considered
-	to be restored afer instant stream resumption.</p>
+	  <p>After the &lt;instant-resumed/&gt; was received both entities
+	  MUST consider the resumed stream to re-established. This
+	  includes all previous negoationed stream features like
+	  &xep0138;. It does however not include the specific state of the
+	  features: For example in case of stream compression, the
+	  dictionary used by the compression mechanism of the resumed
+	  stream MUST NOT be considered to be restored afer instant stream
+	  resumption.</p>
 
-	<p>If the server is unable to resume the stream instantly it MUST
-	reply with a &lt;failed/&gt; Nonza qualified by the 'urn:xmpp:isr:0'
-	namespace.</p>
+	</section3>
 
-	<example caption='Server indicates instant stream resumption failure'><![CDATA[
+	<section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
+	  
+	  <p>If the server is unable to resume the stream instantly it
+	  MUST reply with a &lt;failed/&gt; Nonza qualified by the
+	  'urn:xmpp:isr:0' namespace.</p>
+
+	  <example caption='Server indicates instant stream resumption failure'><![CDATA[
 <failed
   xmlns='urn:xmpp:isr:0'/>]]></example>
 
-	<p>Instant stream resumption errors SHOULD be considered
-	recoverable, the initiating entity MAY continue with normal
-	session establishment; however, misuse of stream management MAY
-	result in termination of the stream.</p>
+	  <p>The server MAY also include a 'h' attribute in the
+	  &lt;failed/&gt; element indicating the number of handled
+	  stanzas.</p>
+
+	  <example caption='Server indicates instant stream resumption failure'><![CDATA[
+<failed
+  xmlns='urn:xmpp:isr:0'
+  h='22'/>]]></example>
+
+	  <p>Instant stream resumption errors SHOULD be considered
+	  recoverable, the initiating entity MAY continue with normal
+	  session establishment; however, misuse of stream management MAY
+	  result in termination of the stream.</p>
+
+	</section3>
 
   </section2>
 
@@ -306,6 +326,12 @@
 <section1 topic='XML Schema' anchor='schema'>
 
   <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
+
+</section1>
+
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to Jonas Wielicki for his feedback.</p>
 
 </section1>
 
