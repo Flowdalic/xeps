@@ -10,7 +10,7 @@
 
   <abstract>This specification introduces an mechanism for instant
   stream resumption, based on Stream Management (XEP-0198), allowing
-  XMPP entities to instanttaneously resume an XMPP stream.</abstract>
+  XMPP entities to instantaneously resume an XMPP stream.</abstract>
 
   <legal>
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 -
@@ -183,7 +183,7 @@
 	qualified by the 'urn:xmpp:isr:0' namespace MUST be connected to
 	using Transport Layer Security (TLS, see &rfc5246;) from the
 	beginning, i.e. &lt;starttls/&gt; MUST NOT be used, instead the
-	TLS Handshake is performed right after establising the
+	TLS Handshake is performed right after establishing the
 	connection.</p>
 
 	<p>The order prefers hosts which allow connections where TLS is
@@ -240,7 +240,7 @@
 
 	  <p>On success the server replies with &lt;instant-resumed/&gt;
 	  Nonza which MUST contain a <em>new</em> ISR Token found in the
-	  'tok' attribute and the squence number of the last by Stream
+	  'tok' attribute and the sequence number of the last by Stream
 	  Mangement handled stanza in the 'h' attribute.</p>
 
 	  <example caption='Server acknowledges instant stream resumption'><![CDATA[
@@ -262,12 +262,12 @@
 
 	  <p>After the &lt;instant-resumed/&gt; was received both entities
 	  MUST consider the resumed stream to re-established. This
-	  includes all previous negoationed stream features like
+	  includes all previously negotiated stream features like
 	  &xep0138;. It does however not include the specific state of the
 	  features: For example in case of stream compression, the
 	  dictionary used by the compression mechanism of the resumed
-	  stream MUST NOT be considered to be restored afer instant stream
-	  resumption.</p>
+	  stream MUST NOT be considered to be restored after instant
+	  stream resumption.</p>
 
 	</section3>
 
