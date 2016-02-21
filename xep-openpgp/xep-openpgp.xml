@@ -5,6 +5,7 @@
   <!ENTITY crypt "&lt;crypt/&gt;">
   <!ENTITY openpgp "&lt;openpgp/&gt;">
   <!ENTITY payload "&lt;payload/&gt;">
+  <!ENTITY rfc3156 "<span class='ref'><link url='http://tools.ietf.org/html/rfc3156'>RFC 3156</link></span> <note>RFC 3156: MIME Security with OpenPGP &lt;<link url='http://tools.ietf.org/html/rfc3156'>http://tools.ietf.org/html/rfc3156</link>&gt;.</note>" >
   <!ENTITY rfc3629 "<span class='ref'><link url='http://tools.ietf.org/html/rfc3629'>RFC 3629</link></span> <note>RFC 3629: UTF-8, a transformation format of ISO 10646 &lt;<link url='http://tools.ietf.org/html/rfc3629'>http://tools.ietf.org/html/rfc3629</link>&gt;.</note>" >
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
@@ -18,7 +19,7 @@
   mechanism to synchronize secret keys over multiple
   devices.</abstract>
   <legal>
-    <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2015 by the XMPP Standards Foundation (XSF).</copyright>
+    <copyright>This XMPP Extension Protocol is copyright (c) 1999 - 2016 by the XMPP Standards Foundation (XSF).</copyright>
     <permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this specification (the &quot;Specification&quot;), to make use of the Specification without restriction, including without limitation the rights to implement the Specification in a software program, deploy the Specification in a network service, and copy, modify, merge, publish, translate, distribute, sublicense, or sell copies of the Specification, and to permit persons to whom the Specification is furnished to do so, subject to the condition that the foregoing copyright notice and this permission notice shall be included in all copies or substantial portions of the Specification. Unless separate permission is granted, modified works that are redistributed shall not contain misleading information regarding the authors, title, number, or publisher of the Specification, and shall not claim endorsement of the modified works by the authors, any organization or project to which the authors belong, or the XMPP 
 Standards Foundation.</permissions>
     <warranty>## NOTE WELL: This Specification is provided on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event shall the XMPP Standards Foundation or the authors of this Specification be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Specification or the implementation, deployment, or other use of the Specification. ##</warranty>
@@ -60,8 +61,8 @@ Standards Foundation.</permissions>
     <jid>valodim@stratum0.org</jid>
   </author>
   <revision>
-    <version>0.0.1alpha1</version>
-    <date>2016-01-04</date>
+    <version>0.0.1alpha2</version>
+    <date>2016-02-20</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -86,15 +87,10 @@ Standards Foundation.</permissions>
   (multi-end-to-multi-end encryption). Therefore this XEP can be used
   to implement end-to-end encrypted &xep0045;.</p>
 
-  <p>Unlike similar XEPs, e.g. OMEMO, this XEP <em>does not</em>
-  provide Perfect Forward Secrecy (PFS), but as an advantage in return,
-  allows users to read their archived conversations (respectively
-  their encrypted data) later on. Of course, only as long as they still
-  possess the according secret key. PFS and being
-  able to decrypt archived messages are mutually exclusive, i.e. one
-  can not have both. We therefore consider this XEP complementary to
-  similar ones which also provide end-to-end encryption but with a
-  different feature set.</p>
+  <p>One such profile of OpenPGP for XMPP (OX) is the Instant
+  Messaging Profile specified in <link
+  url='../xep-openpgp-im/xep-openpgp-im.html'>XEP-OXIM: OpenPGP for
+  XMPP Instant Messaging</link>.</p>
 
 </section1>
 
@@ -179,25 +175,13 @@ Standards Foundation.</permissions>
     random-content padding.</p>
 
     <p>OpenPGP content elements MUST possess exactly one &payload;
-    element. The child elements of &payload; can be seen as stanza
-    extension elements which are encrypted and/or signed. After the
-    &openpgp; element and the including &signcrypt;, &sign; or &crypt;
-    element was verified, they SHOULD be processed similar as if they
-    had been direct extensions elements of the stanza. For example,
-    direct child elements found in &payload; could be:</p>
+    element. The child elements of &payload; can be seen as OpenPGP
+    secured Stanza extension elements which are encrypted and/or
+    signed. After the &openpgp; element and the including &signcrypt;,
+    &sign; or &crypt; element was verified, they are processed
+    according to the specification of the relevant OpenPGP for XMPP
+    profile (see for example XEP-OXIM).</p>
 
-    <ul>
-      <li>Message bodies (&rfc6121; § 5.2.3): &lt;body xmlns='jabber:client'/&gt; </li>
-      <li>&xep0085;: &lt;active xmlns='http://jabber.org/protocol/chatstates'/&gt;</li>
-      <li>&xep0071;: &lt;html xmlns='http://jabber.org/protocol/xhtml-im'/&gt;</li>
-    </ul>
-
-    <p>But just as with stanza extension elements, child elements of
-    &payload; can be any extension element. The example above uses
-    the &lt;body/&gt; element as defined in RFC 6121. Note that it
-    uses 'jabber:client' as namespace, but since the same
-    &lt;body/&gt; element is also defined in the 'jabber:server'
-    namespace, recipients MUST accept both.</p>
   </section2>
 
   <section2 topic='Verification of &openpgp; Content' anchor='openpgp-verification'>
@@ -214,35 +198,6 @@ Standards Foundation.</permissions>
     correspond to the outer 'to' of the XMPP &MESSAGE;. Furthermore,
     recipients are RECOMMENDED to verify the 'time' element for
     plausibility or to display it to a user for verification.</p>
-
-  </section2>
-
-  <section2 topic='Discovering Support' anchor='disco'>
-
-    <p>If an entity supports exchanging OpenPGP encrypted and/or
-    signed data over XMPP as specified herein, it MUST advertise that
-    fact by announcing a &xep0030; feature of 'urn:xmpp:openpgp:0'.
-    request. It thus includes this feature in response to a service
-    discovery request.</p>
-
-    <example caption="Service Discovery information request"><![CDATA[
-<iq type='get'
-    from='juliet@example.org/balcony'
-    to='romeo@example.org/orchard'
-    id='disco1'>
-  <query xmlns='http://jabber.org/protocol/disco#info'/>
-</iq>]]></example>
-  <example caption="Service Discovery information response"><![CDATA[
-<iq type='result'
-    from='romeo@example.org/orchard'
-    to='juliet@example.org/balcony'
-    id='disco1'>
-  <query xmlns='http://jabber.org/protocol/disco#info'>
-    ...
-    <feature var='urn:xmpp:openpgp:0'/>
-    ...
-  </query>
-</iq>]]></example>
 
   </section2>
 
@@ -523,39 +478,6 @@ Standards Foundation.</permissions>
     version 4 (or higher) OpenPGP packets. Lower version OpenPGP
     packets are insecure in many aspects (see for example RFC 4880 <link
     url='http://tools.ietf.org/html/rfc4880#section-5.5.2'>§ 5.5.2</link>.).</p>
-
-  </section2>
-
-  <section2 topic='In the IM use case, always use &signcrypt;' anchor='signcrypt-im-use-case'>
-
-    <p>Only &signcrypt; MUST be used for the Instant Messaging (IM)
-    use case. Encrypted but unsigned messages (&crypt;) do not provide
-    an advantage over unencrypted ones since the sender can not be
-    verified. As result of this rule, the user interface of XMPP based
-    IM clients implementing the protocol defined herein must not
-    provide an option for the user to select between sign+crypt, sign
-    or crypt. This also increases the usability.</p>
-
-  </section2>
-
-  <section2 topic='In the IM use case, provide hints' anchor='hint-im-use-case'>
-
-    <p>In the IM use case every &MESSAGE; equiped with &openpgp;
-    SHOULD include an unencrypted &lt;body/&gt; explaining the actual
-    message is encrypted. Furthermore the message SHOULD contain a
-    'store' hint as defined in &xep0334; <link
-    url='https://xmpp.org/extensions/xep-0334.html#sect-idp1502160'>§
-    4.4</link></p>
-
-    <example caption='An encrypted and signed message with hints.'><![CDATA[
-<message to='juliet@example.org'>
-  <body>This message is encrypted using OpenPGP.</body>
-  <store xmlns='urn:xmpp:hints'/>
-  <openpgp xmlns='urn:xmpp:openpgp:0'>
-    [BASE64_OPENPGP_MESSAGE]
-    WdC81xuET8kAK...
-  </openpgp>
-</message>]]></example>
 
   </section2>
 
