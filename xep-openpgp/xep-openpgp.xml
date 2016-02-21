@@ -117,12 +117,12 @@ Standards Foundation.</permissions>
     <example caption='The &openpgp; extension within a message.'><![CDATA[
 <message to='juliet@example.org'>
   <openpgp xmlns='urn:xmpp:openpgp:0'>
-    [BASE64_OPENPGP_MESSAGE]
-    WdC81xuET8kAK...
+    BASE64_OPENPGP_MESSAGE
   </openpgp>
 </message>]]></example>
 
-    <p>The text content &openpgp; is a Base64 encoded (&rfc4648; <link
+    <p>The text content of &openpgp; ("BASE64_OPENPGP_MESSAGE") is a
+    Base64 encoded (&rfc4648; <link
     url='https://tools.ietf.org/html/rfc4648#section-4'>§ 4</link>)
     OpenPGP message as specified in &rfc4880; which contains an
     encrypted and/or signed UTF-8 (&rfc3629;) encoded string. This
@@ -230,8 +230,7 @@ Standards Foundation.</permissions>
         <item>
           <pubkeys xmlns='urn:xmpp:openpgp:0'>
             <pubkey>
-              [BASE64_OPENPGP_PUBLIC_KEY]
-              YWJjMTIzIT8kK...
+              BASE64_OPENPGP_PUBLIC_KEY
             </pubkey>
           </pubkeys>
          </item>
@@ -267,8 +266,7 @@ Standards Foundation.</permissions>
       <item>
         <pubkeys xmlns='urn:xmpp:openpgp:0'>
           <pubkey>
-            [BASE64_OPENPGP_PUBLIC_KEY]
-            YWJjMTIzIT8kK...
+            BASE64_OPENPGP_PUBLIC_KEY
           </pubkey>
         </pubkeys>
       </item>
@@ -379,8 +377,7 @@ Standards Foundation.</permissions>
     <publish node='urn:xmpp:openpgp:secret-key:0'>
       <item>
         <secretkey xmlns='urn:xmpp:openpgp:0'>
-            [BASE64_OPENPGP_ENCRYPTED_SECRET_KEY]
-            8afaqse73adf...
+            BASE64_OPENPGP_ENCRYPTED_SECRET_KEY
         </secretkey>
       </item>
     </publish>
