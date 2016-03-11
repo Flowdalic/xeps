@@ -227,24 +227,27 @@
 
 	<p>The initiator-hmac is defined as follows:</p>
 
-	<p>initiator-hamc = Base64(HMAC(key, "Initiator" ||
-	tls-server-end-point)).</p>
+	<p class='box'>
+	  initiator-hamc = Base64(HMAC(key, "Initiator" ||
+	  tls-server-end-point))
+	</p>
 
 	<p>The function defined in &rfc2104; is used as HMAC using the
-	hash algorithm specified in the &lt;hash/&gt; element as the
-	cryptographic hash function H. The ISR Key is used as key of the
-	HMAC. And the bytewise concatnation of the ASCII String
-	"Initiator" and the bytes from tls-server-end-point, which a TLS
-	Channel Binding defined in &rfc5929; § 4, is used a the HMAC
-	text. The resulting bytes of the HMAC function are encoded using
-	Base64 is defined in &rfc4648; <link
-	url='https://tools.ietf.org/html/rfc4648#section-4'>§
+	hash algorithm specified in the 'algo' attribute of the
+	&lt;hash/&gt; element as the cryptographic hash function H. The
+	ISR Key is used as key of the HMAC. And the bytewise concatnation
+	of the ASCII String "Initiator" and the bytes from
+	tls-server-end-point, which a TLS Channel Binding defined in
+	&rfc5929; § 4, is used a the HMAC text. The resulting bytes of the
+	HMAC function are encoded using Base64 as defined in &rfc4648;
+	<link url='https://tools.ietf.org/html/rfc4648#section-4'>§
 	4</link>.</p>
 
 	<p>Note that the initiating entity SHOULD pipeline the instant
 	stream resumption request together with then initial
-	&lt;stream&gt; open element since it already has determined that
-	the service supports this feature. Servers MUST announce that they
+	&lt;stream&gt; open element. The initiating entity is able to do
+	so since it already knows that the service supports ISR because it
+	announced an ISR key. Servers MUST nevertheless announce that they
 	support ISR by including an &lt;isr/&gt; element qualified by the
 	'urn:xmpp:isr:0' namespace in their stream features.</p>
 
@@ -278,12 +281,15 @@
 	  Nonza which MUST contain a <em>new</em> ISR Key found in the
 	  'key' attribute, the sequence number of the last by Stream
 	  Mangement handled stanza in the 'h' attribute and the
-	  'responder-hmac' as part of the &gt;hamc/&lt; element.</p>
+	  'responder-hmac' as value of the &lt;hash/&gt; element being a
+	  child of the &lt;hamc/&gt; element.</p>
 
 	  <p>The responder-hmac is defined as follows:</p>
 
-	  <p>responder-hmac = Base64(HMAC(key, "Responder" ||
-	  tls-server-end-point))</p>
+	  <p class='box'>
+		responder-hmac = Base64(HMAC(key, "Responder" ||
+		tls-server-end-point))
+	  </p>
 
 	  <p>That is, it is the same as the initiator-hamc, but instead of
 	  using the ASCII string "Initiator", the ASCII string "Responder"
@@ -319,7 +325,7 @@
 	  MUST consider the resumed stream to re-established. This
 	  includes all previously negotiated stream features like
 	  &xep0138;. It does however not include the specific state of the
-	  features: For example in case of stream compression, the
+	  features: For example in case of Stream Compression, the
 	  dictionary used by the compression mechanism of the resumed
 	  stream MUST NOT be considered to be restored after instant
 	  stream resumption.</p>
@@ -337,10 +343,10 @@
   xmlns='urn:xmpp:isr:0'/>]]></example>
 
 	  <p>The server MAY also include a 'h' attribute in the
-	  &lt;failed/&gt; element indicating the number of handled
-	  stanzas.</p>
+	  &lt;failed/&gt; element indicating the number of stanzas it has
+	  handled so far.</p>
 
-	  <example caption='Server indicates instant stream resumption failure'><![CDATA[
+	  <example caption='Server indicates failure with handled stanzas count'><![CDATA[
 <failed
   xmlns='urn:xmpp:isr:0'
   h='22'/>]]></example>
