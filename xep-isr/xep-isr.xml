@@ -107,7 +107,7 @@
   5</link>, the approach defined herein reduces the round trips
   required to resume a stream to exactly <em>one</em> (besides the
   round trips required by the TLS handshake). This is achieved by
-  using only a secure key to resume the stream.</p>
+  using just a secure key to resume the stream.</p>
   
 </section1>
 
@@ -171,9 +171,9 @@
   <p>In order to instantaneously resume an XMPP stream the initiating
   entity, which is either an XMPP client or server, must posses a
   valid ISR key. After it has obtained the ISR key, using the process
-  which was described in the previous section, it first determines the
-  host for resumption, and after that, tries to perform the instant
-  stream resumption.</p>
+  described in the previous section, it first determines the host for
+  resumption, and after that, tries to perform the instant stream
+  resumption.</p>
 
   <section2 topic='Determing the Host for Resumption' anchor='host'>
 
@@ -219,11 +219,12 @@
 	<p>Next, the initiating entity sends an XMPP &lt;stream&gt; open
 	element followed by a &lt;instant-resume/&gt; Nonza qualified by
 	the 'urn:xmpp:isr:0' namespace which MUST contain the previous
-	stream ID (SM ID) in the 'previd' attribute, the sequence number
-	of the last by Stream Management handled stanza in the 'h'
-	attribute and the initiator-hmac as value of at least one
-	&lt;hash/&gt; element as specified in &xep0300;, which are put
-	child elements under the &lt;hmac/&gt; element.</p>
+	stream identifier, the XEP-0198 "SM-ID", in the 'previd'
+	attribute, the sequence number of the last by Stream Management
+	handled stanza in the 'h' attribute and the initiator-hmac as
+	value of at least one &lt;hash/&gt; element as specified in
+	&xep0300;, which are put as child elements under the &lt;hmac/&gt;
+	element.</p>
 
 	<p>The initiator-hmac is defined as follows:</p>
 
