@@ -181,7 +181,7 @@
 	resumption is as follows:</p>
 
 	<ol>
-	  <li>The host specified in the optional 'location' attribute
+	  <li>The host provided in the optional 'location' attribute
 	  qualified by the 'urn:xmpp:isr:0' namespace found in the
 	  &lt;enabled/&gt; element of XEP-0198 (the "isr:location").
 	  </li>
@@ -222,7 +222,7 @@
 	stream identifier, the XEP-0198 "SM-ID", in the 'previd'
 	attribute, the sequence number of the last by Stream Management
 	handled stanza in the 'h' attribute and the initiator-hmac as
-	value of at least one &lt;hash/&gt; element as specified in
+	value of at least one &lt;hash/&gt; element as specified by
 	&xep0300;, which are put as child elements under the &lt;hmac/&gt;
 	element.</p>
 
