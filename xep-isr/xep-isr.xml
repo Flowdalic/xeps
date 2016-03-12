@@ -322,14 +322,14 @@
   </hmac>
 </inst-resumed>]]></example>
 
-	  <p>After the &lt;inst-resumed/&gt; was received both entities
-	  MUST consider the resumed stream to re-established. This
-	  includes all previously negotiated stream features like
-	  &xep0138;. It does however not include the specific state of the
-	  features: For example in case of Stream Compression, the
-	  dictionary used by the compression mechanism of the resumed
-	  stream MUST NOT be considered to be restored after instant
-	  stream resumption.</p>
+	  <p>After the &lt;inst-resumed/&gt; was received and has been
+	  verified both entities MUST consider the resumed stream to be
+	  re-established. This includes all previously negotiated stream
+	  features like &xep0138;. It does however not include the
+	  specific state of the features: For example in case of Stream
+	  Compression, the dictionary used by the compression mechanism of
+	  the resumed stream MUST NOT be considered to be restored after
+	  instant stream resumption.</p>
 
 	</section3>
 
