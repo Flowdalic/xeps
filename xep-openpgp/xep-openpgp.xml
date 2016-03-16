@@ -70,8 +70,14 @@ Standards Foundation.</permissions>
 
 <section1 topic='Introduction' anchor='intro'>
 
-  <p>This XMPP extension protocol specifies end-to-end encryption of
-  data with the help of OpenPGP.</p>
+  <p>This XMPP extension protocol specifies the foundations of
+  end-to-end encryption and signing of data with the help of
+  OpenPGP. Additional XEPs will use this extension protocol as
+  building block when specifying their own OpenPGP profile suiting
+  their use case. One such profile is the Instant Messaging Profile
+  specified in <link
+  url='../xep-openpgp-im/xep-openpgp-im.html'>XEP-OXIM: OpenPGP for
+  XMPP Instant Messaging</link>.</p>
 
   <p>XMPP provides the mechanisms to solve a lot of issues that come
   with modern day OpenPGP usage. For example, based on &xep0163; this
@@ -85,12 +91,7 @@ Standards Foundation.</permissions>
   <p>OpenPGP in return allows for end-to-end encrypted data to be
   exchanged between one, two or even multiple entities
   (multi-end-to-multi-end encryption). Therefore this XEP can be used
-  to implement end-to-end encrypted &xep0045;.</p>
-
-  <p>One such profile of OpenPGP for XMPP (OX) is the Instant
-  Messaging Profile specified in <link
-  url='../xep-openpgp-im/xep-openpgp-im.html'>XEP-OXIM: OpenPGP for
-  XMPP Instant Messaging</link>.</p>
+  for example to implement end-to-end encrypted &xep0045;.</p>
 
 </section1>
 
@@ -154,25 +155,57 @@ Standards Foundation.</permissions>
   </payload>
 </signcrypt>]]></example>
 
-    <p>OpenPGP content elements MUST possess at least one 'to' and
-    exactly one 'time' element as direct child elements. The 'to'
-    element(s) MUST have a 'jid' attribute which contains the intended
-    recipient's XMPP address of the signed and/or encrypted data to
-    prevent Surreptitious Forward Attacks<note>Jee Hea An, Yevgeniy
-    Dodis, and Tal Rabin. 2002. On the Security of Joint Signature and
+    <p>OpenPGP content elements MUST possess exactly one 'time'
+    element as direct child elements. The &signcrypt; and &crypt;
+    content elements MUST contain at least one 'to' element(s), which
+    MUST have a 'jid' attribute containing the intended recipient's
+    XMPP address of the signed and/or encrypted data to prevent
+    Surreptitious Forward Attacks<note>Jee Hea An, Yevgeniy Dodis, and
+    Tal Rabin. 2002. On the Security of Joint Signature and
     Encryption. In Proceedings of the International Conference on the
     Theory and Applications of Cryptographic Techniques: Advances in
     Cryptology (EUROCRYPT '02), Lars R. Knudsen
     (Ed.). Springer-Verlag, London, UK, UK, 83-107. &lt;<link
     url='https://www.iacr.org/archive/eurocrypt2002/23320080/adr.pdf'>https://www.iacr.org/archive/eurocrypt2002/23320080/adr.pdf</link>&gt;</note>.
     The XMPP address found in the 'to' element's 'jid' attribute
-    SHOULD be without Resourcepart (i.e. a bare JID). The 'time'
-    element MUST have a 'stamp' attribute which contains the timestamp
-    when the OpenPGP content element was signed and/or encrypted in
-    the DateTime format as specified in &xep0082; § 3.2. The
-    &signcrypt; and &crypt; elements SHOULD furthermore contain a
-    'rpad' element which text content is a random-length
-    random-content padding.</p>
+    SHOULD be without Resourcepart (i.e. a bare JID). A &sign; content
+    element may not carry a 'to' attribute. The 'time' element MUST
+    have a 'stamp' attribute which contains the timestamp when the
+    OpenPGP content element was signed and/or encrypted in the
+    DateTime format as specified in &xep0082; § 3.2. The &signcrypt;
+    and &crypt; elements SHOULD furthermore contain a 'rpad' element
+    which text content is a random-length random-content padding.</p>
+
+    <table caption='OpenPGP Content Element Properties'>
+      <tr>
+        <th>Content Element</th>
+        <th>'to' Attribute</th>
+        <th>'time' Attribute</th>
+        <th>&lt;rpad/&gt; Element</th>
+        <th>&lt;payload/&gt; Element</th>
+      </tr>
+      <tr>
+        <td>&signcrypt;</td>
+        <td>MUST have at least one</td>
+        <td>MUST have exactly one</td>
+        <td>SHOULD have exaclty one</td>
+        <td>MUST have exactly one</td>
+      </tr>
+      <tr>
+        <td>&sign;</td>
+        <td>MAY NOT contain one</td>
+        <td>MUST have exaclty one</td>
+        <td>NOT REQUIRED</td>
+        <td>MUST have exactly one</td>
+      </tr>
+      <tr>
+        <td>&crypt;</td>
+        <td>MUST have at least one</td>
+        <td>MUST have exaclty one</td>
+        <td>SHOULD have exaclty one</td>
+        <td>MUST have exactly one</td>
+      </tr>
+    </table>
 
     <p>OpenPGP content elements MUST possess exactly one &payload;
     element. The child elements of &payload; can be seen as OpenPGP
@@ -212,15 +245,15 @@ Standards Foundation.</permissions>
 
   <section2 topic='Announcing the Public Key via PEP' anchor='annoucning-pubkey'>
 
-    <p>In order to announce the public key, the client needs to store it
-    in a PEP node. The public key data, as specified in RFC 4880, is
-    stored within a &lt;pubkey/&gt; element which is a child element of
-    the &lt;pubkeys/&gt; element qualified by the 'urn:xmpp:openpgp:0'
-    namespace. Note that OpenPGP's ASCII armor is not used, instead the
-    XMPP client MUST encode the public key using Base64. Client SHOULD
-    only try to store the public key if the Personal Eventing Protocol
-    service supports persistent-items, thus it SHOULD check if the
-    service reports the
+    <p>In order to announce the public key, the client needs to store
+    it in a PEP node. The public key data, as specified in <cite>RFC
+    4880</cite>, is stored within a &lt;pubkey/&gt; element which is a
+    child element of the &lt;pubkeys/&gt; element qualified by the
+    'urn:xmpp:openpgp:0' namespace. Note that OpenPGP's ASCII armor is
+    not used, instead the XMPP client MUST encode the public key using
+    Base64. Client SHOULD only try to store the public key if the
+    Personal Eventing Protocol service supports persistent-items, thus
+    it SHOULD check if the service reports the
     'http://jabber.org/protocol/pubsub#persistent-items' feature.</p>
 
     <example caption='Saving the public key in the PEP node.'><![CDATA[
@@ -393,6 +426,9 @@ Standards Foundation.</permissions>
       </section3>
 
       <section3 topic='PEP Not Supported'>
+
+        <p>TODO</p>
+
       </section3>
 
     </section2>
@@ -432,8 +468,9 @@ Standards Foundation.</permissions>
 
       <ol>
         <li>All secret keys that should be included in the backup MUST
-        be concatenated in their transferable key format (RFC 4880
-        <link url='http://tools.ietf.org/html/rfc4880#section-11.1'>§
+        be concatenated in their transferable key format (<cite>RFC
+        4880</cite> <link
+        url='http://tools.ietf.org/html/rfc4880#section-11.1'>§
         11.1</link>).
         </li>
         <li>A backup code is generated from secure random: The backup
@@ -455,7 +492,7 @@ Standards Foundation.</permissions>
         used as a string to encrypt the concatenated transferable keys
         as an OpenPGP message. More precisely: It is used as the
         symmetric-key for a Symmetric-Key Encrypted Session Key Packet
-        according to RFC 4880 <link
+        according to <cite>RFC 4880</cite> <link
         url='http://tools.ietf.org/html/rfc4880#section-5.3'>§
         5.3</link>; the symmetric-key is thus 29 characters long
         including the dashes.  The encryption algorithm MUST be one of
@@ -471,10 +508,12 @@ Standards Foundation.</permissions>
 
   <section2 topic='OpenPGP Packet Format Version Restriction' anchor='openpgp-packet-format-version'>
 
-    <p>Implementations of this XEP must generate and accept only
+    <p>Implementations of this XEP MUST generate and accept only
     version 4 (or higher) OpenPGP packets. Lower version OpenPGP
-    packets are insecure in many aspects (see for example RFC 4880 <link
-    url='http://tools.ietf.org/html/rfc4880#section-5.5.2'>§ 5.5.2</link>.).</p>
+    packets are insecure in many aspects (see for example <cite>RFC
+    4880</cite> <link
+    url='http://tools.ietf.org/html/rfc4880#section-5.5.2'>§
+    5.5.2</link>.).</p>
 
   </section2>
 
@@ -523,8 +562,8 @@ Standards Foundation.</permissions>
     kilobytes. Applying Base64 encoding on keys, as it is described
     herein, further increases the size. The formula to determine the
     Base64 encoded size is: ceil(bytes / 3) * 4. Thus the lower bound
-    for the maximum stanza size of 10000 bytes, as specified in RFC
-    6120 § 13.12. 4., is usually exceeded. However all XMPP server
+    for the maximum stanza size of 10000 bytes, as specified in <cite>RFC
+    6120</cite> § 13.12. 4., is usually exceeded. However all XMPP server
     implementations, the authors are aware of, follow the
     recommendation of the RFC and do not blindly set the maximum
     stanza size to such a low value, but use a much higher
