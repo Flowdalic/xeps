@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
-  <!ENTITY rfc5929 "<span class='ref'><link url='http://tools.ietf.org/html/rfc5929'>RFC 5929</link></span> <note>RFC 5929: Channel Bindings for TLS &lt;<link url='http://tools.ietf.org/html/rfc5929'>http://tools.ietf.org/html/rfc5929</link>&gt;.</note>" >
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
@@ -17,55 +16,55 @@
     <copyright>This XMPP Extension Protocol is copyright (c) 1999 -
     2016 by the XMPP Standards Foundation (XSF).</copyright>
 
-	<permissions>Permission is hereby granted, free of charge, to any
-	person obtaining a copy of this specification (the
-	&quot;Specification&quot;), to make use of the Specification
-	without restriction, including without limitation the rights to
-	implement the Specification in a software program, deploy the
-	Specification in a network service, and copy, modify, merge,
-	publish, translate, distribute, sublicense, or sell copies of the
-	Specification, and to permit persons to whom the Specification is
-	furnished to do so, subject to the condition that the foregoing
-	copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Specification. Unless
-	separate permission is granted, modified works that are
-	redistributed shall not contain misleading information regarding
-	the authors, title, number, or publisher of the Specification, and
-	shall not claim endorsement of the modified works by the authors,
-	any organization or project to which the authors belong, or the
-	XMPP Standards Foundation.</permissions>
+  <permissions>Permission is hereby granted, free of charge, to any
+    person obtaining a copy of this specification (the
+    &quot;Specification&quot;), to make use of the Specification
+    without restriction, including without limitation the rights to
+    implement the Specification in a software program, deploy the
+    Specification in a network service, and copy, modify, merge,
+    publish, translate, distribute, sublicense, or sell copies of the
+    Specification, and to permit persons to whom the Specification is
+    furnished to do so, subject to the condition that the foregoing
+    copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Specification. Unless
+    separate permission is granted, modified works that are
+    redistributed shall not contain misleading information regarding
+    the authors, title, number, or publisher of the Specification, and
+    shall not claim endorsement of the modified works by the authors,
+    any organization or project to which the authors belong, or the
+    XMPP Standards Foundation.</permissions>
 
-	<warranty>## NOTE WELL: This Specification is provided on an
-	&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-	KIND, express or implied, including, without limitation, any
-	warranties or conditions of TITLE, NON-INFRINGEMENT,
-	MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event
-	shall the XMPP Standards Foundation or the authors of this
-	Specification be liable for any claim, damages, or other
-	liability, whether in an action of contract, tort, or otherwise,
-	arising from, out of, or in connection with the Specification or
-	the implementation, deployment, or other use of the
-	Specification. ##</warranty>
+  <warranty>## NOTE WELL: This Specification is provided on an
+    &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, express or implied, including, without limitation, any
+    warranties or conditions of TITLE, NON-INFRINGEMENT,
+    MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. In no event
+    shall the XMPP Standards Foundation or the authors of this
+    Specification be liable for any claim, damages, or other
+    liability, whether in an action of contract, tort, or otherwise,
+    arising from, out of, or in connection with the Specification or
+    the implementation, deployment, or other use of the
+    Specification. ##</warranty>
 
-	<liability>In no event and under no legal theory, whether in tort
-	(including negligence), contract, or otherwise, unless required by
-	applicable law (such as deliberate and grossly negligent acts) or
-	agreed to in writing, shall the XMPP Standards Foundation or any
-	author of this Specification be liable for damages, including any
-	direct, indirect, special, incidental, or consequential damages of
-	any character arising out of the use or inability to use the
-	Specification (including but not limited to damages for loss of
-	goodwill, work stoppage, computer failure or malfunction, or any
-	and all other commercial damages or losses), even if the XMPP
-	Standards Foundation or such author has been advised of the
-	possibility of such damages.</liability>
+  <liability>In no event and under no legal theory, whether in tort
+    (including negligence), contract, or otherwise, unless required by
+    applicable law (such as deliberate and grossly negligent acts) or
+    agreed to in writing, shall the XMPP Standards Foundation or any
+    author of this Specification be liable for damages, including any
+    direct, indirect, special, incidental, or consequential damages of
+    any character arising out of the use or inability to use the
+    Specification (including but not limited to damages for loss of
+    goodwill, work stoppage, computer failure or malfunction, or any
+    and all other commercial damages or losses), even if the XMPP
+    Standards Foundation or such author has been advised of the
+    possibility of such damages.</liability>
 
-	<conformance>This XMPP Extension Protocol has been contributed in
-	full conformance with the XSF's Intellectual Property Rights
-	Policy (a copy of which may be found at &lt;<link
-	url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt;
-	or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201
-	USA).</conformance>
+  <conformance>This XMPP Extension Protocol has been contributed in
+    full conformance with the XSF's Intellectual Property Rights
+    Policy (a copy of which may be found at &lt;<link
+      url='http://xmpp.org/extensions/ipr-policy.shtml'>http://xmpp.org/extensions/ipr-policy.shtml</link>&gt;
+    or obtained by writing to XSF, P.O. Box 1641, Denver, CO 80201
+    USA).</conformance>
   </legal>
 
   <number>xxxx</number>
@@ -76,7 +75,7 @@
   <dependencies>
     <spec>XMPP Core</spec>
     <spec>XEP-0198</spec>
-	<spec>XEP-0300</spec>
+    <spec>XEP-0300</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -90,6 +89,12 @@
   <revision>
     <version>0.0.2</version>
     <date>2016-03-11</date>
+    <initials>fs</initials>
+    <remark><p>Second draft.</p></remark>
+  </revision>
+  <revision>
+    <version>0.0.1</version>
+    <date>2016-02-12</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -108,26 +113,26 @@
   required to resume a stream to exactly <em>one</em> (besides the
   round trips required by the TLS handshake). This is achieved by
   using just a secure key to resume the stream.</p>
-  
+
 </section1>
 
 <section1 topic='Glossary' anchor='glossary'>
 
   <dl>
-	<di>
-	  <dt>ISR</dt>
-	  <dd>Instant Stream Resumption.</dd>
-	</di>
-	<di>
-	  <dt>Instant Stream Resumption Key (ISR Key)</dt>
-	  <dd>A key, represented as string, which contains at least 128
-	  bits of entropy generated by a cryptographically secure random
-	  number generator.</dd>
-	</di>
-	<di>
-	  <dt>TLS</dt>
-	  <dd>Transport Layer Security (&rfc5246;).</dd>
-	</di>
+  <di>
+    <dt>ISR</dt>
+    <dd>Instant Stream Resumption.</dd>
+  </di>
+  <di>
+    <dt>Instant Stream Resumption Key (ISR Key)</dt>
+    <dd>A key, represented as string, which contains at least 128
+    bits of entropy generated by a cryptographically secure random
+    number generator.</dd>
+  </di>
+  <di>
+    <dt>TLS</dt>
+    <dd>Transport Layer Security (&rfc5246;).</dd>
+  </di>
   </dl>
 
 </section1>
@@ -151,13 +156,13 @@
   or hostname, and a TCP port number of the host which should be used
   for instant stream resumption.</p>
 
-	<example caption='An &lt;enabled/&gt; Nonza with a ISR key'><![CDATA[
+  <example caption='An &lt;enabled/&gt; Nonza with a ISR key'><![CDATA[
 <enabled
   xmlns='urn:xmpp:sm:3'
   xmlns:isr='urn:xmpp:isr:0'
   isr:key='a0b9162d-0981-4c7d-9174-1f55aedd1f52'/>]]></example>
 
-	<example caption='An &lt;enabled/&gt; Nonza with a ISR key and location'><![CDATA[
+  <example caption='An &lt;enabled/&gt; Nonza with a ISR key and location'><![CDATA[
 <enabled
   xmlns='urn:xmpp:sm:3'
   xmlns:isr='urn:xmpp:isr:0'
@@ -177,85 +182,85 @@
 
   <section2 topic='Determing the Host for Resumption' anchor='host'>
 
-	<p>The lookup mechanism order to determine host candidates for ISR
-	resumption is as follows:</p>
+  <p>The lookup mechanism order to determine host candidates for ISR
+  resumption is as follows:</p>
 
-	<ol>
-	  <li>The host provided in the optional 'location' attribute
-	  qualified by the 'urn:xmpp:isr:0' namespace found in the
-	  &lt;enabled/&gt; element of <cite>XEP-0198</cite> (the
-	  "isr:location").
-	  </li>
-	  <li>The hosts determined by means of &xep0368;.</li>
-	  <li>The host announced in the 'location' attribute of the
-	  &lt;enabled/&gt; Nonza defined in <cite>XEP-0198</cite>.</li>
-	  <li>Standard host lookup mechanisms.</li>
-	</ol>
+  <ol>
+    <li>The host provided in the optional 'location' attribute
+    qualified by the 'urn:xmpp:isr:0' namespace found in the
+    &lt;enabled/&gt; element of <cite>XEP-0198</cite> (the
+    "isr:location").
+    </li>
+    <li>The hosts determined by means of &xep0368;.</li>
+    <li>The host announced in the 'location' attribute of the
+    &lt;enabled/&gt; Nonza defined in <cite>XEP-0198</cite>.</li>
+    <li>Standard host lookup mechanisms.</li>
+  </ol>
 
-	<p>The host candidates retrieved by those mechanisms SHOULD be
-	tried by the initiating entity in this order.</p>
+  <p>The host candidates retrieved by those mechanisms SHOULD be
+  tried by the initiating entity in this order.</p>
 
-	<p>Note that the hosts announced by the 'location' attribute
-	qualified by the 'urn:xmpp:isr:0' namespace MUST be connected to
-	using TLS from the beginning, i.e. &lt;starttls/&gt; MUST NOT be
-	used, instead the TLS handshake is performed right after
-	establishing the connection.</p>
+  <p>Note that the hosts announced by the 'location' attribute
+  qualified by the 'urn:xmpp:isr:0' namespace MUST be connected to
+  using TLS from the beginning, i.e. &lt;starttls/&gt; MUST NOT be
+  used, instead the TLS handshake is performed right after
+  establishing the connection.</p>
 
-	<p>This order prefers hosts which allow connections where TLS is
-	enabled from the beginning. This is desirable to reduce the
-	required round trips by skipping the &lt;starttls/&gt; step.</p>
+  <p>This order prefers hosts which allow connections where TLS is
+  enabled from the beginning. This is desirable to reduce the
+  required round trips by skipping the &lt;starttls/&gt; step.</p>
 
   </section2>
 
   <section2 topic='Performing Instant Stream Resumption' anchor='resume'>
 
-	<p>After the remote host on which the instant stream resumption
-	should be performed was determined, the initiating entity connects
-	to the host, and establishes TLS by either</p>
+  <p>After the remote host on which the instant stream resumption
+  should be performed was determined, the initiating entity connects
+  to the host, and establishes TLS by either</p>
 
-	<ol>
-	  <li>establishing a TLS session right away, or</li>
-	  <li>performing STARTTLS (&rfc6120; § 5).</li>
-	</ol>
+  <ol>
+    <li>establishing a TLS session right away, or</li>
+    <li>performing STARTTLS (&rfc6120; § 5).</li>
+  </ol>
 
-	<p>Next, the initiating entity sends an XMPP &lt;stream&gt; open
-	element followed by a &lt;instant-resume/&gt; Nonza qualified by
-	the 'urn:xmpp:isr:0' namespace which MUST contain the previous
-	stream identifier, the <cite>XEP-0198</cite> "SM-ID", in the
-	'previd' attribute, the sequence number of the last by Stream
-	Management handled stanza in the 'h' attribute and the
-	initiator-hmac as value of at least one &lt;hash/&gt; element as
-	specified by &xep0300;, which are put as child elements under the
-	&lt;hmac/&gt; element.</p>
+  <p>Next, the initiating entity sends an XMPP &lt;stream&gt; open
+  element followed by a &lt;instant-resume/&gt; Nonza qualified by
+  the 'urn:xmpp:isr:0' namespace which MUST contain the previous
+  stream identifier, the <cite>XEP-0198</cite> "SM-ID", in the
+  'previd' attribute, the sequence number of the last by Stream
+  Management handled stanza in the 'h' attribute and the
+  initiator-hmac as value of at least one &lt;hash/&gt; element as
+  specified by &xep0300;, which are put as child elements under the
+  &lt;hmac/&gt; element.</p>
 
-	<p>The initiator-hmac is defined as follows:</p>
+  <p>The initiator-hmac is defined as follows:</p>
 
-	<p class='box'>
-	  initiator-hamc = Base64(HMAC(key, "Initiator" ||
-	  tls-server-end-point))
-	</p>
+  <p class='box'>
+    initiator-hamc = Base64(HMAC(key, "Initiator" ||
+    tls-server-end-point))
+  </p>
 
-	<p>The function defined in &rfc2104; is used to compute the HMAC
-	using the hash algorithm specified in the 'algo' attribute of the
-	&lt;hash/&gt; element as the cryptographic hash function H. The
-	ISR Key is used as key of the HMAC. And the bytewise concatnation
-	of the ASCII String "Initiator" and the bytes from
-	tls-server-end-point, which a TLS Channel Binding defined in
-	&rfc5929; § 4, is used a the HMAC text. The resulting bytes of the
-	HMAC function are encoded using Base64 as defined in &rfc4648;
-	<link url='https://tools.ietf.org/html/rfc4648#section-4'>§
-	4</link> and resulting string is used as text value of the
-	&lt;hash/&gt; element.</p>
+  <p>The function defined in &rfc2104; is used to compute the HMAC
+  using the hash algorithm specified in the 'algo' attribute of the
+  &lt;hash/&gt; element as the cryptographic hash function H. The
+  ISR Key is used as key of the HMAC. And the bytewise concatnation
+  of the ASCII String "Initiator" and the bytes from
+  tls-server-end-point, which a TLS Channel Binding defined in
+  &rfc5929; § 4, is used a the HMAC text. The resulting bytes of the
+  HMAC function are encoded using Base64 as defined in &rfc4648;
+  <link url='https://tools.ietf.org/html/rfc4648#section-4'>§
+  4</link> and resulting string is used as text value of the
+  &lt;hash/&gt; element.</p>
 
-	<p>Note that the initiating entity SHOULD pipeline the instant
-	stream resumption request together with then initial
-	&lt;stream&gt; open element. The initiating entity is able to do
-	so since it already knows that the service supports ISR because it
-	announced an ISR key. Servers MUST nevertheless announce that they
-	support ISR by including an &lt;isr/&gt; element qualified by the
-	'urn:xmpp:isr:0' namespace in their stream features.</p>
+  <p>Note that the initiating entity SHOULD pipeline the instant
+  stream resumption request together with then initial
+  &lt;stream&gt; open element. The initiating entity is able to do
+  so since it already knows that the service supports ISR because it
+  announced an ISR key. Servers MUST nevertheless announce that they
+  support ISR by including an &lt;isr/&gt; element qualified by the
+  'urn:xmpp:isr:0' namespace in their stream features.</p>
 
-	<example caption='Initiating entity requests instant stream resumption'><![CDATA[
+  <example caption='Initiating entity requests instant stream resumption'><![CDATA[
 <stream:stream
  from='juliet@im.example.com'
  to='im.example.com'
@@ -274,35 +279,35 @@
   </hmac>
 </inst-resume>]]></example>
 
-	<p>ISR MUST only be performed over TLS secured sessions. What
-	follows is that the ISR feature MUST only be announced after
-	STARTTLS has been successfully performed or on streams where TLS
-	was established from the beginning.</p>
+  <p>ISR MUST only be performed over TLS secured sessions. What
+  follows is that the ISR feature MUST only be announced after
+  STARTTLS has been successfully performed or on streams where TLS
+  was established from the beginning.</p>
 
-	<section3 topic='Successful Stream Resumption' anchor='isr-success'>
+  <section3 topic='Successful Stream Resumption' anchor='isr-success'>
 
-	  <p>On success the server replies with &lt;inst-resumed/&gt;
-	  Nonza which MUST contain a <em>new</em> ISR Key found in the
-	  'key' attribute, the sequence number of the last by Stream
-	  Mangement handled stanza in the 'h' attribute and the
-	  'responder-hmac' as value of the &lt;hash/&gt; element being a
-	  child of the &lt;hamc/&gt; element.</p>
+  <p>On success the server replies with &lt;inst-resumed/&gt;
+  Nonza which MUST contain a <em>new</em> ISR Key found in the
+  'key' attribute, the sequence number of the last by Stream
+  Mangement handled stanza in the 'h' attribute and the
+  'responder-hmac' as value of the &lt;hash/&gt; element being a
+  child of the &lt;hamc/&gt; element.</p>
 
-	  <p>The responder-hmac is defined as follows:</p>
+  <p>The responder-hmac is defined as follows:</p>
 
-	  <p class='box'>
-		responder-hmac = Base64(HMAC(key, "Responder" ||
-		tls-server-end-point))
-	  </p>
+  <p class='box'>
+    responder-hmac = Base64(HMAC(key, "Responder" ||
+    tls-server-end-point))
+  </p>
 
-	  <p>That is, it is the same as the initiator-hamc, but instead of
-	  using the ASCII string "Initiator", the ASCII string "Responder"
-	  is used.</p>
+  <p>That is, it is the same as the initiator-hamc, but instead of
+    using the ASCII string "Initiator", the ASCII string "Responder"
+    is used.</p>
 
-	  <p>The initiating entity is required to verify the
-	  responder-hmac achieve mutual authentication.</p>
+  <p>The initiating entity is required to verify the
+    responder-hmac achieve mutual authentication.</p>
 
-	  <example caption='Server acknowledges instant stream resumption'><![CDATA[
+  <example caption='Server acknowledges instant stream resumption'><![CDATA[
 <stream:stream
   from='im.example.com'
   id='t7AMCin9zjMNwQKDnplntZPIDEI='
@@ -325,42 +330,42 @@
   </hmac>
 </inst-resumed>]]></example>
 
-	  <p>After the &lt;inst-resumed/&gt; was received and has been
-	  verified both entities MUST consider the resumed stream to be
-	  re-established. This includes all previously negotiated stream
-	  features like &xep0138;. It does however not include the
-	  specific state of the features: For example in case of Stream
-	  Compression, the dictionary used by the compression mechanism of
-	  the resumed stream MUST NOT be considered to be restored after
-	  instant stream resumption.</p>
+  <p>After the &lt;inst-resumed/&gt; was received and has been
+  verified both entities MUST consider the resumed stream to be
+  re-established. This includes all previously negotiated stream
+  features like &xep0138;. It does however not include the
+  specific state of the features: For example in case of Stream
+  Compression, the dictionary used by the compression mechanism of
+  the resumed stream MUST NOT be considered to be restored after
+  instant stream resumption.</p>
 
-	</section3>
+  </section3>
 
-	<section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
-	  
-	  <p>If the server is unable to resume the stream instantly it
-	  MUST reply with a &lt;failed/&gt; Nonza qualified by the
-	  'urn:xmpp:isr:0' namespace.</p>
+  <section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
 
-	  <example caption='Server indicates instant stream resumption failure'><![CDATA[
+    <p>If the server is unable to resume the stream instantly it
+      MUST reply with a &lt;failed/&gt; Nonza qualified by the
+      'urn:xmpp:isr:0' namespace.</p>
+
+    <example caption='Server indicates instant stream resumption failure'><![CDATA[
 <failed
   xmlns='urn:xmpp:isr:0'/>]]></example>
 
-	  <p>The server MAY also include a 'h' attribute in the
-	  &lt;failed/&gt; element indicating the number of stanzas it has
-	  handled so far.</p>
+    <p>The server MAY also include a 'h' attribute in the
+      &lt;failed/&gt; element indicating the number of stanzas it has
+      handled so far.</p>
 
-	  <example caption='Server indicates failure with handled stanzas count'><![CDATA[
+    <example caption='Server indicates failure with handled stanzas count'><![CDATA[
 <failed
   xmlns='urn:xmpp:isr:0'
   h='22'/>]]></example>
 
-	  <p>Instant stream resumption errors SHOULD be considered
-	  recoverable, the initiating entity MAY continue with normal
-	  session establishment; however, misuse of stream management MAY
-	  result in termination of the stream.</p>
+    <p>Instant stream resumption errors SHOULD be considered
+      recoverable, the initiating entity MAY continue with normal
+      session establishment; however, misuse of stream management MAY
+      result in termination of the stream.</p>
 
-	</section3>
+  </section3>
 
   </section2>
 
