@@ -122,7 +122,7 @@ Standards Foundation.</permissions>
 
     <p>XMPP entities engaging in an OpenPGP secured instant messaging
     conversation MUST use the &signcrypt; OpenPGP content element
-    specified in XEP-OX § 3.1</p>
+    specified in XEP-OX § 3.1.</p>
 
     <p> The child elements of the OpenPGP content element's &payload;
     can be seen as stanza extension elements which are encrypted and
