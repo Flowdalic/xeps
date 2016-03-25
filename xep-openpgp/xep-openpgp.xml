@@ -14,7 +14,7 @@
 <xep>
 <header>
   <title>OpenPGP for XMPP</title>
-  <abstract>Specifies end-to-end encryption of data with the help of
+  <abstract>Specifies end-to-end encryption and authentication of data with the help of
   OpenPGP, announcement, discovery and retrieval of public keys and a
   mechanism to synchronize secret keys over multiple
   devices.</abstract>
@@ -71,11 +71,11 @@ Standards Foundation.</permissions>
 <section1 topic='Introduction' anchor='intro'>
 
   <p>This XMPP extension protocol specifies the foundations of
-  end-to-end encryption and signing of data with the help of
-  OpenPGP. Additional XEPs will use this extension protocol as
-  building block when specifying their own OpenPGP profile suiting
-  their use case. One such profile is the Instant Messaging Profile
-  specified in <link
+  end-to-end encryption and authentication, based on digital
+  signatures, of data with the help of OpenPGP. Additional XEPs will
+  use this extension protocol as building block when specifying their
+  own OpenPGP profile suiting their use case. One such profile is the
+  Instant Messaging Profile specified in <link
   url='../xep-openpgp-im/xep-openpgp-im.html'>XEP-OXIM: OpenPGP for
   XMPP Instant Messaging</link>.</p>
 
