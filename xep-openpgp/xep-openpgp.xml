@@ -258,7 +258,7 @@ Standards Foundation.</permissions>
 
     <example caption='Saving the public key in the PEP node.'><![CDATA[
 <iq from='juliet@example.org/balcony' type='set' id='1'>
-  <pubsub>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
      <publish node='urn:xmpp:openpgp:0'>
         <item>
           <pubkeys xmlns='urn:xmpp:openpgp:0'>
@@ -284,7 +284,7 @@ Standards Foundation.</permissions>
     to='juliet@example.org'
     type='get'
     id='getpub'>
-  <pubsub>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <items node='urn:xmpp:openpgp:0'
            max_items='1'/>
   </pubsub>
@@ -294,7 +294,7 @@ Standards Foundation.</permissions>
     to='romeo@example.org/orchard'
     type='result'
     id='getpub'>
-  <pubsub>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <publish node='urn:xmpp:openpgp:0'>
       <item>
         <pubkeys xmlns='urn:xmpp:openpgp:0'>
@@ -392,7 +392,7 @@ Standards Foundation.</permissions>
     to='juliet@example.org'
     type='get'
     id='getsecret'>
-  <pubsub>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <items node='urn:xmpp:openpgp:secret-key:0'
            max_items='1'/>
   </pubsub>
@@ -406,7 +406,7 @@ Standards Foundation.</permissions>
     to='romeo@example.org/orchard'
     type='result'
     id='getsecret'>
-  <pubsub>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <publish node='urn:xmpp:openpgp:secret-key:0'>
       <item>
         <secretkey xmlns='urn:xmpp:openpgp:0'>
@@ -731,8 +731,8 @@ Standards Foundation.</permissions>
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan, Marc Laporte and
-  Georg Lukas for their feedback.</p>
+  <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan, Marc Laporte Georg
+  Lukas and Adithya Abraham Philip for their feedback.</p>
 
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
