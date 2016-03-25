@@ -31,7 +31,7 @@ Standards Foundation.</permissions>
   <dependencies>
     <spec>XMPP Core</spec>
     <spec>XEP-0030</spec>
-	<spec>XEP-OX</spec>
+    <spec>XEP-OX</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -56,7 +56,7 @@ Standards Foundation.</permissions>
   </author>
   <revision>
     <version>0.0.1alpha2</version>
-    <date>2016-02-20</date>
+    <date>2016-03-25</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -69,12 +69,12 @@ Standards Foundation.</permissions>
   (XEP-OX)</link> for OpenPGP secured Instant Messaging (IM).</p>
 
   <p>Unlike similar XEPs, e.g. OMEMO, this XEP <em>does not</em>
-  provide Perfect Forward Secrecy (PFS), but as an advantage in return,
-  allows users to read their archived conversations (respectively
-  their encrypted data) later on. Of course, only as long as they still
-  possess the according secret key. PFS and being
-  able to decrypt archived messages are mutually exclusive, i.e. one
-  can not have both. We therefore consider this XEP complementary to
+  provide Forward Secrecy (FS), but as an advantage in return, allows
+  users to read their archived conversations (respectively their
+  encrypted data) later on. Of course, only as long as they still
+  possess the according secret key. PFS and being able to decrypt
+  archived messages are mutually exclusive, i.e. one can not have
+  both. The authors therefore consider this XEP complementary to
   similar ones which also provide end-to-end encryption but with a
   different feature set.</p>
 
@@ -117,14 +117,25 @@ Standards Foundation.</permissions>
 
   <section2 topic='OpenPGP Secured Instant Messaging' anchor='openpgp-secured-im'>
 
-    <p>TODO: describe how IM clients should engage in and perform
-    OpenPGP secured communication</p>
+    <p>In order to establish a OpenPGP secured IM communcation IM
+    clients first need to determine the public key of their
+    interloctur(s). OpenPGP historically provides public keyservers
+    which can be used for key retrieval. Additional there are efforts
+    underway to store OpenPGP key information in the Domain Name
+    System (DNS). This specification does not restrict the mechanism
+    of key discovery and retrieval, but compliant clients MUST support
+    the public key announcement as described in <link
+    url='../xep-openpgp/xep-openpgp.html#announcing-discover-pubkey'>XEP-OX
+    § 4</link>.</p>
 
-    <p>XMPP entities engaging in an OpenPGP secured instant messaging
-    conversation MUST use the &signcrypt; OpenPGP content element
-    specified in XEP-OX § 3.1.</p>
+    <p>After the required public keys have been discovered, XMPP
+    clients engage in an OpenPGP secured instant messaging
+    conversation by exchanging &openpgp; extension elements. They MUST
+    use the &signcrypt; OpenPGP content element specified in <link
+    url='../xep-openpgp/xep-openpgp.html#exchange'>XEP-OX §
+    3.1</link>.</p>
 
-    <p> The child elements of the OpenPGP content element's &payload;
+    <p>The child elements of the OpenPGP content element's &payload;
     can be seen as stanza extension elements which are encrypted and
     signed. After the &openpgp; element and the including &signcrypt;,
     element was verified, they SHOULD be processed similar as if they
@@ -149,8 +160,20 @@ Standards Foundation.</permissions>
 
   <section2 topic='OpenPGP Key Handling' anchor='openpgp-key-handling'>
 
-    <p>TODO: annoucing public keys, discovering public keys of
-    different entities, synchronizing secret keys, all in XEP-OX.</p>
+    <section3 topic='Choosing Public Keys' anchor='choose-pubkey'>
+
+      <p>Clients MUST expect multiple public keys to be announced for a single remote entity. In this case all keys MUST be used for encryption.</p>
+
+    </section3>
+
+      <section3 topic='OpenPGP Secret Key Synchronization' anchor='openpgp-secret-key-sync'>
+
+      <p>Clients MAY want to use the mechanism in XEP-OX § 5 to
+      synchronize their secret key(s) over multiple devices. Thus they
+      should query the user's PEP service for an eventually stored
+      encrypted secret key.</p>
+
+    </section3>
 
   </section2>
 
@@ -210,8 +233,8 @@ Standards Foundation.</permissions>
 
 <section1 topic='XML Schema' anchor='schema'>
 
-  <p>This XEP does not define a Schema, since it uses elements from
-  XEP-OX exclusively.</p>
+  <p>This XEP does not define a Schema, since it exclusively uses elements from
+  XEP-OX and other XEPs.</p>
 
 </section1>
 
