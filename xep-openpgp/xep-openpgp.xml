@@ -310,8 +310,10 @@ Standards Foundation.</permissions>
     <p>Note that the result may contain multiple pubkey elements. Only
     the public keys found in the most recent MUST be used. Requesters
     may want to limit the results to the most recent item using the
-    'max_items' attribute set to '1'. (Note: RSM would be an alternative
-    but XEP-60 says it is not yet mandatory).</p>
+    'max_items' attribute set to '1'. Clients could alternatively use
+    &xep0059; as an alternative to 'max_items' but accoding to
+    <cite>XEP-0060</cite> RSM is not (yet) mandatory for PubSub
+    services.</p>
 
     <p>Some XMPP services may not provide the Personal Eventing
     Protocol feature required to provide the mechanism described
@@ -325,18 +327,19 @@ Standards Foundation.</permissions>
 <section1 topic='Synchronizing the Secret Key with a Private PEP Node' anchor='synchro-pep'>
 
     <p>A private PEP node is used to allow XMPP clients to synchronize
-    the used secret OpenPGP key. Where private PEP node means: A PEP
-    node in whitelist mode where only the bare JID of the key owner is
-    whitelisted as described in &xep0223;. The secret key is additionally encrypted.</p>
+    the used secret OpenPGP key. Where private PEP node is defined: A
+    PEP node in whitelist mode where only the bare JID of the key
+    owner is whitelisted as described in &xep0223;. The secret key is
+    additionally encrypted.</p>
 
     <section2 topic='Required PEP features'>
 
       <p>The used PEP server MUST support PEP and the whitelist access
-       model. It SHOULD also support persistent items</p>
+      model. It SHOULD also support persistent items.</p>
 
-       <section3 topic='Discovering support'>
+        <section3 topic='Discovering support'>
 
-         <example caption='Account owner queries server regarding protocol support'><![CDATA[
+          <example caption='Account owner queries server regarding protocol support'><![CDATA[
 <iq from='juliet@capulet.lit/balcony'
     to='juliet@capulet.lit'
     id='disco1'
@@ -420,14 +423,36 @@ Standards Foundation.</permissions>
       </section3>
       <section3 topic='PEP Node Does Not Exist Response'>
 
-        <p>If the node does not exist, the client MUST create it with
-        an whitelist access model.</p>
+        <p>If the node does not exist the service will return an &IQ;
+        error indicating the item-not-found error condition. The
+        client MUST then create it with an whitelist access model.</p>
+
+        <example caption='Node does not exist'><![CDATA[
+<iq from='juliet@example.org'
+    to='romeo@example.org/orchard'
+    type='error'
+    id='getsecret'>
+  <error type='cancel'>
+    <item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]></example>
 
       </section3>
 
       <section3 topic='PEP Not Supported'>
 
-        <p>TODO</p>
+        <p>The service will return a service-unavailable error &IQ; if
+        it does not support PEP.</p>
+
+        <example caption='Node does not exist'><![CDATA[
+<iq from='juliet@example.org'
+    to='romeo@example.org/orchard'
+    type='error'
+    id='getsecret'>
+  <error type='cancel'>
+    <service-unavailable xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>]]></example>
 
       </section3>
 
