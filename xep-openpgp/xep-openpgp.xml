@@ -85,7 +85,7 @@ Standards Foundation.</permissions>
   public keys of other entities. But unlike the OpenPGP keyservers,
   this process establishes a strong relation between the key and the
   key's owning entity (usually a human user). A similar mechanism
-  described herein allows to synchronize the secret key across
+  described herein allows to synchronize the secret key(s) across
   multiple devices.</p>
 
   <p>OpenPGP in return allows for end-to-end encrypted data to be
@@ -130,7 +130,7 @@ Standards Foundation.</permissions>
     string MUST correspond to exactly one OpenPGP content element,
     that is, it represents either a &signcrypt;, a &sign; or a &crypt;
     extension element qualified by the 'urn:xmpp:openpgp:0'
-    namespace. Note that OpenPGP's ASCII armor is not used, instead
+    namespace. Note that OpenPGP's ASCII Armor is not used, instead
     the XMPP client MUST encode the raw bytes of OpenPGP message using
     Base64.</p>
 
@@ -249,7 +249,7 @@ Standards Foundation.</permissions>
     it in a PEP node. The public key data, as specified in <cite>RFC
     4880</cite>, is stored within a &lt;pubkey/&gt; element which is a
     child element of the &lt;pubkeys/&gt; element qualified by the
-    'urn:xmpp:openpgp:0' namespace. Note that OpenPGP's ASCII armor is
+    'urn:xmpp:openpgp:0' namespace. Note that OpenPGP's ASCII Armor is
     not used, instead the XMPP client MUST encode the public key using
     Base64. Client SHOULD only try to store the public key if the
     Personal Eventing Protocol service supports persistent-items, thus
@@ -327,7 +327,7 @@ Standards Foundation.</permissions>
 <section1 topic='Synchronizing the Secret Key with a Private PEP Node' anchor='synchro-pep'>
 
     <p>A private PEP node is used to allow XMPP clients to synchronize
-    the used secret OpenPGP key. Where private PEP node is defined: A
+    the user's secret OpenPGP key. Where private PEP node is defined: A
     PEP node in whitelist mode where only the bare JID of the key
     owner is whitelisted as described in &xep0223;. The secret key is
     additionally encrypted.</p>
