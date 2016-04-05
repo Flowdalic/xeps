@@ -72,7 +72,7 @@ Standards Foundation.</permissions>
   provide Forward Secrecy (FS), but as an advantage in return, allows
   users to read their archived conversations (respectively their
   encrypted data) later on. Of course, only as long as they still
-  possess the according secret key. PFS and being able to decrypt
+  possess the according secret key. FS and being able to decrypt
   archived messages are mutually exclusive, i.e. one can not have
   both. The authors therefore consider this XEP complementary to
   similar ones which also provide end-to-end encryption but with a
@@ -117,11 +117,11 @@ Standards Foundation.</permissions>
 
   <section2 topic='OpenPGP Secured Instant Messaging' anchor='openpgp-secured-im'>
 
-    <p>In order to establish a OpenPGP secured IM communcation IM
+    <p>In order to establish a OpenPGP secured IM communication, IM
     clients first need to determine the public key of their
-    interloctur(s). OpenPGP historically provides public keyservers
-    which can be used for key retrieval. Additional there are efforts
-    underway to store OpenPGP key information in the Domain Name
+    interlocutor(s). OpenPGP historically provides public keyservers
+    which can be used for key retrieval. Additional there are methods
+    to store OpenPGP key information in the Domain Name
     System (DNS). This specification does not restrict the mechanism
     of key discovery and retrieval, but compliant clients MUST support
     the public key announcement as described in <link
@@ -129,7 +129,7 @@ Standards Foundation.</permissions>
     § 4</link>.</p>
 
     <p>After the required public keys have been discovered, XMPP
-    clients engage in an OpenPGP secured instant messaging
+    clients engage in an OpenPGP secured IM
     conversation by exchanging &openpgp; extension elements. They MUST
     use the &signcrypt; OpenPGP content element specified in <link
     url='../xep-openpgp/xep-openpgp.html#exchange'>XEP-OX §
@@ -139,9 +139,9 @@ Standards Foundation.</permissions>
     can be seen as stanza extension elements which are encrypted and
     signed. After the &openpgp; element and the including &signcrypt;,
     element was verified, they SHOULD be processed similar as if they
-    had been direct extensions elements of the stanza. For example,
-    direct child elements found in &payload; in the context of instant
-    messaging could be:</p>
+    had been direct extension elements of the stanza. For example,
+    direct child elements found in &payload; in the context of IM
+    could be:</p>
 
     <ul>
       <li>Message bodies (&rfc6121; § 5.2.3): &lt;body xmlns='jabber:client'/&gt; </li>
@@ -169,7 +169,7 @@ Standards Foundation.</permissions>
       <section3 topic='OpenPGP Secret Key Synchronization' anchor='openpgp-secret-key-sync'>
 
       <p>Clients MAY want to use the mechanism in XEP-OX § 5 to
-      synchronize their secret key(s) over multiple devices. Thus they
+      synchronize their secret key(s) over multiple devices. Thus, they
       should query the user's PEP service for an eventually stored
       encrypted secret key.</p>
 
@@ -181,22 +181,22 @@ Standards Foundation.</permissions>
 
 <section1 topic='Business Rules' anchor='rules'>
 
-  <section2 topic='Always use &signcrypt;' anchor='signcrypt-im-use-case'>
+  <section2 topic='Always Use &signcrypt;' anchor='signcrypt-im-use-case'>
 
-    <p>Only &signcrypt; MUST be used for the Instant Messaging (IM)
+    <p>Only &signcrypt; MUST be used for the IM
     use case. Encrypted but unsigned messages (&crypt;) do not provide
     an advantage over unencrypted ones since the sender can not be
-    verified. As result of this rule, the user interface of XMPP based
-    IM clients implementing the protocol defined herein must not
+    verified. As result of this rule, the user interface of
+    IM clients implementing the protocol defined herein MUST NOT
     provide an option for the user to select between sign+crypt, sign
     or crypt. This also increases the usability.</p>
 
   </section2>
 
-  <section2 topic='Provide hints' anchor='hint-im-use-case'>
+  <section2 topic='Provide Hints' anchor='hint-im-use-case'>
 
-    <p>In the IM use case every &MESSAGE; equiped with &openpgp;
-    SHOULD include an unencrypted &lt;body/&gt; explaining the actual
+    <p>In the IM use case every &MESSAGE; equipped with &openpgp;
+    SHOULD include an unencrypted &lt;body/&gt; explaining that the actual
     message is encrypted. Furthermore the message SHOULD contain a
     'store' hint as defined in &xep0334; <link
     url='https://xmpp.org/extensions/xep-0334.html#sect-idp1502160'>§
