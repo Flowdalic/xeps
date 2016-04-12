@@ -61,8 +61,8 @@ Standards Foundation.</permissions>
     <jid>valodim@stratum0.org</jid>
   </author>
   <revision>
-    <version>0.0.1alpha2</version>
-    <date>2016-03-25</date>
+    <version>0.0.1alpha3</version>
+    <date>2016-04-12</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -179,8 +179,8 @@ Standards Foundation.</permissions>
     <table caption='OpenPGP Content Element Properties'>
       <tr>
         <th>Content Element</th>
-        <th>'to' Attribute</th>
-        <th>'time' Attribute</th>
+        <th>'to' Element</th>
+        <th>'time' Element</th>
         <th>&lt;rpad/&gt; Element</th>
         <th>&lt;payload/&gt; Element</th>
       </tr>
