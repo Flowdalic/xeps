@@ -252,12 +252,19 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
   <section2 topic='Token Generation' anchor='security_token'>
-    <p>As the authentication token grants automatic addition to Romeo's roster and
-      automatic approval of presence subscription, the token SHOULD be created
-      with a cryptographically secure random number generator and provide
-      sufficient entropy to make brute-force attacks infeasible. It is
-      suggested to generate at least 80 bits of entropy, and to use an encoding
-      that can be easily encoded as part of an URI (e.g. Base-32).</p>
+    <p>As the authentication token grants automatic addition to
+    Romeo's roster and automatic approval of presence subscription,
+    the token SHOULD be created with a cryptographically secure random
+    number generator <note>See for example <link
+    url='https://lwn.net/Articles/606141/'><tt>getrandom(2)</tt></link>,
+    <link
+    url='https://docs.oracle.com/javase/8/docs/api/java/security/SecureRandom.html'><tt>SecureRandom</tt></link>
+    or <tt>/dev/urandom</tt>. More information about the randomness
+    requirements for security can be found in &rfc4086;</note> and
+    provide sufficient entropy to make brute-force attacks
+    infeasible. It is suggested to generate at least 80 bits of
+    entropy, and to use an encoding that can be easily encoded as part
+    of an URI (e.g. Base-32).</p>
     <p>It is possible to use a different token generation scheme like SAML or
       JWT. In such a case, the issuer must ensure a comparable security level
       and limit token reuse.</p>
