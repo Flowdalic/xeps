@@ -190,16 +190,10 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]>
     </p>
     <example caption='Juliet Pre-approves Romeo'><![CDATA[
 <presence to='romeo@montague.net' type='subscribed' />]]></example>
-    <p>If Juliet's server does not indicate pre-approval support, a different
-      mechanism needs to be deployed to allow Romeo to seamlessly subscribe to
-      Juliet as well. Therefore, Juliet's client SHOULD create an authentication
-      token of its own, bind it to Romeo's JID, and add it as the optional
-      'returntoken' parameter to the subscription request:
+    <p>If Juliet's server does not indicate pre-approval support, her client
+      SHOULD store Romeo's JID in an auto-approval whitelist, together with an
+      appropriate expiration time.
     </p>
-    <example caption='Subscription Request With Additional Return Token'><![CDATA[
-<presence to='romeo@montague.net' type='subscribe'>
-  <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' returntoken='J7GIJ4gUBQU3cxRV' />
-</presence>]]></example>
   </section2>
 
   <section2 topic='Approval by the User and Mutual Subscription Request' anchor='sub_approval'>
@@ -209,35 +203,26 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]>
       (see security considerations below).</p>
     <example caption='Subscription Request With Tokens Received by Romeo'><![CDATA[
 <presence to='romeo@montague.net' from='juliet@capulet.net' type='subscribe'>
-  <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' returntoken='J7GIJ4gUBQU3cxRV' />
+  <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' />
 </presence>]]></example>
     <p>If the token is considered valid, the client SHOULD automatically approve
       the subscription request, add the sender of the subscription request to
-      the roster and send a subscription request of its own. If the received
-      request contained a 'returntoken', the client SHOULD add it as a 'token'
-      to the outgoing subscription request:</p>
+      the roster and send a subscription request of its own.</p>
     <example caption='Automatic Approval and Response Subscription Request'><![CDATA[
-<presence to='juliet@capulet.net' type='subscribed'>
-
-<presence to='juliet@capulet.net' type='subscribe'>
-  <preauth xmlns='urn:xmpp:pars:0' token='J7GIJ4gUBQU3cxRV' />
-</presence>]]></example>
+<presence to='juliet@capulet.net' type='subscribed' />
+<presence to='juliet@capulet.net' type='subscribe' />]]></example>
 
   </section2>
 
   <section2 topic='Approval by the New Contact' anchor='sub_mutual_approval'>
     <p>If Juliet's server support pre-approval, it will automatically handle the
     incoming subscription request and issue a roster push. Otherwise, Juliet's
-    client will receive the subscription request containing the token it created
-    for Romeo:</p>
-    <example caption='Mutual Subscription Request with Token'><![CDATA[
-<presence from='romeo@montague.net' to='juliet@capulet.net' type='subscribe'>
-  <preauth xmlns='urn:xmpp:pars:0' token='J7GIJ4gUBQU3cxRV' />
-</presence>]]></example>
-    <p>Juliet's client MUST process the subscription request in the same way as
-      outlined in <link url='#sub_approval'>the previous section</link>, and
-      either automatically approve the request or display an according
-      notification to Juliet.</p>
+    client will receive the subscription request:</p>
+    <example caption='Mutual Subscription Request'><![CDATA[
+<presence from='romeo@montague.net' to='juliet@capulet.net' type='subscribe' />]]></example>
+    <p>Juliet's client SHOULD check the subscription request sender JID against
+      the whitelist, and either automatically approve the request or display an
+      according notification to Juliet.</p>
 
   </section2>
 </section1>
@@ -245,7 +230,7 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]>
   <p>Multiple clients - only act automatically on known tokens - yaddayadda.</p>
 </section1>
 <section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
+  <p>Full backward compatibility / graceful downgrade.</p>
 </section1>
 <section1 topic='Accessibility Considerations' anchor='access'>
   <p>OPTIONAL.</p>
@@ -282,8 +267,8 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]>
 	reaction time, e.g. one week. The time limit also allows the issuer to
 	delete expired tokens.</li>
       <li><strong>Identity:</strong> if the JID of the token receiver is known
-	in advance (like in the return subscription situation), the token
-	sender MUST NOT allow a different JID to redeem this token.</li>
+	in advance, the token sender MUST NOT allow a different JID to redeem
+	this token.</li>
     </ul>
     <p>If a token is considered invalid (due to failing any of the above
       conditions, or for other reasons), a client MUST fall back to manual
