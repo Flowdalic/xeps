@@ -97,8 +97,7 @@
       optionally a "name" parameter with the suggested display name.
     </p>
     <example caption='Invitation Link with Roster Action and Authentication Token'><![CDATA[
-xmpp:romeo@montague.net?roster;preauth=1tMFqYDdKhfe2pwp;name=Romeo%20Montague
-      ]]></example>
+xmpp:romeo@montague.net?roster;preauth=1tMFqYDdKhfe2pwp;name=Romeo%20Montague]]></example>
     <p>
       If the "preauth" parameter is present, the processing client is supposed
       not only to add the user to the roster, but also to automatically send a
@@ -144,8 +143,7 @@ xmpp:romeo@montague.net?roster;preauth=1tMFqYDdKhfe2pwp;name=Romeo%20Montague
 	recommended clients.</li>
     </ol>
     <example caption='Developer-Hosted Landing Page Generated with Conversations'><![CDATA[
-https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
-      ]]></example>
+https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague]]></example>
     <p>A possible screen representation of the landing page would be:</p>
     <blockquote>
       <strong><em>Romeo Montague</em> has invited you as an XMPP contact.</strong>
@@ -185,15 +183,13 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
     <example caption='Subscription Request with Pre-Authenticated Roster Subscription Element'><![CDATA[
 <presence to='romeo@montague.net' type='subscribe'>
   <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' />
-</presence>
-      ]]></example>
+</presence>]]></example>
     <p>If Juliet's server supports <link
 	url='http://xmpp.org/rfcs/rfc6121.html#sub-preapproval'>subscription
 	pre-approval</link>, the client SHOULD additionally pre-approve Romeo:
     </p>
     <example caption='Juliet Pre-approves Romeo'><![CDATA[
-<presence to='romeo@montague.net' type='subscribed' />
-      ]]></example>
+<presence to='romeo@montague.net' type='subscribed' />]]></example>
     <p>If Juliet's server does not indicate pre-approval support, a different
       mechanism needs to be deployed to allow Romeo to seamlessly subscribe to
       Juliet as well. Therefore, Juliet's client SHOULD create an authentication
@@ -203,8 +199,7 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
     <example caption='Subscription Request With Additional Return Token'><![CDATA[
 <presence to='romeo@montague.net' type='subscribe'>
   <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' returntoken='J7GIJ4gUBQU3cxRV' />
-</presence>
-      ]]></example>
+</presence>]]></example>
   </section2>
 
   <section2 topic='Approval by the User and Mutual Subscription Request' anchor='sub_approval'>
@@ -215,8 +210,7 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
     <example caption='Subscription Request With Tokens Received by Romeo'><![CDATA[
 <presence to='romeo@montague.net' from='juliet@capulet.net' type='subscribe'>
   <preauth xmlns='urn:xmpp:pars:0' token='1tMFqYDdKhfe2pwp' returntoken='J7GIJ4gUBQU3cxRV' />
-</presence>
-      ]]></example>
+</presence>]]></example>
     <p>If the token is considered valid, the client SHOULD automatically approve
       the subscription request, add the sender of the subscription request to
       the roster and send a subscription request of its own. If the received
@@ -227,8 +221,7 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
 
 <presence to='juliet@capulet.net' type='subscribe'>
   <preauth xmlns='urn:xmpp:pars:0' token='J7GIJ4gUBQU3cxRV' />
-</presence>
-      ]]></example>
+</presence>]]></example>
 
   </section2>
 
@@ -240,8 +233,7 @@ https://conversations.im/i/romeo/montague.net/1tMFqYDdKhfe2pwp/Romeo+Montague
     <example caption='Mutual Subscription Request with Token'><![CDATA[
 <presence from='romeo@montague.net' to='juliet@capulet.net' type='subscribe'>
   <preauth xmlns='urn:xmpp:pars:0' token='J7GIJ4gUBQU3cxRV' />
-</presence>
-      ]]></example>
+</presence>]]></example>
     <p>Juliet's client MUST process the subscription request in the same way as
       outlined in <link url='#sub_approval'>the previous section</link>, and
       either automatically approve the request or display an according
