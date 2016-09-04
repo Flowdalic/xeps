@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Simple Internet of Things XMPP Extension Protocol</title>
+  <abstract>Specifies a simple XMPP Extension Protocol for the Internet of Things.</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+	<spec>XMPP IM</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>siot</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2016-09-04</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>This XEP specifies an simple and easy to implement XMPP extension
+  protocol for the Internet of Things. It is built up on the 4
+  fundamental concepts: Thing, Friendship, Provisioning and
+  Requestor. Those concepts are explained in the next section.</p>
+
+</section1>
+
+<section1 topic='Glossary' anchor='glossary'>
+
+  <section2 topic='Thing' anchor='thing-definition'>
+
+	<p>A <strong>thing</strong> is a physical or virtual entity which provides
+	data and/or can be controlled in some way. Typical examples
+	include a temperature sensor, a light bulb or a door lock. A thing
+	is mapped into XMPP to a bare JID. No bare JID shall represent
+	more than one thing.</p>
+
+  </section2>
+
+  <section2 topic='Requestor' anchor='requestor-definition'>
+
+	<p>A <strong>requestor</strong> is an XMPP entity which makes a
+	request to a thing. Typical examples for requests include reading
+	out the current temperature, turning the light bulb on, or opening
+	the door lock. A requestor also be a thing, but this is not
+	necessary.</p>
+
+  </section2>
+
+  <section2 topic='Friendship' anchor='friendship-definition'>
+
+	<p><strong>Friendship</strong> is the basic mechanism upon which
+	things decide if another XMPP entity is allowed to interact with
+	them. If the requestor is a friend of the thing, then the thing
+	must try to fullfil the request (if no other limitations are in
+	effect).</p>
+
+	<p>Friendship is defined on XMPP level as follows: A requestor R
+	is a friend of thing T, if T's roster has an item for R's bare JID
+	with a subscription state of either 'From' or 'Both'.</p>
+
+  </section2>
+
+  <section2 topic='Provisioning Service'
+			anchor='provisioning-definition'>
+
+	<p>The <strong>provisioning service</strong> acts as link between
+	a thing and its owner. It acts as manager between those two types:
+	Things ask the provisioning service if it should accept a
+	friendship request. Owners inform the provisioning service if an
+	XMPP entity is a friend of a thing or not.</p>
+	<p>Provisioning services may act as as registry for things. Or
+	they could forward their knowledge about existing things and
+	owners to such registries. IoT registry services are not within
+	the scope of this XEP (but may be specified by another XEP).</p>
+
+  </section2>
+
+  <section2 topic='Owner' anchor='owner'>
+
+	<p>A <string>owner</string> is an XMPP entity. represented as bare
+	JID, owning a thing. The ownership of a thing is noted in the
+	provisioning service used by the thing. Ownership gives full
+	control over thing and allows to decide about the thing's
+	friends. The owner of thing is always also a friend of the thing.</p>
+
+  </section2>
+
+</section1>
+
+<section1 topic='Thing Registration' anchor='thing-registration'>
+
+  <p>A thing registers with the provisioning service by sending an IQ
+  of type 'set' with the &lt;register/&gt; element qualified by the
+  'urn:xmpp:siot:1' namespace. The element must have an 'name'
+  attribute with the description of the thing, and a 'key' attribute
+  containing a unique key for the thing.</p>
+
+  <example caption='Thing registers'><![CDATA[
+<iq type='set'
+    from='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
+    to='provisioning.example.org'
+    id='register-1'>
+    <register xmlns='urn:xmpp:siot:1'
+              name='Futuretec Light Bulb 10X'
+              key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'/>
+ </iq>]]></example>
+
+  <p>The value of the key element must be a string consiting of at
+  least TODO entropy. It is suggested that it consists of 24 upper
+  case characters from the Latin alphabet and numbers without 'O'
+  ("LATIN CAPITAL LETTER O") and '0' ("DIGIT ZERO") (alphabet:
+  <tt>123456789ABCDEFGHIJKLMNPQRSTUVWXYZ</tt>) grouped into
+  4-character chunks</p>
+
+  <p>If the registration was successful, then the provisioning service
+  replies with a empty result response.</p>
+
+  <example caption='Thing registration successful'><![CDATA[
+<iq type='result'
+    from='provisioning.example.org'
+    to='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
+    id='register-1'>
+</iq>]]></example>
+ 
+</section1>
+
+<section1 topic='Claiming Things' anchor='claiming-things'>
+
+  <p>A XMPP entity claims a thing by sending an IQ of type 'set' with
+  a &lt;claim/&gt; child element qualified by the 'urn:xmpp:siot:1'
+  namespace to a provisioning service.</p>
+
+  <example caption='Owner claims thing'><![CDATA[
+<iq type='set'
+    from='owner@example.com/76a60ed0-4f54-4ef7-9589-642ea25d354b'
+    to='provisioning.example.org'
+    id='claim-1'>
+    <claim xmlns='urn:xmpp:siot:1'
+              name='Futuretec Light Bulb 10X'
+              key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'/>
+ </iq>]]></example>
+
+    <example caption='Claim success'><![CDATA[
+<iq type='result'
+    from='provisioning.example.org'
+    to='owner@example.com/76a60ed0-4f54-4ef7-9589-642ea25d354b'
+    id='claim-1'>
+    <claimed xmlns='urn:xmpp:siot:1'
+              jid='thing@exampe.org'/>
+ </iq>]]></example>
+
+	<p>The provisioning service may now also send a owner update
+	message to the thing, informing the thing about the changed
+	ownership state. The 'jid' attribute must contain the owners bare
+	JID.</p>
+
+    <example caption='Claim success'><![CDATA[
+<message
+    from='provisioning.example.org'
+    to='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
+    id='owner-update-1'>
+    <owner xmlns='urn:xmpp:siot:1'
+             jid='owner@example.com'/>
+ </messaage>]]></example>
+
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+
+<section1 topic='Security Considerations' anchor='security'>
+
+  <p>Involved entities, in particular but not only <em>things</em>,
+  MUST verify the sender of the received messages: Things MUST verify
+  that stanzas send by provisining services have the correct JID set
+  in the 'from' attribute of the stanza.</p>
+
+</section1>
+
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>REQUIRED.</p>
+</section1>
+
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+
+</xep>
