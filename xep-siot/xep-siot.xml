@@ -16,7 +16,7 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-	<spec>XMPP IM</spec>
+    <spec>XMPP IM</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -43,60 +43,60 @@
 
   <section2 topic='Thing' anchor='thing-definition'>
 
-	<p>A <strong>thing</strong> is a physical or virtual entity which provides
-	data and/or can be controlled in some way. Typical examples
-	include a temperature sensor, a light bulb or a door lock. A thing
-	is mapped into XMPP to a bare JID. No bare JID shall represent
-	more than one thing.</p>
+    <p>A <strong>thing</strong> is a physical or virtual entity which provides
+    data and/or can be controlled in some way. Typical examples
+    include a temperature sensor, a light bulb or a door lock. A thing
+    is mapped into XMPP to a bare JID. No bare JID shall represent
+    more than one thing.</p>
 
   </section2>
 
   <section2 topic='Requestor' anchor='requestor-definition'>
 
-	<p>A <strong>requestor</strong> is an XMPP entity which makes a
-	request to a thing. Typical examples for requests include reading
-	out the current temperature, turning the light bulb on, or opening
-	the door lock. A requestor also be a thing, but this is not
-	necessary.</p>
+    <p>A <strong>requestor</strong> is an XMPP entity which makes a
+    request to a thing. Typical examples for requests include reading
+    out the current temperature, turning the light bulb on, or opening
+    the door lock. A requestor also be a thing, but this is not
+    necessary.</p>
 
   </section2>
 
   <section2 topic='Friendship' anchor='friendship-definition'>
 
-	<p><strong>Friendship</strong> is the basic mechanism upon which
-	things decide if another XMPP entity is allowed to interact with
-	them. If the requestor is a friend of the thing, then the thing
-	must try to fullfil the request (if no other limitations are in
-	effect).</p>
+    <p><strong>Friendship</strong> is the basic mechanism upon which
+    things decide if another XMPP entity is allowed to interact with
+    them. If the requestor is a friend of the thing, then the thing
+    must try to fullfil the request (if no other limitations are in
+    effect).</p>
 
-	<p>Friendship is defined on XMPP level as follows: A requestor R
-	is a friend of thing T, if T's roster has an item for R's bare JID
-	with a subscription state of either 'From' or 'Both'.</p>
+    <p>Friendship is defined on XMPP level as follows: A requestor R
+    is a friend of thing T, if T's roster has an item for R's bare JID
+    with a subscription state of either 'From' or 'Both'.</p>
 
   </section2>
 
   <section2 topic='Provisioning Service'
-			anchor='provisioning-definition'>
+            anchor='provisioning-definition'>
 
-	<p>The <strong>provisioning service</strong> acts as link between
-	a thing and its owner. It acts as manager between those two types:
-	Things ask the provisioning service if it should accept a
-	friendship request. Owners inform the provisioning service if an
-	XMPP entity is a friend of a thing or not.</p>
-	<p>Provisioning services may act as as registry for things. Or
-	they could forward their knowledge about existing things and
-	owners to such registries. IoT registry services are not within
-	the scope of this XEP (but may be specified by another XEP).</p>
+    <p>The <strong>provisioning service</strong> acts as link between
+    a thing and its owner. It acts as manager between those two types:
+    Things ask the provisioning service if it should accept a
+    friendship request. Owners inform the provisioning service if an
+    XMPP entity is a friend of a thing or not.</p>
+    <p>Provisioning services may act as as registry for things. Or
+    they could forward their knowledge about existing things and
+    owners to such registries. IoT registry services are not within
+    the scope of this XEP (but may be specified by another XEP).</p>
 
   </section2>
 
   <section2 topic='Owner' anchor='owner'>
 
-	<p>A <string>owner</string> is an XMPP entity. represented as bare
-	JID, owning a thing. The ownership of a thing is noted in the
-	provisioning service used by the thing. Ownership gives full
-	control over thing and allows to decide about the thing's
-	friends. The owner of thing is always also a friend of the thing.</p>
+    <p>A <string>owner</string> is an XMPP entity. represented as bare
+    JID, owning a thing. The ownership of a thing is noted in the
+    provisioning service used by the thing. Ownership gives full
+    control over thing and allows to decide about the thing's
+    friends. The owner of thing is always also a friend of the thing.</p>
 
   </section2>
 
@@ -112,7 +112,7 @@
 
   <example caption='Thing registers'><![CDATA[
 <iq type='set'
-    from='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
+    from='thing@example.org/f65dece8'
     to='provisioning.example.org'
     id='register-1'>
     <register xmlns='urn:xmpp:siot:1'
@@ -147,53 +147,160 @@
 
   <example caption='Owner claims thing'><![CDATA[
 <iq type='set'
-    from='owner@example.com/76a60ed0-4f54-4ef7-9589-642ea25d354b'
+    from='owner@example.com/76a60ed0'
     to='provisioning.example.org'
     id='claim-1'>
-    <claim xmlns='urn:xmpp:siot:1'
-              name='Futuretec Light Bulb 10X'
-              key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'/>
- </iq>]]></example>
+  <claim xmlns='urn:xmpp:siot:1'
+         name='Futuretec Light Bulb 10X'
+         key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'/>
+</iq>]]></example>
 
     <example caption='Claim success'><![CDATA[
 <iq type='result'
     from='provisioning.example.org'
     to='owner@example.com/76a60ed0-4f54-4ef7-9589-642ea25d354b'
     id='claim-1'>
-    <claimed xmlns='urn:xmpp:siot:1'
-              jid='thing@exampe.org'/>
- </iq>]]></example>
+  <claimed xmlns='urn:xmpp:siot:1'
+          jid='thing@exampe.org'/>
+</iq>]]></example>
 
-	<p>The provisioning service may now also send a owner update
-	message to the thing, informing the thing about the changed
-	ownership state. The 'jid' attribute must contain the owners bare
-	JID.</p>
+    <p>The provisioning service may now also send a owner update
+    message to the thing, informing the thing about the changed
+    ownership state. The 'jid' attribute must contain the owners bare
+    JID.</p>
 
-    <example caption='Claim success'><![CDATA[
-<message
-    from='provisioning.example.org'
-    to='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
-    id='owner-update-1'>
-    <owner xmlns='urn:xmpp:siot:1'
-             jid='owner@example.com'/>
- </messaage>]]></example>
+    <example caption='Owner update notification'><![CDATA[
+<message from='provisioning.example.org'
+         to='thing@example.org/f65dece8'
+         id='owner-update-1'>
+  <owner xmlns='urn:xmpp:siot:1'
+         jid='owner@example.com'/>
+</messaage>]]></example>
 
 </section1>
 
 <section1 topic='Establishing Friendship' anchor='becoming-friends'>
 
-</section1>
+    <p>A requestor first sends a presence subscription request to the thing in order to establish friendship (see RFC 6121 § 3.1.1).</p>
 
-<section1 topic='Friendship State Changed Notifications' anchor='friendship-state-changed'>
+    <example caption='Presence subscription request'><![CDATA[
+<presence from='requestor@example.net/10b798d6'
+          to='thing@example.org'
+          type='subscribe'
+          id='subscribe-1'>
+</presence>]]></example>
+
+    <p>If the thing is unaware wether the requestor is a friend or not
+    (the usual case), then upon receiving a presence subscription
+    request, it must ask the provisioning service about the friendship
+    status.</p>
+
+    <example caption='Is Friend Query'><![CDATA[
+<iq from='thing@example.org/f65dece8'
+    to='provisioning.example.org'
+    type='get'
+    id='is-friend-1'>
+  <is-friend-query jid='requestor@example.net'/>
+</iq>]]></example>
+
+    <example caption='Positive Is Friend Query Result'><![CDATA[
+<iq from='provisioning.example.org'
+    to='thing@example.org/f65dece8'
+    type='result'
+    id='is-friend-1'>
+  <is-friend-result friend='yes'/>
+</iq>]]></example>
+
+    <example caption='Negative Is Friend Query Result'><![CDATA[
+<iq from='provisioning.example.org'
+    to='thing@example.org/f65dece8'
+    type='result'
+    id='is-friend-1'>
+  <is-friend-result friend='no'/>
+</iq>]]></example>
+
+    <example caption='Pending Is Friend Query Result'><![CDATA[
+<iq from='provisioning.example.org'
+    to='thing@example.org/f65dece8'
+    type='result'
+    id='is-friend-1'>
+  <is-friend-result friend='pending'/>
+</iq>]]></example>
 
 </section1>
 
 <section1 topic='Pending Friend Requests'
-		  anchor='pending-friend-requests'>
+          anchor='pending-friend-requests'>
+
+  <example caption='Pending Friend Request Notification'><![CDATA[
+<message from='provisioning.example.org'
+         to='owner@example.net'
+         id='pending-friend-notification-1'>
+  <pending-friend-notification xmlns='urn:xmpp:siot:1'/>
+</message>]]></example>
+
+    <example caption='Pending Friend Requests Query'><![CDATA[
+<iq from='owner@example.com/76a60ed0'
+    to='provisioning.example.org'
+    type='get'
+    id='pending-friend-requests-query-1'>
+    <pending-friend-query xmlns='urn:xmpp:siot:1'/>
+</iq>]]></example>
+
+<example caption='Pending Friend Requests List'><![CDATA[
+<iq from='provisioning.example.org'
+    to='owner@example.com/76a60ed0'
+    type='result'
+    id='pending-friend-requests-query-1'>
+  <pending-friend-requests xmlns='urn:xmpp:siot:1'>
+    <pending-friend jid='possibleFriend@example.net'/>
+    <pending-friend jid='anotherPossibleFriend@example.net'/>
+  </pending-friend-requests>
+</iq>]]></example>
 
 </section1>
 
-<section1 topic='Friend Updates' anchor='friend-updates'>
+<section1 topic='Friend state updates' anchor='friend-state-update'>
+
+  <p>To inform the provisioning service about a change in the friendship state, the owner sends a friend state update &IQ;. This is typically done by the owner after he became aware of pending friendship requests, if he wants to remove an existing friend, or if he wants to add a new friend.</p>
+
+  <example caption='Friend state update'><![CDATA[
+<iq from='owner@example.com/76a60ed0'
+    to='provisioning.example.org'
+    type='set'
+    id='friend-state-update-1'>
+  <friend-state-update xmlns='urn:xmpp:siot:1'>
+    <non-friend jid='possibleFriend@example.net'/>
+    <friend jid='anotherPossibleFriend@example.net'/>
+  </friend-state-update>
+</iq>]]></example>
+
+    <example caption='Friend state update result'><![CDATA[
+<iq from='provisioning.example.org'
+    to='owner@example.com/76a60ed0'
+    type='set'
+    id='friend-state-update-1'/>]]></example>
+
+</section1>
+
+<section1 topic='Friendship State Changed Notifications' anchor='friendship-state-changed'>
+
+  <p>In order to inform a thing about changed friendship state, the
+  provisioning service sends a notification to the thing.</p>
+
+  <p>TODO: Make this an IQ? Would require mandating the provisioning
+  service to subscribe to the things presence and that the thing
+  allowing it.</p>
+
+    <example caption='Friendship State Changed Notifications'><![CDATA[
+<message from='provisioning.example.org'
+         to='thing@example.org'
+         id='friendship-state-changed-1'>
+  <friendship-states xmlns='urn:xmpp:siot:1'>
+    <item jid='rommeo@example.com' friend='yes'/>
+    <item jid='julia@example.com' friend='no'/>
+  </friendship-states>
+</message>]]></example>
 
 </section1>
 
