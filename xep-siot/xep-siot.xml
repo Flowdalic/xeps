@@ -6,7 +6,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Simple Internet of Things XMPP Extension Protocol</title>
+  <title>Simple Internet of Things</title>
   <abstract>Specifies a simple XMPP Extension Protocol for the Internet of Things.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
@@ -36,6 +36,15 @@
   protocol for the Internet of Things. It is built up on the 4
   fundamental concepts: Thing, Friendship, Provisioning and
   Requestor. Those concepts are explained in the next section.</p>
+
+  <p>At is core, the IoT protocol defined herein defines, amoungst
+  others, the terms <em>Thing</em>, <em>Owner</em>, <em>Requestor</em>
+  and <em>Provisioning Service</em> and the interaction between
+  those. A fundamental permission concept is <em>Friendship</em>,
+  which is based on XMPP presence subscriptions state. Since a thing
+  can't decide on it's own if another entity should be a friend or
+  not, a proxy mechanism for XMPP subscription states is also
+  specified.</p>
 
 </section1>
 
@@ -102,6 +111,35 @@
 
 </section1>
 
+<section1 topic='IoT Product and Customer Story' anchor='story'>
+
+  <p>This section explains how the story of an IoT product and its
+  customer could look like. Note that the manufacturer needs to decide
+  which parameters are pre-configured for the thing. The
+  recommendation is that a thing only has a valid and unique JID and
+  the corresponding credentials shipped, and is able to to generate
+  and show a key to the user.</p>
+
+  <p>During the initial setup of the thing, e.g. after customer has
+  unpacked the thing, the thing creates a new random key, presents the
+  key to the customer, connects to the XMPP network and registers
+  itself with the provisioning service.</p>
+
+  <p>Now the customer can claim ownership of the thing, just by using
+  the provisining server, the product name and the key of the
+  thing.</p>
+
+  <p>The ting can be at any point reset to factory settings. For
+  example when the customer wants to sell it. Doing so will make the
+  thing forget the generated key, but not its XMPP account
+  credentials, so that a new initial setup can be performed</p>
+
+  <p>Derivations from this approach, e.g. using the same key all the
+  time, are possible but come with their own drawbacks (and
+  advantages).</p>
+
+</section1>
+
 <section1 topic='Thing Registration' anchor='thing-registration'>
 
   <p>A thing registers with the provisioning service by sending an IQ
@@ -116,9 +154,11 @@
     to='provisioning.example.org'
     id='register-1'>
     <register xmlns='urn:xmpp:siot:1'
-              name='Futuretec Light Bulb 10X'
-              key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'/>
- </iq>]]></example>
+              key='TWNK-KD5Y-MT3T-E1GS-DRDB-KVTW'>
+      <name>Futuretec Light Bulb 10X'</name>
+      <name xml:lang='de'>Futuretec Glühbirne 10X</name>
+    </register>
+</iq>]]></example>
 
   <p>The value of the key element must be a string consiting of at
   least TODO entropy. It is suggested that it consists of 24 upper
@@ -136,7 +176,27 @@
     to='thing@example.org/f65dece8-4d69-4b71-80ed-da9562882a61'
     id='register-1'>
 </iq>]]></example>
- 
+
+  <p>After the provisioning service has acknowledged the registration,
+  it MUST send send a presence subscription request to thing in order
+  to subscribe to the thing's presence.</p>
+
+  <example caption='The Provisioning Services requests to subscribe to
+					the thing&quot;s presence'><![CDATA[
+<presence from='provisioning.example.org'
+          to='thing@example.org'
+          id='subscription-request-1'
+		  type='subscribe'/>]]></example>
+
+  <p>A thing MUST approve any presence subscription request from the
+  provisioning service.</p>
+
+  <example caption='Thing approves subscription request'><![CDATA[
+<presence from='thing@example.org'
+          to='provisioning.example.org'  
+          id='subscription-request-1'
+		  type='subscribed'/>]]></example>
+
 </section1>
 
 <section1 topic='Claiming Things' anchor='claiming-things'>
@@ -181,7 +241,8 @@
 
 <section1 topic='Establishing Friendship' anchor='becoming-friends'>
 
-    <p>A requestor first sends a presence subscription request to the thing in order to establish friendship (see RFC 6121 § 3.1.1).</p>
+    <p>A requestor first sends a presence subscription request to the
+    thing in order to establish friendship (see RFC 6121 § 3.1.1).</p>
 
     <example caption='Presence subscription request'><![CDATA[
 <presence from='requestor@example.net/10b798d6'
