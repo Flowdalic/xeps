@@ -33,18 +33,14 @@
 <section1 topic='Introduction' anchor='intro'>
 
   <p>This XEP specifies an simple and easy to implement XMPP extension
-  protocol for the Internet of Things. It is built up on the 4
-  fundamental concepts: Thing, Friendship, Provisioning and
-  Requestor. Those concepts are explained in the next section.</p>
-
-  <p>At is core, the IoT protocol defined herein defines, amoungst
-  others, the terms <em>Thing</em>, <em>Owner</em>, <em>Requestor</em>
-  and <em>Provisioning Service</em> and the interaction between
-  those. A fundamental permission concept is <em>Friendship</em>,
-  which is based on XMPP presence subscriptions state. Since a thing
-  can't decide on it's own if another entity should be a friend or
-  not, a proxy mechanism for XMPP subscription states is also
-  specified.</p>
+  protocol for the Internet of Things. At is core, the IoT protocol
+  defined herein defines, amoungst others, the terms <em>Thing</em>,
+  <em>Owner</em>, <em>Requestor</em> and <em>Provisioning Service</em>
+  and the interaction between those. A fundamental permission concept
+  is <em>Friendship</em>, which is based on XMPP presence
+  subscriptions state. Since a thing can't decide on it's own if
+  another entity should be a friend or not, a proxy mechanism for XMPP
+  subscription states is also specified.</p>
 
 </section1>
 
