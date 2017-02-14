@@ -263,30 +263,13 @@
   support ISR by including an &lt;isr/&gt; element qualified by the
   'urn:xmpp:isr:0' namespace in their stream features.</p>
 
-  <example caption='Initiating entity requests instant stream resumption'><![CDATA[
-<stream:stream
- from='juliet@im.example.com'
- to='im.example.com'
- version='1.0'
- xml:lang='en'
- xmlns='jabber:client'
- xmlns:stream='http://etherx.jabber.org/streams'>
-<inst-resume
-  xmlns='urn:xmpp:isr:0'
-  previd='some-long-sm-id'
-  h='42'>
-  <hmac>
-    <hash xmlns='urn:xmpp:hashes:1' algo='sha256'>
-      initator-hmac
-    </hash>
-  </hmac>
-  </inst-resume>]]></example>
-
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
 <authenticate xmlns='urn:xmpp:sasl:0' mechanism='YAP-SHA-256-TLS-UNIQ'>
   <initial-response></initial-response>
   <bind xmlns='urn:xmpp:bind2:0'/>
-    <resume
+    <resume xmlns='urn:xmpp:sm:3'
+            h='some-sequence-number'
+	        previd='some-long-sm-id'/>
   </bind>
 </authenticate>
 ]]></example>
