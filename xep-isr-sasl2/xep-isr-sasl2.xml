@@ -143,6 +143,24 @@
 </section1>
 -->
 
+<section1 topic='Stream Feature'>
+
+  <example caption='Server announces the Instant Stream Resumption Stream Feature'><![CDATA[
+<stream:stream
+  from='example.com'
+  xmlns='jabber:client'
+  xmlns:stream='http://etherx.jabber.org/stream'
+  version='1.0'>
+
+<stream:features>
+  <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
+  <sm xmlns='urn:xmpp:sm:3'/>
+  <isr xmlns='urn:xmpp:isr:0'/>
+</stream:features>
+]]></example>
+
+</section1>
+
 <section1 topic='Obtaining a Instant Stream Resumption Key' anchor='obtain'>
 
   <p>If an entity supports ISR, then the &lt;enabled/&gt;
@@ -227,8 +245,7 @@
   </ol>
 
   <p>Next, the initiating entity sends an XMPP &lt;stream&gt; open
-  element followed by a &lt;instant-resume/&gt; Nonza qualified by
-  the 'urn:xmpp:isr:0' namespace which MUST contain the previous
+  element followed by a &lt;authenticate/&gt; Nonza as specified in <cite>SASL2</cite>. namespace which MUST contain the previous
   stream identifier, the <cite>XEP-0198</cite> "SM-ID", in the
   'previd' attribute, the sequence number of the last by Stream
   Management handled stanza in the 'h' attribute and the
@@ -266,11 +283,11 @@
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
 <authenticate xmlns='urn:xmpp:sasl:0' mechanism='YAP-SHA-256-TLS-UNIQ'>
   <initial-response></initial-response>
-  <bind xmlns='urn:xmpp:bind2:0'/>
+  <inst-resume xmlns='urn:xmpp:isr:0'/>
     <resume xmlns='urn:xmpp:sm:3'
             h='some-sequence-number'
-	        previd='some-long-sm-id'/>
-  </bind>
+            previd='some-long-sm-id'/>
+  </inst-resume>
 </authenticate>
 ]]></example>
 
@@ -280,6 +297,17 @@
   was established from the beginning.</p>
 
   <section3 topic='Successful Stream Resumption' anchor='isr-success'>
+
+  <example caption='Successful Instant Stream Resumption'><![CDATA[
+<success xmlns='urn:xmpp:sasl:0'>z
+  <success-data>
+  </success-data>
+  <inst-resumed xmlns='urn:xmpp:isr:o'
+                key='006b1a29-c549-41c7-a12c-2a931822f8c0'>
+    <resumed xmlns='urn:xmpp:sm:3' h='354' previd='123'/>
+  </inst-resumed>
+</success>
+]]></example>
 
   <p>On success the server replies with &lt;inst-resumed/&gt;
   Nonza which MUST contain a <em>new</em> ISR Key found in the
