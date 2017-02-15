@@ -164,7 +164,7 @@
   <sm xmlns='urn:xmpp:sm:3'/>
   <isr xmlns='urn:xmpp:isr:0'>
     <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-      <mechanism>YAP-SHA-256-SERVER-ENDPOINT</mechanism>
+      <mechanism>YAP-SHA-256-TLS-SERVER-ENDPOINT</mechanism>
     </mechaisms>
   </isr>
 </stream:features>
@@ -257,19 +257,22 @@
   <p>After receiving the stream open and -features from the remote
   entity, the initiating entity sends an XMPP &lt;stream&gt; open
   element followed by a &lt;authenticate/&gt; Nonza as specified in
-  <cite>SASL2</cite>. Only the family of SASL <emph>YAP-*</emph>
-  mechanisms, as defined in &sasl-yap;,
-  MUST be used as selected SASL mechanism in the 'authenticate'
-  element in order to perform ISR. The initiating entity must also
-  provide a &lt;inst-resume/&gt; element qualified by the
-  'urn:xmpp:isr:0' namespace, which must contain a &lt;resume/&gt;
-  element as defined in &xep0198;.</p>
+  <cite>SASL2</cite>. A good candidate for a ISR SASL mechanism is the
+  family of SASL <emph>YAP-*</emph> mechanisms, as defined in
+  &sasl-yap;. The initiating entity must also provide a
+  &lt;inst-resume/&gt; element qualified by the 'urn:xmpp:isr:0'
+  namespace, which must contain a &lt;resume/&gt; element as defined
+  in &xep0198;.</p>
 
-  <p>The ISR key is now used as password within the selected YAP-*
-  mechanism.</p>
+  <p>If the 'without-isr-token' attribute is set to true, then the
+  SASL mechanisms are performed as when initially authenticating the
+  XMPP session. If the value of the attribute is 'false', which is the
+  default value for this attribute, then the password for the SASL
+  mechanism is the ISR key. Note that this implies that only SASL
+  mechanisms which take a password can be used this way.</p>
 
-  <p>All ISR implementations MUST support the YAP-SHA-256-TLS-UNIQ
-  mechanism.</p>
+  <p>All ISR implementations MUST support the
+  YAP-SHA-256-TLS-SERVER-ENDPOINT mechanism.</p>
 
   <p>Note that the initiating entity SHOULD pipeline the instant
   stream resumption request together with then initial
@@ -280,7 +283,7 @@
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
 <authenticate xmlns='urn:xmpp:sasl:0' mechanism='YAP-SHA-256-TLS-UNIQ'>
   <initial-response></initial-response>
-  <inst-resume xmlns='urn:xmpp:isr:0'/>
+  <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
     <resume xmlns='urn:xmpp:sm:3'
             h='some-sequence-number'
             previd='some-long-sm-id'/>
@@ -306,47 +309,8 @@
   namespace. This element MUST contain a <em>new</em> ISR Key found in
   the 'key' attribute. It also MUST include a &lt;resumed/&gt; as
   specified in &xep0198; containing the sequence number of the last by
-  Stream Mangement handled stanza in the 'h' attribute and the 'previd' attribute.
-  The &lt;success-data/&gt; element contains the 
-  'responder-hmac' as value of the &lt;hash/&gt; element being a child
-  of the &lt;hamc/&gt; element.</p>
-
-  <p>The responder-hmac is defined as follows:</p>
-
-  <p class='box'>
-    responder-hmac = Base64(HMAC(key, "Responder" ||
-    tls-server-end-point))
-  </p>
-
-  <p>That is, it is the same as the initiator-hamc, but instead of
-    using the ASCII string "Initiator", the ASCII string "Responder"
-    is used.</p>
-
-  <p>The initiating entity is required to verify the
-    responder-hmac achieve mutual authentication.</p>
-
-  <example caption='Server acknowledges instant stream resumption'><![CDATA[
-<stream:stream
-  from='im.example.com'
-  id='t7AMCin9zjMNwQKDnplntZPIDEI='
-  to='juliet@im.example.com'
-  version='1.0'
-  xml:lang='en'
-  xmlns='jabber:client'
-  xmlns:stream='http://etherx.jabber.org/streams'>
-<stream:features>
- <isr xmlns='urn:xmpp:isr:0'/>
-</stream:features>
-<inst-resumed
-  xmlns='urn:xmpp:isr:0'
-  key='006b1a29-c549-41c7-a12c-2a931822f8c0'
-  h='21'>
-  <hmac>
-    <hash xmlns='urn:xmpp:hashes:1' algo='sha-256'>
-      responder-hmac
-    </hash>
-  </hmac>
-</inst-resumed>]]></example>
+  Stream Mangement handled stanza in the 'h' attribute and the
+  'previd' attribute.</p>
 
   <p>After the &lt;inst-resumed/&gt; was received and has been
   verified both entities MUST consider the resumed stream to be
@@ -356,6 +320,19 @@
   Compression, the dictionary used by the compression mechanism of
   the resumed stream MUST NOT be considered to be restored after
   instant stream resumption.</p>
+
+  </section3>
+
+  <section3 topic='Multi step SASL ISR' anchor='multi-step-sasl-isr'>
+
+    <p>As specified in <cite>SASL2</cite> § 2.6.4, a single SASL step
+    may not be sufficient for authentication. In this case, the remote
+    entity sends a &lt;continue/&gt; element as defined in
+    <cite>SASL2</cite> to request the local entity to perform another
+    SASL mechanism in order to perform an instant stream
+    resumption. This MUST only be done if the 'without-isr-token'
+    attribute is set to 'true'. But if this is the case, then multiple
+    SASL steps are possible.</p>
 
   </section3>
 
@@ -419,7 +396,7 @@
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Jonas Wielicki and Thijs Alkemade for their feedback.</p>
+  <p>Thanks to Jonas Wielicki, Thijs Alkemade and Dave Cridland for their feedback.</p>
 
 </section1>
 
