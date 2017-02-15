@@ -162,7 +162,11 @@
 <stream:features>
   <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'/>
   <sm xmlns='urn:xmpp:sm:3'/>
-  <isr xmlns='urn:xmpp:isr:0'/>
+  <isr xmlns='urn:xmpp:isr:0'>
+    <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
+      <mechanism>YAP-SHA-256-SERVER-ENDPOINT</mechanism>
+    </mechaisms>
+  </isr>
 </stream:features>
 ]]></example>
 
@@ -296,12 +300,16 @@
 </success>
 ]]></example>
 
-  <p>On success the server replies with a &lt;success/&gt; nonza as specified in <cite>SASL2</cite>, which must include a &lt;inst-resumed/&gt;
-  element qualified by the 'urn:xmpp:isr:0' namespace. This element MUST contain a <em>new</em> ISR Key found in the
-  'key' attribute, the sequence number of the last by Stream
-  Mangement handled stanza in the 'h' attribute and the
-  'responder-hmac' as value of the &lt;hash/&gt; element being a
-  child of the &lt;hamc/&gt; element.</p>
+  <p>On success the server replies with a &lt;success/&gt; nonza as
+  specified in <cite>SASL2</cite>, which must include a
+  &lt;inst-resumed/&gt; element qualified by the 'urn:xmpp:isr:0'
+  namespace. This element MUST contain a <em>new</em> ISR Key found in
+  the 'key' attribute. It also MUST include a &lt;resumed/&gt; as
+  specified in &xep0198; containing the sequence number of the last by
+  Stream Mangement handled stanza in the 'h' attribute and the 'previd' attribute.
+  The &lt;success-data/&gt; element contains the 
+  'responder-hmac' as value of the &lt;hash/&gt; element being a child
+  of the &lt;hamc/&gt; element.</p>
 
   <p>The responder-hmac is defined as follows:</p>
 
