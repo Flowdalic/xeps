@@ -338,22 +338,21 @@
 
   <section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
 
-    <p>If the server is unable to resume the stream instantly it
-      MUST reply with a &lt;failed/&gt; Nonza qualified by the
-      'urn:xmpp:isr:0' namespace.</p>
+    <p>If the server is unable to resume the stream instantly it MUST
+    reply with a &lt;failed/&gt; elemennt qualified by the
+    'urn:xmpp:isr:0' namespace wrapped into a &lt;failure/&gt; Nonza
+    as defined in <cite>SASL2</cite>.</p>
 
     <example caption='Server indicates instant stream resumption failure'><![CDATA[
-<failed
-  xmlns='urn:xmpp:isr:0'/>]]></example>
-
-    <p>The server MAY also include a 'h' attribute in the
-      &lt;failed/&gt; element indicating the number of stanzas it has
-      handled so far.</p>
-
-    <example caption='Server indicates failure with handled stanzas count'><![CDATA[
-<failed
-  xmlns='urn:xmpp:isr:0'
-  h='22'/>]]></example>
+<failure xmlns='urn:xmpp:sasl:0'>
+  <inst-resume-failed xmlns='urn:xmpp:isr:0'>
+    <failed xmlns='urn:xmpp:sm:3'
+              h='another-sequence-number'>
+      <item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+    </failed>
+  </inst-resume-failed>
+</failure>
+]]></example>
 
     <p>Instant stream resumption errors SHOULD be considered
       recoverable, the initiating entity MAY continue with normal
