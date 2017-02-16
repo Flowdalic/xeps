@@ -88,6 +88,12 @@
     <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
+    <version>0.0.3</version>
+    <date>2017-02-17</date>
+    <initials>fs</initials>
+    <remark><p>Based ISR on SASL2.</p></remark>
+  </revision>
+  <revision>
     <version>0.0.2</version>
     <date>2016-03-11</date>
     <initials>fs</initials>
