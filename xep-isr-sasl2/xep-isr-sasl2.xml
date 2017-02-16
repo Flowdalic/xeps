@@ -203,7 +203,7 @@
   isr:location='isr.example.org:5222'/>]]></example>
 
   <p>The &lt;enabled/&gt; Nonza containing an ISR key MUST only be
-  sent over TLS secured connections. It MUST not contain whitespace
+  sent over TLS secured connections. It MUST NOT contain whitespace
   characters.</p>
 
 </section1>
