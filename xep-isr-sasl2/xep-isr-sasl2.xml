@@ -2,6 +2,8 @@
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
   <!ENTITY sasl-yap "<span class='ref'><link url='https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06'>draft-zeilenga-sasl-yap-06</link></span> <note>SASL Yet Another Password Mechanism &lt;<link url='https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06'>https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06</link>&gt;.</note>" >
+  <!ENTITY iana-hash-alg "<span class='ref'><link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>IANA Named Information Hash Algorithm Registry</link></span><note>IANA Named Information Hash Algorithm Registry &lt;<link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</link>&gt;.</note>" >
+  <!ENTITY iana-cbt "<span class='ref'><link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>IANA Channel-Binding Types</link></span><note>IANA Channel-Binding Types&lt;<link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml</link>&gt;.</note>" >
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
@@ -76,7 +78,6 @@
   <dependencies>
     <spec>XMPP Core</spec>
     <spec>XEP-0198</spec>
-    <spec>XEP-0300</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -170,7 +171,7 @@
   <sm xmlns='urn:xmpp:sm:3'/>
   <isr xmlns='urn:xmpp:isr:0'>
     <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-      <mechanism>YAP-SHA-256-TLS-SERVER-ENDPOINT</mechanism>
+      <mechanism>X-ISR-SHA-512-SERVER-ENDPOINT</mechanism>
     </mechaisms>
   </isr>
 </stream:features>
@@ -263,9 +264,10 @@
   <p>After receiving the stream open and -features from the remote
   entity, the initiating entity sends an XMPP &lt;stream&gt; open
   element followed by a &lt;authenticate/&gt; Nonza as specified in
-  <cite>SASL2</cite>. A good candidate for a ISR SASL mechanism is the
-  family of SASL <emph>YAP-*</emph> mechanisms, as defined in
-  &sasl-yap;. The initiating entity must also provide a
+  <cite>SASL2</cite>. A default and mandatory to implement candidate
+  for a ISR SASL mechanism is the family of SASL <emph>X-ISR-*</emph>
+  mechanisms, as defined below in <link url='#isr-sasl'>Section
+  6</link>. The initiating entity must also provide a
   &lt;inst-resume/&gt; element qualified by the 'urn:xmpp:isr:0'
   namespace, which must contain a &lt;resume/&gt; element as defined
   in &xep0198;.</p>
@@ -278,7 +280,7 @@
   mechanisms which take a password can be used this way.</p>
 
   <p>All ISR implementations MUST support the
-  YAP-SHA-256-TLS-SERVER-ENDPOINT mechanism.</p>
+  X-ISR-SHA-512-SERVER-ENDPOINT mechanism.</p>
 
   <p>Note that the initiating entity SHOULD pipeline the instant
   stream resumption request together with then initial
@@ -287,7 +289,7 @@
   announced an ISR key.</p>
 
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
-<authenticate xmlns='urn:xmpp:sasl:0' mechanism='YAP-SHA-256-TLS-UNIQ'>
+<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-ISR-SHA-512-SERVER-ENDPOINT'>
   <initial-response></initial-response>
   <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
     <resume xmlns='urn:xmpp:sm:3'
@@ -367,6 +369,41 @@
 
   </section3>
 
+  </section2>
+
+</section1>
+
+<section1 topic='The X-ISR SASL Mechanism' anchor='isr-sasl'>
+
+  <section2 topic='The X-ISR-* Family of Mechanisms' anchor='isr-sasl-mechanism-family'>
+
+	<p>Naming scheme: X-ISR-[HA]-[CBT], where [HA] is the upcase "Hash
+	Name String" of the &iana-hash-alg; registry, and [CBT] is the
+	upcase "Channel-binding unique prefix" of the &iana-cbt;
+	registry.</p>
+	
+  </section2>
+
+  <section2 topic='The ISR Mechanism' anchor='isr-sasl-mechanism'>
+
+	<p>The mechanism involves a single message from the client to the
+	server, followed by another single message from the server to the
+	client.</p>
+
+	<p class='box'>
+	  initiator-message = HMAC(isr-key, "Initiator" || cbt)
+	</p>
+
+	<p>HMAC is HMAC with H of the choosen hash algorithm, 'cbt' is
+	channel binding type data.</p>
+
+	<p class='box'>
+	  responder-message = HMAC(isr-key, "Responder" || cbt)
+	</p>
+
+	<p>The initiating entity SHOULD verify the responder-message to
+	achieve mutual authentication.</p>
+	
   </section2>
 
 </section1>
