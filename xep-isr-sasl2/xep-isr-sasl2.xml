@@ -390,7 +390,8 @@
       <tr><td>UNIQ</td><td>tls-unique</td></tr>
     </table>
 
-    <p>The following table lists a few examples of X-ISR-* SASL mechanism names.</p>
+    <p>The following table lists a few examples of X-ISR-* SASL
+    mechanism names.</p>
 
     <table caption='Example X-ISR-* SASL mechanisms'>
       <tr><th>Mechanism Name</th><th>Hash Algorithm</th><th>Channel-binding unique prefix</th></tr>
@@ -402,16 +403,21 @@
 
   <section2 topic='The ISR Mechanism' anchor='isr-sasl-mechanism'>
 
-    <p>The mechanism involves a single message from the client to the
-    server, followed by another single message from the server to the
-    client.</p>
+    <p>The mechanism consists of a simple exchange of exactly two
+    messages between the initator and responder. It starts with the
+    message from the initiator to the responder. This
+    'initiator-message' is defined as follows:</p>
 
     <p class='box'>
       initiator-message = HMAC(isr-key, "Initiator" || cbt)
     </p>
 
-    <p>HMAC is HMAC with H of the choosen hash algorithm, 'cbt' is
-    channel binding type data.</p>
+    <p>HMAC is the function defined in &rfc2104; with H of the choosen
+    hash algorithm, 'cbt' is channel binding type data, and 'isr-key'
+    are the UTF-8 encoded bytes of the ISR key.</p>
+
+    <p>This message is followed by a message from the responder to the
+    initiator. This 'responder-message' is defined as follows:</p>
 
     <p class='box'>
       responder-message = HMAC(isr-key, "Responder" || cbt)
@@ -419,7 +425,7 @@
 
     <p>The initiating entity SHOULD verify the responder-message to
     achieve mutual authentication.</p>
-    
+   
   </section2>
 
 </section1>
