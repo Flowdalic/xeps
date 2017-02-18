@@ -424,9 +424,9 @@
 
 </section1>
 
-<section1 topic='The X-HT SASL Mechanism' anchor='ht-sasl'>
+<section1 topic='The X-HT-* SASL Mechanism' anchor='ht-sasl'>
 
-  <p>This section specifies the Hashed Token (X-HT) SASL
+  <p>This section specifies the Hashed Token (X-HT-*) SASL
   mechanism. This mechanism was designed to be used with short-lived
   tokens (shared secrets) for authentication. It provides hash
   agility, mutual authentication and is secured by channel
@@ -503,7 +503,6 @@
 
 </section1>
 
-
 <section1 topic='Security Considerations' anchor='security'>
 
   <p>It is of vital importance that the Instant Stream Resumption Key
@@ -522,7 +521,6 @@
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
 
   <p>The &REGISTRAR; includes 'urn:xmpp:isr:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
-
 
 </section1>
 
