@@ -331,16 +331,15 @@
 
   </section3>
 
-  <section3 topic='Multi step SASL ISR' anchor='multi-step-sasl-isr'>
+  <section3 topic='Multi SASL Mechanism ISR' anchor='multi-sasl-mech-isr'>
 
-    <p>As specified in <cite>SASL2</cite> § 2.6.4, a single SASL step
-    may not be sufficient for authentication. In this case, the remote
-    entity sends a &lt;continue/&gt; element as defined in
+    <p>As specified in <cite>SASL2</cite> § 2.6.4, a single SASL
+    mechanism may not be sufficient for authentication. In this case,
+    the remote entity sends a &lt;continue/&gt; element as defined in
     <cite>SASL2</cite> to request the local entity to perform another
-    SASL mechanism in order to perform an instant stream
-    resumption. This MUST only be done if the 'without-isr-token'
-    attribute is set to 'true'. But if this is the case, then multiple
-    SASL steps are possible.</p>
+    SASL mechanism. Performing instant stream resumption using
+    multiple SASL mechanisms MUST only be done if the
+    'without-isr-token' attribute is set to 'true'.</p>
 
   </section3>
 
