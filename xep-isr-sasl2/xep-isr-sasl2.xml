@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
-  <!ENTITY sasl-yap "<span class='ref'><link url='https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06'>draft-zeilenga-sasl-yap-06</link></span> <note>SASL Yet Another Password Mechanism &lt;<link url='https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06'>https://tools.ietf.org/html/draft-zeilenga-sasl-yap-06</link>&gt;.</note>" >
+  <!ENTITY tls13 "<span class='ref'><link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-18'>draft-ietf-tls-tls13-18</link></span> <note>The Transport Layer Security (TLS) Protocol Version 1.3 &lt;<link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-18'>https://tools.ietf.org/html/draft-ietf-tls-tls13-18</link>&gt;.</note>" >
   <!ENTITY iana-hash-alg "<span class='ref'><link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>IANA Named Information Hash Algorithm Registry</link></span><note>IANA Named Information Hash Algorithm Registry &lt;<link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</link>&gt;.</note>" >
   <!ENTITY iana-cbt "<span class='ref'><link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>IANA Channel-Binding Types</link></span><note>IANA Channel-Binding Types&lt;<link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml</link>&gt;.</note>" >
 %ents;
@@ -118,9 +118,11 @@
   <p>Compared to the existing stream resumption mechanism of <link
   url='http://xmpp.org/extensions/xep-0198.html#resumption'><cite>XEP-0198</cite>
   § 5</link>, the approach defined herein reduces the round trips
-  required to resume a stream to exactly <em>one</em> (besides the
-  round trips required by the TLS handshake). This is achieved by
-  using just a secure key to resume the stream.</p>
+  required to resume a stream to exactly <em>one</em>. This is
+  achieved by using just a secure short-lived key to resume the
+  stream. The technique specified herein can be combined with the
+  0-RTT handshake of &tls13; to further decrease the time to resume an
+  XMPP session.</p>
 
 </section1>
 
@@ -171,7 +173,7 @@
   <sm xmlns='urn:xmpp:sm:3'/>
   <isr xmlns='urn:xmpp:isr:0'>
     <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-      <mechanism>X-ISR-SHA-512-ENDP</mechanism>
+      <mechanism>X-HT-SHA-256-ENDP</mechanism>
     </mechaisms>
   </isr>
 </stream:features>
@@ -181,11 +183,11 @@
 
 <section1 topic='Obtaining a Instant Stream Resumption Key' anchor='obtain'>
 
-  <p>If an entity supports ISR, then the &lt;enabled/&gt; &xep0360;
-  which is send as positive reply upon a request to enable Stream
-  Management, MUST contain an 'key' attribute qualified by the
-  'urn:xmpp:isr:0' namespace containing a ISR Key. The Nonza MAY
-  also contain a 'location' attribute qualified by the
+  <p>If an entity supports ISR, then the &lt;enabled/&gt; Nonza (see
+  &xep0360;) which is send as positive reply upon a request to enable
+  Stream Management, MUST contain an 'key' attribute qualified by the
+  'urn:xmpp:isr:0' namespace containing a ISR Key. The Nonza can
+  optionally also contain a 'location' attribute qualified by the
   'urn:xmpp:isr:0' namespace which specifies the preferred IP address
   or hostname, and a TCP port number of the host which should be used
   for instant stream resumption.</p>
@@ -204,8 +206,7 @@
   isr:location='isr.example.org:5222'/>]]></example>
 
   <p>The &lt;enabled/&gt; Nonza containing an ISR key MUST only be
-  sent over TLS secured connections. It MUST NOT contain whitespace
-  characters.</p>
+  sent over TLS secured connections.</p>
 
 </section1>
 
@@ -265,7 +266,7 @@
   entity, the initiating entity sends an XMPP &lt;stream&gt; open
   element followed by a &lt;authenticate/&gt; Nonza as specified in
   <cite>SASL2</cite>. A default and mandatory to implement candidate
-  for a ISR SASL mechanism is the family of SASL <emph>X-ISR-*</emph>
+  for a ISR SASL mechanism is the family of SASL <emph>X-HT-*</emph>
   mechanisms, as defined below in <link url='#isr-sasl'>Section
   6</link>. The initiating entity must also provide a
   &lt;inst-resume/&gt; element qualified by the 'urn:xmpp:isr:0'
@@ -280,16 +281,19 @@
   mechanisms which take a password can be used this way.</p>
 
   <p>All ISR implementations MUST support the
-  X-ISR-SHA-512-ENDP mechanism.</p>
-
-  <p>Note that the initiating entity SHOULD pipeline the instant
-  stream resumption request together with then initial
-  &lt;stream&gt; open element. The initiating entity is able to do
-  so since it already knows that the service supports ISR because it
-  announced an ISR key.</p>
+  X-HT-SHA-256-ENDP mechanism.</p>
 
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
-<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-ISR-SHA-512-ENDP'>
+<?xml version='1.0'?>
+<stream:stream
+    from='juliet@im.example.com'
+    to='im.example.com'
+    version='1.0'
+    xml:lang='en'
+    xmlns='jabber:client'
+    xmlns:stream='http://etherx.jabber.org/streams'>
+
+<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-HT-SHA-256-ENDP'>
   <initial-response></initial-response>
   <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
     <resume xmlns='urn:xmpp:sm:3'
@@ -298,6 +302,12 @@
   </inst-resume>
 </authenticate>
 ]]></example>
+
+    <p>Note that the initiating entity SHOULD pipeline the instant
+  stream resumption request together with then initial
+  &lt;stream&gt; open element. The initiating entity is able to do
+  so since it already knows that the service supports ISR because it
+  announced an ISR key.</p>
 
   <section3 topic='Successful Stream Resumption' anchor='isr-success'>
 
@@ -341,6 +351,18 @@
     multiple SASL mechanisms MUST only be done if the
     'without-isr-token' attribute is set to 'true'.</p>
 
+    <example caption='Server requires Multi SASL Mechanism ISR'><![CDATA[
+<continue xmlns='urn:xmpp:sasl:0'>
+  <additional-data>
+   T3B0aW9uYWwgQmFzZSA2NCBlbmNvZGVkIFNBU0wgc3VjY2VzcyBkYXRh
+  </additional-data>
+  <mechanisms>
+    <mechanism>HOTP-EXAMPLE</mechanism>
+    <mechanism>TOTP-EXAMPLE</mechanism>
+  <mechanisms>
+</continue>
+]]></example>
+
   </section3>
 
   <section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
@@ -372,11 +394,14 @@
 
 </section1>
 
-<section1 topic='The X-ISR SASL Mechanism' anchor='isr-sasl'>
+<section1 topic='The X-HT SASL Mechanism' anchor='ht-sasl'>
 
-  <section2 topic='The X-ISR-* Family of Mechanisms' anchor='isr-sasl-mechanism-family'>
+  <p>This section specifies the Hashed Token (X-HT) SASL
+  mechanism.</p>
 
-    <p>Naming scheme: X-ISR-[HA]-[CBT], where [HA] is the upcase "Hash
+  <section2 topic='The X-HT-* Family of Mechanisms' anchor='ht-sasl-mechanism-family'>
+
+    <p>Naming scheme: X-HT-[HA]-[CBT], where [HA] is the upcase "Hash
     Name String" of the &iana-hash-alg; registry, and [CBT] is one of
     'ENDP' or 'UNIQ'. In case of 'ENDP', the tls-server-end-point
     channel binding type is used. In case of 'UNIQ', the tls-unique
@@ -389,18 +414,18 @@
       <tr><td>UNIQ</td><td>tls-unique</td></tr>
     </table>
 
-    <p>The following table lists a few examples of X-ISR-* SASL
+    <p>The following table lists a few examples of X-HT-* SASL
     mechanism names.</p>
 
-    <table caption='Example X-ISR-* SASL mechanisms'>
+    <table caption='Example X-HT-* SASL mechanisms'>
       <tr><th>Mechanism Name</th><th>Hash Algorithm</th><th>Channel-binding unique prefix</th></tr>
-      <tr><td>X-ISR-SHA-512-ENDP</td><td>SHA-512</td><td>tls-server-end-point</td></tr>
-      <tr><td>X-ISR-SHA-512-UNIQ</td><td>SHA-512</td><td>tls-unique</td></tr>
-      <tr><td>X-ISR-SHA-256-UNIQ</td><td>SHA-256</td><td>tls-unique</td></tr>
+      <tr><td>X-HT-SHA-512-ENDP</td><td>SHA-512</td><td>tls-server-end-point</td></tr>
+      <tr><td>X-HT-SHA-512-UNIQ</td><td>SHA-512</td><td>tls-unique</td></tr>
+      <tr><td>X-HT-SHA-256-UNIQ</td><td>SHA-256</td><td>tls-unique</td></tr>
     </table>
   </section2>
 
-  <section2 topic='The ISR Mechanism' anchor='isr-sasl-mechanism'>
+  <section2 topic='The X-HT Mechanism' anchor='ht-sasl-mechanism'>
 
     <p>The mechanism consists of a simple exchange of exactly two
     messages between the initator and responder. It starts with the
@@ -424,10 +449,19 @@
 
     <p>The initiating entity SHOULD verify the responder-message to
     achieve mutual authentication.</p>
-   
+
+  </section2>
+
+  <section2 topic='Security Considerations for the X-HT SASL Mechanism' anchor='ht-sasl-security-considerations'>
+
+    <p>To be secure, X-HTS MUST be used over a TLS channel that has
+    had the session hash extension &rfc7627; negotiated, or session
+    resumption MUST NOT have been used.</p>
+
   </section2>
 
 </section1>
+
 
 <section1 topic='Security Considerations' anchor='security'>
 
