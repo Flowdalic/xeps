@@ -262,23 +262,23 @@
     <li>performing STARTTLS (&rfc6120; § 5).</li>
   </ol>
 
-  <p>After receiving the stream open and -features from the remote
-  entity, the initiating entity sends an XMPP &lt;stream&gt; open
+  <p>Now the initiating entity sends an XMPP &lt;stream&gt; open
   element followed by a &lt;authenticate/&gt; Nonza as specified in
   <cite>SASL2</cite>. A default and mandatory to implement candidate
   for a ISR SASL mechanism is the family of SASL <emph>X-HT-*</emph>
-  mechanisms, as defined below in <link url='#isr-sasl'>Section
+  mechanisms, as defined below in <link url='#ht-sasl'>Section
   6</link>. The initiating entity must also provide a
   &lt;inst-resume/&gt; element qualified by the 'urn:xmpp:isr:0'
   namespace, which must contain a &lt;resume/&gt; element as defined
   in &xep0198;.</p>
 
   <p>If the 'without-isr-token' attribute is set to true, then the
-  SASL mechanisms are performed as when initially authenticating the
-  XMPP session. If the value of the attribute is 'false', which is the
-  default value for this attribute, then the password for the SASL
-  mechanism is the ISR key. Note that this implies that only SASL
-  mechanisms which take a password can be used this way.</p>
+  SASL mechanisms are performed as when traditionally authenticating
+  the XMPP session. If the value of the attribute is 'false', which is
+  the default value for this attribute, then the "password" given to
+  the SASL mechanism is the ISR key. Note that this implies that only
+  SASL mechanisms which take a password/token can be used this
+  way.</p>
 
   <p>All ISR implementations MUST support the
   X-HT-SHA-256-ENDP mechanism.</p>
@@ -433,18 +433,19 @@
     'initiator-message' is defined as follows:</p>
 
     <p class='box'>
-      initiator-message = HMAC(isr-key, "Initiator" || cbt)
+      initiator-message = HMAC(token, "Initiator" || cb-data)
     </p>
 
     <p>HMAC is the function defined in &rfc2104; with H of the choosen
-    hash algorithm, 'cbt' is channel binding type data, and 'isr-key'
-    are the UTF-8 encoded bytes of the ISR key.</p>
+    hash algorithm, 'cb-data' is channel binding type data, and 'token'
+    are the UTF-8 encoded bytes of the token String which acts as
+    shared secret between initiator and responder.</p>
 
     <p>This message is followed by a message from the responder to the
     initiator. This 'responder-message' is defined as follows:</p>
 
     <p class='box'>
-      responder-message = HMAC(isr-key, "Responder" || cbt)
+      responder-message = HMAC(token, "Responder" || cb-data)
     </p>
 
     <p>The initiating entity SHOULD verify the responder-message to
