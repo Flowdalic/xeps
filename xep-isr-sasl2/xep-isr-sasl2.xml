@@ -155,9 +155,11 @@
 
 <section1 topic='Stream Feature'>
 
-  <p>XMPP entities providing ISR MUST announce that functionality as
-  stream feature, but only if an instant stream resumption is possible
-  at this stage. And since ISR requires TLS, this means that the
+  <p>XMPP entities providing Instant Stream Resumption MUST announce
+  that functionality as stream feature, but only if an instant stream
+  resumption is possible at this stage. The ISR stream future consists
+  of an &lt;isr/&gt; element qualified by the 'urn:xmpp:isr:0'
+  namespace. And since ISR requires TLS, this means that the
   &lt;isr/&gt; stream feature only appears on TLS secured
   connections.</p>
 
@@ -365,7 +367,7 @@
 
   </section3>
 
-  <section3 topic='Failed Stream Resumptino' anchor='isr-failed'>
+  <section3 topic='Failed Stream Resumption' anchor='isr-failed'>
 
     <p>If the server is unable to resume the stream instantly it MUST
     reply with a &lt;failed/&gt; elemennt qualified by the
@@ -401,12 +403,15 @@
 
   <section2 topic='The X-HT-* Family of Mechanisms' anchor='ht-sasl-mechanism-family'>
 
-    <p>Naming scheme: X-HT-[HA]-[CBT], where [HA] is the upcase "Hash
-    Name String" of the &iana-hash-alg; registry, and [CBT] is one of
-    'ENDP' or 'UNIQ'. In case of 'ENDP', the tls-server-end-point
-    channel binding type is used. In case of 'UNIQ', the tls-unique
-    channel binding type is used. For more information about channel
-    binding, see &rfc5929; and the &iana-cbt; registry.</p>
+    <p>Each mechanism in this family differs by the choice of the hash
+    algorithm and the coice of the channel binding type. Each
+    mechanism has a name of the form X-HT-[HA]-[CBT] where [HA] is the
+    "Hash Name String" of the &iana-hash-alg; registry in capital
+    letters, and [CBT] is one of 'ENDP' or 'UNIQ'. In case of 'ENDP',
+    the tls-server-end-point channel binding type is used. In case of
+    'UNIQ', the tls-unique channel binding type is used. For more
+    information about channel binding, see &rfc5929; and the
+    &iana-cbt; registry.</p>
 
     <table caption='Mapping of CBT to Channel Bindings'>
       <tr><th>CBT</th><th>Channel Binding Type</th></tr>
@@ -419,9 +424,10 @@
 
     <table caption='Example X-HT-* SASL mechanisms'>
       <tr><th>Mechanism Name</th><th>Hash Algorithm</th><th>Channel-binding unique prefix</th></tr>
-      <tr><td>X-HT-SHA-512-ENDP</td><td>SHA-512</td><td>tls-server-end-point</td></tr>
-      <tr><td>X-HT-SHA-512-UNIQ</td><td>SHA-512</td><td>tls-unique</td></tr>
-      <tr><td>X-HT-SHA-256-UNIQ</td><td>SHA-256</td><td>tls-unique</td></tr>
+      <tr><td>X-HT-SHA-512-ENDP</td><td>SHA-512 (FIPS 180-4)</td><td>tls-server-end-point</td></tr>
+      <tr><td>X-HT-SHA3-256-ENDP</td><td>SHA3-512 (FIPS 202)</td><td>tls-server-end-point</td></tr>
+      <tr><td>X-HT-SHA-512-UNIQ</td><td>SHA-512 (FIPS 180-4)</td><td>tls-unique</td></tr>
+      <tr><td>X-HT-SHA-256-UNIQ</td><td>SHA-256 (&rfc6920;)</td><td>tls-unique</td></tr>
     </table>
   </section2>
 
