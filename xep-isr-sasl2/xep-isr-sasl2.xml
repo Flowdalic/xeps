@@ -163,6 +163,11 @@
   &lt;isr/&gt; stream feature only appears on TLS secured
   connections.</p>
 
+  <p>The ISR stream feature element MUST contain a &lt;mechanisms/&gt;
+  element as specified in &rfc6120;. This element contains the SASL
+  mechanism which are available to be used for instant stream
+  resumption.</p>
+
   <example caption='Server announces the Instant Stream Resumption Stream Feature'><![CDATA[
 <stream:stream
   from='example.com'
