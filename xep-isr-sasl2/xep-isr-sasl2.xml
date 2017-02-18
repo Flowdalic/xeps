@@ -348,6 +348,36 @@
 
   </section3>
 
+    <section3 topic='Successful Authentication but failed Stream Resumption' anchor='isr-auth-success-resumption-failed'>
+
+    <p>If the server was able to authenticate the initiating entity
+    but is unable to resume the stream instantly it MUST reply with a
+    &lt;success/&gt; Nonza as defined in <cite>SASL2</cite> containing
+    a &lt;inst-resume-failed-failed/&gt; element qualified by the
+    'urn:xmpp:isr:0' namespace. This
+    &lt;inst-resume-failed-failed/&gt; MUST contain a &lt;failed/&gt;
+    element as specified in &xep0198;.</p>
+
+    <example caption='Server indicates instant stream resumption failure'><![CDATA[
+<success xmlns='urn:xmpp:sasl:0'>
+  <inst-resume-failed xmlns='urn:xmpp:isr:0'>
+    <failed xmlns='urn:xmpp:sm:3'
+            h='another-sequence-number'>
+      <item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+    </failed>
+  </inst-resume-failed>
+</sucess>
+]]></example>
+
+    <p>Instant stream resumption errors SHOULD be considered
+    recoverable, the initiating entity MAY continue with normal
+    session establishment; however, misuse of stream management MAY
+    result in termination of the stream. Since the initating entity is
+    authenticated, it could contine with resource binding by using
+    &rfc6120; § 7. or &xep0386;.</p>
+
+  </section3>
+
   <section3 topic='Multi SASL Mechanism ISR' anchor='multi-sasl-mech-isr'>
 
     <p>As specified in <cite>SASL2</cite> § 2.6.4, a single SASL
@@ -372,28 +402,21 @@
 
   </section3>
 
-  <section3 topic='Failed Stream Resumption' anchor='isr-failed'>
+    <section3 topic='Failed ISR Authentication' anchor='isr-auth-failed'>
 
-    <p>If the server is unable to resume the stream instantly it MUST
-    reply with a &lt;failed/&gt; elemennt qualified by the
-    'urn:xmpp:isr:0' namespace wrapped into a &lt;failure/&gt; Nonza
-    as defined in <cite>SASL2</cite>.</p>
+    <p>If the server is unable to authenticate the initating entity it
+    MUST reply with a &lt;failure/&gt; Nonza as defined in
+    <cite>SASL2</cite>.</p>
 
     <example caption='Server indicates instant stream resumption failure'><![CDATA[
 <failure xmlns='urn:xmpp:sasl:0'>
-  <inst-resume-failed xmlns='urn:xmpp:isr:0'>
-    <failed xmlns='urn:xmpp:sm:3'
-              h='another-sequence-number'>
-      <item-not-found xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
-    </failed>
-  </inst-resume-failed>
+    <not-authorized xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>
 </failure>
 ]]></example>
 
-    <p>Instant stream resumption errors SHOULD be considered
-      recoverable, the initiating entity MAY continue with normal
-      session establishment; however, misuse of stream management MAY
-      result in termination of the stream.</p>
+    <p>After the ISR authentication has failed, the initiating entity
+    could continue with normal authentication (<cite>SASL2</cite>,
+    …).</p>
 
   </section3>
 
@@ -404,7 +427,13 @@
 <section1 topic='The X-HT SASL Mechanism' anchor='ht-sasl'>
 
   <p>This section specifies the Hashed Token (X-HT) SASL
-  mechanism.</p>
+  mechanism. This mechanism was designed to be used with short-lived
+  tokens (shared secrets) for authentication. It provides hash
+  agility, mutual authentication and is secured by channel
+  binding. Since the token is not salted, and only one iteration is
+  used, the X-HT mechanism is not suitable to protect long-lived
+  shared secrets (e.g. "passwords"). You may want to look at &rfc5802;
+  for that.</p>
 
   <section2 topic='The X-HT-* Family of Mechanisms' anchor='ht-sasl-mechanism-family'>
 
@@ -447,10 +476,10 @@
       initiator-message = HMAC(token, "Initiator" || cb-data)
     </p>
 
-    <p>HMAC is the function defined in &rfc2104; with H of the choosen
-    hash algorithm, 'cb-data' is channel binding type data, and 'token'
-    are the UTF-8 encoded bytes of the token String which acts as
-    shared secret between initiator and responder.</p>
+    <p>HMAC() is the function defined in &rfc2104; with H being the
+    choosen hash algorithm, 'cb-data' represents channel binding type
+    data, and 'token' are the UTF-8 encoded bytes of the token String
+    which acts as shared secret between initiator and responder.</p>
 
     <p>This message is followed by a message from the responder to the
     initiator. This 'responder-message' is defined as follows:</p>
