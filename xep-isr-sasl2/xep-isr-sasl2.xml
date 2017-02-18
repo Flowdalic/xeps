@@ -171,7 +171,7 @@
   <sm xmlns='urn:xmpp:sm:3'/>
   <isr xmlns='urn:xmpp:isr:0'>
     <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-      <mechanism>X-ISR-SHA-512-SERVER-ENDPOINT</mechanism>
+      <mechanism>X-ISR-SHA-512-ENDP</mechanism>
     </mechaisms>
   </isr>
 </stream:features>
@@ -280,7 +280,7 @@
   mechanisms which take a password can be used this way.</p>
 
   <p>All ISR implementations MUST support the
-  X-ISR-SHA-512-SERVER-ENDPOINT mechanism.</p>
+  X-ISR-SHA-512-ENDP mechanism.</p>
 
   <p>Note that the initiating entity SHOULD pipeline the instant
   stream resumption request together with then initial
@@ -289,7 +289,7 @@
   announced an ISR key.</p>
 
   <example caption='Initiating entity requests instant stream resumption via SASL2'><![CDATA[
-<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-ISR-SHA-512-SERVER-ENDPOINT'>
+<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-ISR-SHA-512-ENDP'>
   <initial-response></initial-response>
   <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
     <resume xmlns='urn:xmpp:sm:3'
@@ -377,33 +377,49 @@
 
   <section2 topic='The X-ISR-* Family of Mechanisms' anchor='isr-sasl-mechanism-family'>
 
-	<p>Naming scheme: X-ISR-[HA]-[CBT], where [HA] is the upcase "Hash
-	Name String" of the &iana-hash-alg; registry, and [CBT] is the
-	upcase "Channel-binding unique prefix" of the &iana-cbt;
-	registry.</p>
-	
+    <p>Naming scheme: X-ISR-[HA]-[CBT], where [HA] is the upcase "Hash
+    Name String" of the &iana-hash-alg; registry, and [CBT] is one of
+    'ENDP' or 'UNIQ'. In case of 'ENDP', the tls-server-end-point
+    channel binding type is used. In case of 'UNIQ', the tls-unique
+    channel binding type is used. For more information about channel
+    binding, see &rfc5929; and the &iana-cbt; registry.</p>
+
+    <table caption='Mapping of CBT to Channel Bindings'>
+      <tr><th>CBT</th><th>Channel Binding Type</th></tr>
+      <tr><td>ENDP</td><td>tls-server-end-point</td></tr>
+      <tr><td>UNIQ</td><td>tls-unique</td></tr>
+    </table>
+
+    <p>The following table lists a few examples of X-ISR-* SASL mechanism names.</p>
+
+    <table caption='Example X-ISR-* SASL mechanisms'>
+      <tr><th>Mechanism Name</th><th>Hash Algorithm</th><th>Channel-binding unique prefix</th></tr>
+      <tr><td>X-ISR-SHA-512-ENDP</td><td>SHA-512</td><td>tls-server-end-point</td></tr>
+      <tr><td>X-ISR-SHA-512-UNIQ</td><td>SHA-512</td><td>tls-unique</td></tr>
+      <tr><td>X-ISR-SHA-256-UNIQ</td><td>SHA-256</td><td>tls-unique</td></tr>
+    </table>
   </section2>
 
   <section2 topic='The ISR Mechanism' anchor='isr-sasl-mechanism'>
 
-	<p>The mechanism involves a single message from the client to the
-	server, followed by another single message from the server to the
-	client.</p>
+    <p>The mechanism involves a single message from the client to the
+    server, followed by another single message from the server to the
+    client.</p>
 
-	<p class='box'>
-	  initiator-message = HMAC(isr-key, "Initiator" || cbt)
-	</p>
+    <p class='box'>
+      initiator-message = HMAC(isr-key, "Initiator" || cbt)
+    </p>
 
-	<p>HMAC is HMAC with H of the choosen hash algorithm, 'cbt' is
-	channel binding type data.</p>
+    <p>HMAC is HMAC with H of the choosen hash algorithm, 'cbt' is
+    channel binding type data.</p>
 
-	<p class='box'>
-	  responder-message = HMAC(isr-key, "Responder" || cbt)
-	</p>
+    <p class='box'>
+      responder-message = HMAC(isr-key, "Responder" || cbt)
+    </p>
 
-	<p>The initiating entity SHOULD verify the responder-message to
-	achieve mutual authentication.</p>
-	
+    <p>The initiating entity SHOULD verify the responder-message to
+    achieve mutual authentication.</p>
+    
   </section2>
 
 </section1>
