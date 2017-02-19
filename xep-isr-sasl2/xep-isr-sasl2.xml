@@ -334,7 +334,7 @@
   namespace. This element MUST contain a <em>new</em> ISR Key found in
   the 'key' attribute. It also MUST include a &lt;resumed/&gt; as
   specified in &xep0198; containing the sequence number of the last by
-  Stream Mangement handled stanza in the 'h' attribute and the
+  Stream Management handled stanza in the 'h' attribute and the
   'previd' attribute.</p>
 
   <p>After the &lt;inst-resumed/&gt; was received and has been
@@ -353,9 +353,9 @@
     <p>If the server was able to authenticate the initiating entity
     but is unable to resume the stream instantly it MUST reply with a
     &lt;success/&gt; Nonza as defined in <cite>SASL2</cite> containing
-    a &lt;inst-resume-failed-failed/&gt; element qualified by the
+    a &lt;inst-resume-failed/&gt; element qualified by the
     'urn:xmpp:isr:0' namespace. This
-    &lt;inst-resume-failed-failed/&gt; MUST contain a &lt;failed/&gt;
+    &lt;inst-resume-failed/&gt; MUST contain a &lt;failed/&gt;
     element as specified in &xep0198;.</p>
 
     <example caption='Server indicates instant stream resumption failure'><![CDATA[
@@ -372,8 +372,8 @@
     <p>Instant stream resumption errors SHOULD be considered
     recoverable, the initiating entity MAY continue with normal
     session establishment; however, misuse of stream management MAY
-    result in termination of the stream. Since the initating entity is
-    authenticated, it could contine with resource binding by using
+    result in termination of the stream. Since the initiating entity is
+    authenticated, it could continue with resource binding by using
     &rfc6120; § 7. or &xep0386;.</p>
 
   </section3>
@@ -404,7 +404,7 @@
 
     <section3 topic='Failed ISR Authentication' anchor='isr-auth-failed'>
 
-    <p>If the server is unable to authenticate the initating entity it
+    <p>If the server is unable to authenticate the initiating entity it
     MUST reply with a &lt;failure/&gt; Nonza as defined in
     <cite>SASL2</cite>.</p>
 
@@ -438,7 +438,7 @@
   <section2 topic='The X-HT-* Family of Mechanisms' anchor='ht-sasl-mechanism-family'>
 
     <p>Each mechanism in this family differs by the choice of the hash
-    algorithm and the coice of the channel binding type. Each
+    algorithm and the choice of the channel binding type. Each
     mechanism has a name of the form X-HT-[HA]-[CBT] where [HA] is the
     "Hash Name String" of the &iana-hash-alg; registry in capital
     letters, and [CBT] is one of 'ENDP' or 'UNIQ'. In case of 'ENDP',
@@ -468,7 +468,7 @@
   <section2 topic='The X-HT Mechanism' anchor='ht-sasl-mechanism'>
 
     <p>The mechanism consists of a simple exchange of exactly two
-    messages between the initator and responder. It starts with the
+    messages between the initiator and responder. It starts with the
     message from the initiator to the responder. This
     'initiator-message' is defined as follows:</p>
 
@@ -477,7 +477,7 @@
     </p>
 
     <p>HMAC() is the function defined in &rfc2104; with H being the
-    choosen hash algorithm, 'cb-data' represents channel binding type
+    chosen hash algorithm, 'cb-data' represents channel binding type
     data, and 'token' are the UTF-8 encoded bytes of the token String
     which acts as shared secret between initiator and responder.</p>
 
@@ -532,7 +532,8 @@
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Jonas Wielicki, Thijs Alkemade and Dave Cridland for their feedback.</p>
+  <p>Thanks to Jonas Wielicki, Thijs Alkemade, Dave Cridland and
+  Maxime Buquet for their feedback.</p>
 
 </section1>
 
