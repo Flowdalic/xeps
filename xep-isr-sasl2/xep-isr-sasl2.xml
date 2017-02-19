@@ -337,6 +337,11 @@
   Stream Management handled stanza in the 'h' attribute and the
   'previd' attribute.</p>
 
+  <p>In case of an successful Instant Stream Resumption authenticated
+  by an ISR key, the server MUST immediately destroy the ISR key after
+  authentication, i.e., it MUST no longer be possible to perform an
+  ISR using that ISR key and Stream Management ID (SM-ID) tuple.</p>
+
   <p>After the &lt;inst-resumed/&gt; was received and has been
   verified both entities MUST consider the resumed stream to be
   re-established. This includes all previously negotiated stream
