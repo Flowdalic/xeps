@@ -186,6 +186,11 @@
 </stream:features>
 ]]></example>
 
+  <p>Every ISR enabled entity MUST support the X-HT-SHA-256-ENDP
+  mechanism, support for X-HT-SHA-256-UNIQ is RECOMMENDED. The family
+  of SASL <emph>X-HT-*</emph> mechanisms is defined below in <link
+  url='#ht-sasl'>Section 6</link>.</p>
+
 </section1>
 
 <section1 topic='Obtaining a Instant Stream Resumption Key' anchor='obtain'>
@@ -271,10 +276,7 @@
 
   <p>Now the initiating entity sends an XMPP &lt;stream&gt; open
   element followed by a &lt;authenticate/&gt; Nonza as specified in
-  <cite>SASL2</cite>. A default and mandatory to implement candidate
-  for a ISR SASL mechanism is the family of SASL <emph>X-HT-*</emph>
-  mechanisms, as defined below in <link url='#ht-sasl'>Section
-  6</link>. The initiating entity must also provide a
+  <cite>SASL2</cite>. The initiating entity must also provide a
   &lt;inst-resume/&gt; element qualified by the 'urn:xmpp:isr:0'
   namespace, which must contain a &lt;resume/&gt; element as defined
   in &xep0198;.</p>
