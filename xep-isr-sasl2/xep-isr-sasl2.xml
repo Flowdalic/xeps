@@ -120,9 +120,7 @@
   § 5</link>, the approach defined herein reduces the round trips
   required to resume a stream to exactly <em>one</em>. This is
   achieved by using just a secure short-lived key to resume the
-  stream. The technique specified herein can be combined with the
-  0-RTT handshake of &tls13; to further decrease the time to resume an
-  XMPP session.</p>
+  stream.</p>
 
 </section1>
 
@@ -353,6 +351,11 @@
   the resumed stream MUST NOT be considered to be restored after
   instant stream resumption.</p>
 
+  <p>Servers MUST destroy the ISR key of a stream after an instant
+  stream resumption was attempted for that stream with an invalid ISR
+  key. Server implementations MUST implement the ISR key comparision in
+  linear runtime.</p>
+
   </section3>
 
     <section3 topic='Successful Authentication but failed Stream Resumption' anchor='isr-auth-success-resumption-failed'>
@@ -486,7 +489,9 @@
     <p>HMAC() is the function defined in &rfc2104; with H being the
     chosen hash algorithm, 'cb-data' represents channel binding type
     data, and 'token' are the UTF-8 encoded bytes of the token String
-    which acts as shared secret between initiator and responder.</p>
+    which acts as shared secret between initiator and responder.  The
+    initiator-message MUST NOT be included in TLS 1.3 0-RTT early data
+    (&tls13;).</p>
 
     <p>This message is followed by a message from the responder to the
     initiator. This 'responder-message' is defined as follows:</p>
@@ -495,7 +500,7 @@
       responder-message = HMAC(token, "Responder" || cb-data)
     </p>
 
-    <p>The initiating entity SHOULD verify the responder-message to
+    <p>The initiating entity MUST verify the responder-message to
     achieve mutual authentication.</p>
 
   </section2>
@@ -539,8 +544,8 @@
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Jonas Wielicki, Thijs Alkemade, Dave Cridland and
-  Maxime Buquet for their feedback.</p>
+  <p>Thanks to Jonas Wielicki, Thijs Alkemade, Dave Cridland,
+  Maxime Buquet and Alexander Würstlein for their feedback.</p>
 
 </section1>
 
