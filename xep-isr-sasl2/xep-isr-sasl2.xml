@@ -534,7 +534,7 @@
 
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>Using <cite>TLS 1.3</cite> 0-RTT early data for ISR is forbidden
+  <p>Putting ISR data in <cite>TLS 1.3</cite> 0-RTT early data is forbidden
   (TODO: Shall we weaken this requirement to allow early data?). It
   would be technically possible if the sender does not add additional
   data, for example following Stanzas, after the ISR-SASL2 data to the
