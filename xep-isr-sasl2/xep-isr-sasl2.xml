@@ -185,7 +185,7 @@
 
   <p>Every ISR enabled entity MUST support the X-HT-SHA-256-ENDP
   mechanism, support for X-HT-SHA-256-UNIQ is RECOMMENDED. The family
-  of SASL <emph>X-HT-*</emph> mechanisms is defined below in <link
+  of SASL <cite>X-HT-*</cite> mechanisms is defined below in <link
   url='#ht-sasl'>Section 6</link>.</p>
 
 </section1>
