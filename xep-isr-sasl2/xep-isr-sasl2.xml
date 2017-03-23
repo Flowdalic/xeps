@@ -2,8 +2,7 @@
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
   <!ENTITY tls13 "<span class='ref'><link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-19'>draft-ietf-tls-tls13-19</link></span> <note>The Transport Layer Security (TLS) Protocol Version 1.3 &lt;<link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-19'>https://tools.ietf.org/html/draft-ietf-tls-tls13-19</link>&gt;.</note>" >
-  <!ENTITY iana-hash-alg "<span class='ref'><link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>IANA Named Information Hash Algorithm Registry</link></span><note>IANA Named Information Hash Algorithm Registry &lt;<link url='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</link>&gt;.</note>" >
-  <!ENTITY iana-cbt "<span class='ref'><link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>IANA Channel-Binding Types</link></span><note>IANA Channel-Binding Types&lt;<link url='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml</link>&gt;.</note>" >
+  <!ENTITY sasl-ht "<span class='ref'><link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html'>draft-schmaus-sasl-ht</link></span><note>draft-schmaus-sasl-ht: The Hashed Token SASL Mechanism&lt;<link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html'>http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html</link>&gt;.</note>" >
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
@@ -183,16 +182,15 @@
   <sm xmlns='urn:xmpp:sm:3'/>
   <isr xmlns='urn:xmpp:isr:0'>
     <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
-      <mechanism>X-HT-SHA-256-ENDP</mechanism>
+      <mechanism>HT-SHA-256-ENDP</mechanism>
     </mechaisms>
   </isr>
 </stream:features>
 ]]></example>
 
-  <p>Every ISR enabled entity MUST support the X-HT-SHA-256-ENDP
-  mechanism, support for X-HT-SHA-256-UNIQ is RECOMMENDED. The family
-  of SASL <cite>X-HT-*</cite> mechanisms is defined below in <link
-  url='#ht-sasl'>Section 6</link>.</p>
+  <p>Every ISR enabled entity MUST support the HT-SHA-256-ENDP
+  mechanism, support for HT-SHA-256-UNIQ is RECOMMENDED. The family
+  of SASL <cite>HT-*</cite> mechanisms as specified in &sasl-ht;.</p>
 
 </section1>
 
@@ -209,11 +207,11 @@
   effectively pins the SASL mechanism <note>Pinning the SASL mechanism
   is believed to increase the security</note>.</p>
 
-  <example caption='An &lt;enable/gt; Nonza with the ISR &apos;mechanism&apos; element'><![CDATA[
+  <example caption='An &lt;enable/&gt; Nonza with the ISR &apos;mechanism&apos; element'><![CDATA[
 <enable
   xmlns='urn:xmpp:sm:3'
   xmlns:isr='urn:xmpp:isr:0'>
-  <isr-enable xmlns='urn:xmpp:isr:0' mechanism='X-HT-SHA-256-ENDP'/>
+  <isr-enable xmlns='urn:xmpp:isr:0' mechanism='HT-SHA-256-ENDP'/>
 </enable>
 ]]></example>
 
@@ -234,14 +232,15 @@
   xmlns='urn:xmpp:sm:3'
   xmlns:isr='urn:xmpp:isr:0'>
   <isr-enabled xmlns='urn:xmpp:isr:0' key='a0b9162d-0981-4c7d-9174-1f55aedd1f52'/>
-</enable>]]></example>
+</enabled>]]></example>
 
   <example caption='An &lt;enabled/&gt; Nonza with a ISR key and location'><![CDATA[
 <enabled
   xmlns='urn:xmpp:sm:3'
-  xmlns:isr='urn:xmpp:isr:0'
+  xmlns:isr='urn:xmpp:isr:0'>
   isr:key='a0b9162d-0981-4c7d-9174-1f55aedd1f52'
-  isr:location='isr.example.org:5222'/>]]></example>
+  isr:location='isr.example.org:5222'/>
+</enabled>]]></example>
 
   <p>The &lt;enabled/&gt; Nonza containing an ISR key MUST only be
   sent over TLS secured connections.</p>
@@ -316,7 +315,7 @@
   way.</p>
 
   <p>All ISR implementations MUST support the
-  X-HT-SHA-256-ENDP mechanism.</p>
+  HT-SHA-256-ENDP mechanism.</p>
 
   <example caption='Initiating entity requests instant stream resumption via the Extensible SASL Profile (XEP-0388)'><![CDATA[
 <?xml version='1.0'?>
@@ -328,7 +327,7 @@
     xmlns='jabber:client'
     xmlns:stream='http://etherx.jabber.org/streams'>
 
-<authenticate xmlns='urn:xmpp:sasl:0' mechanism='X-HT-SHA-256-ENDP'>
+<authenticate xmlns='urn:xmpp:sasl:0' mechanism='HT-SHA-256-ENDP'>
   <initial-response></initial-response>
   <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
     <resume xmlns='urn:xmpp:sm:3'
@@ -473,87 +472,6 @@
 
 </section1>
 
-<section1 topic='The X-HT-* SASL Mechanism' anchor='ht-sasl'>
-
-  <p>This section specifies the Hashed Token (X-HT-*) SASL
-  mechanism. This mechanism was designed to be used with short-lived
-  tokens (shared secrets) for authentication. It provides hash
-  agility, mutual authentication and is secured by channel
-  binding. Since the token is not salted, and only one iteration is
-  used, the X-HT mechanism is not suitable to protect long-lived
-  shared secrets (e.g. "passwords"). You may want to look at &rfc5802;
-  for that.</p>
-
-  <section2 topic='The X-HT-* Family of Mechanisms' anchor='ht-sasl-mechanism-family'>
-
-    <p>Each mechanism in this family differs by the choice of the hash
-    algorithm and the choice of the channel binding type. Each
-    mechanism has a name of the form X-HT-[HA]-[CBT] where [HA] is the
-    "Hash Name String" of the &iana-hash-alg; registry in capital
-    letters, and [CBT] is one of 'ENDP' or 'UNIQ'. In case of 'ENDP',
-    the tls-server-end-point channel binding type is used. In case of
-    'UNIQ', the tls-unique channel binding type is used. For more
-    information about channel binding, see &rfc5929; and the
-    &iana-cbt; registry.</p>
-
-    <table caption='Mapping of CBT to Channel Bindings'>
-      <tr><th>CBT</th><th>Channel Binding Type</th></tr>
-      <tr><td>ENDP</td><td>tls-server-end-point</td></tr>
-      <tr><td>UNIQ</td><td>tls-unique</td></tr>
-    </table>
-
-    <p>The following table lists a few examples of X-HT-* SASL
-    mechanism names.</p>
-
-    <table caption='Example X-HT-* SASL mechanisms'>
-      <tr><th>Mechanism Name</th><th>Hash Algorithm</th><th>Channel-binding unique prefix</th></tr>
-      <tr><td>X-HT-SHA-512-ENDP</td><td>SHA-512 (FIPS 180-4)</td><td>tls-server-end-point</td></tr>
-      <tr><td>X-HT-SHA3-256-ENDP</td><td>SHA3-512 (FIPS 202)</td><td>tls-server-end-point</td></tr>
-      <tr><td>X-HT-SHA-512-UNIQ</td><td>SHA-512 (FIPS 180-4)</td><td>tls-unique</td></tr>
-      <tr><td>X-HT-SHA-256-UNIQ</td><td>SHA-256 (&rfc6920;)</td><td>tls-unique</td></tr>
-    </table>
-  </section2>
-
-  <section2 topic='The X-HT Mechanism' anchor='ht-sasl-mechanism'>
-
-    <p>The mechanism consists of a simple exchange of exactly two
-    messages between the initiator and responder. It starts with the
-    message from the initiator to the responder. This
-    'initiator-message' is defined as follows:</p>
-
-    <p class='box'>
-      initiator-message = HMAC(token, "Initiator" || cb-data)
-    </p>
-
-    <p>HMAC() is the function defined in &rfc2104; with H being the
-    chosen hash algorithm, 'cb-data' represents channel binding type
-    data, and 'token' are the UTF-8 (see &rfc3629;) encoded bytes of
-    the token String which acts as shared secret between initiator and
-    responder.  The initiator-message MUST NOT be included in TLS 1.3
-    0-RTT early data (&tls13;).</p>
-
-    <p>This message is followed by a message from the responder to the
-    initiator. This 'responder-message' is defined as follows:</p>
-
-    <p class='box'>
-      responder-message = HMAC(token, "Responder" || cb-data)
-    </p>
-
-    <p>The initiating entity MUST verify the responder-message to
-    achieve mutual authentication.</p>
-
-  </section2>
-
-  <section2 topic='Security Considerations for the X-HT SASL Mechanism' anchor='ht-sasl-security-considerations'>
-
-    <p>To be secure, X-HT MUST be used over a TLS channel that has had
-    the session hash extension &rfc7627; negotiated, or session
-    resumption MUST NOT have been used.</p>
-
-  </section2>
-
-</section1>
-
 <section1 topic='Security Considerations' anchor='security'>
 
   <p>Putting ISR data in <cite>TLS 1.3</cite> 0-RTT early data is
@@ -590,8 +508,8 @@
 
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
-  <p>Thanks to Jonas Wielicki, Thijs Alkemade, Dave Cridland,
-  Maxime Buquet and Alexander Würstlein for their feedback.</p>
+  <p>Thanks to Jonas Wielicki, Thijs Alkemade, Dave Cridland, Maxime
+  Buquet, Alexander Würstlein and Sam Whited for their feedback.</p>
 
 </section1>
 
