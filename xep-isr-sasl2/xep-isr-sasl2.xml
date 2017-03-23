@@ -474,8 +474,8 @@
 
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>Putting ISR data in <cite>TLS 1.3</cite> 0-RTT early data is
-  forbidden. (TODO: Shall we weaken this requirement to allow early
+  <p>Any ISR data SHALL NOT be part of <cite>TLS 1.3</cite> 0-RTT
+  early data. (TODO: Shall we weaken this requirement to allow early
   data?. It would be technically possible if the sender does not add
   additional data, for example Stanzas, after the ISR/XEP-0388 data at
   the end of the early data. And if the receiver does ensure that the
