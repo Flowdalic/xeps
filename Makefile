@@ -1,9 +1,10 @@
 FROM_XMPP_GIT := xmpp.css prettify.js prettify.css
 XEPS := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'xep-*')
+SASL-HT := draft-schmaus-sasl-ht
 
-.PHONY: all clean distclean init sync $(XEPS)
+.PHONY: all clean distclean init sync $(XEPS) $(SASL-HT)
 
-all: $(XEPS)
+all: $(XEPS) $(SASL-HT)
 
 init: $(FROM_XMPP_GIT)
 
@@ -25,6 +26,9 @@ prettify.js: xsf-xeps/prettify.js
 
 $(XEPS): init
 	$(MAKE) -C $@ $(TARGET)
+
+$(SASL-HT):
+	$(MAKE) -C $@
 
 deploy: all
 	./deploy.sh
