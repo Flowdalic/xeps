@@ -306,9 +306,9 @@
   namespace, which must contain a &lt;resume/&gt; element as defined
   in &xep0198;.</p>
 
-  <p>If the 'without-isr-token' attribute is set to true, then the
+  <p>If the with-isr-token' attribute is set to 'false', then the
   SASL mechanisms are performed as when traditionally authenticating
-  the XMPP session. If the value of the attribute is 'false', which is
+  the XMPP session. If the value of the attribute is 'true', which is
   the default value for this attribute, then the "password" given to
   the SASL mechanism is the ISR key. Note that this implies that only
   SASL mechanisms which take a password/token can be used this
@@ -329,7 +329,7 @@
 
 <authenticate xmlns='urn:xmpp:sasl:0' mechanism='HT-SHA-256-ENDP'>
   <initial-response></initial-response>
-  <inst-resume xmlns='urn:xmpp:isr:0' without-isr-token='false'/>
+  <inst-resume xmlns='urn:xmpp:isr:0' with-isr-token='true'/>
     <resume xmlns='urn:xmpp:sm:3'
             h='some-sequence-number'
             previd='some-long-sm-id'/>
@@ -425,13 +425,13 @@
 
   <section3 topic='Multi SASL Mechanism ISR' anchor='multi-sasl-mech-isr'>
 
-    <p>As specified in the &xep0388; § 2.6.4, a single SASL
-    mechanism may not be sufficient for authentication. In this case,
-    the remote entity sends a &lt;continue/&gt; element as defined in
-    &xep0388; to request the local entity to perform another
-    SASL mechanism. Performing instant stream resumption using
-    multiple SASL mechanisms MUST only be done if the
-    'without-isr-token' attribute is set to 'true'.</p>
+    <p>As specified in the &xep0388; § 2.6.4, a single SASL mechanism
+    may not be sufficient for authentication. In this case, the remote
+    entity sends a &lt;continue/&gt; element as defined in &xep0388;
+    to request the local entity to perform another SASL
+    mechanism. Instant stream resumption using multiple SASL
+    mechanisms MUST only be performed if the 'with-isr-token'
+    attribute is set to 'false'.</p>
 
     <example caption='Server requires Multi SASL Mechanism ISR'><![CDATA[
 <continue xmlns='urn:xmpp:sasl:0'>
