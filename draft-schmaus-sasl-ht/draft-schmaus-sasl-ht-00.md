@@ -46,6 +46,8 @@ this document are to interpreted as described in RFC 6919 [@!RFC6919].
 Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism MUST only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
 In addition, when TLS is used, the client MUST successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
 
+The family of HT-* mechanisms is not applicable for proxy authentication, since they can not carry a authorization identity string (authzid).
+
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
@@ -78,7 +80,7 @@ This 'initiator-message' is defined as follows:
 
 initiator-message = HMAC(token, "Initiator" || cb-data)
 
-HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded bytes of the token String which acts as shared secret between initiator and responder.
+HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded bytes of the token string which acts as shared secret between initiator and responder.
 The initiator-message MUST NOT be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
 
 This message is followed by a message from the responder to the initiator. This 'responder-message' is defined as follows:
