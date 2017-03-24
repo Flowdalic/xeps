@@ -1,7 +1,7 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
 category = "info"
-docName = "draft-schmaus-sasl-ht"
+docName = "draft-schmaus-sasl-ht-00"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
@@ -44,12 +44,12 @@ this document are to interpreted as described in RFC 6919 [@!RFC6919].
 ## Applicability
 
 Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism MUST only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
-In addition, when TLS is used, the client MUST successfully validate the server's certificate ([RFC5280],[RFC6125]).
+In addition, when TLS is used, the client MUST successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
 
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
-Each mechanism has a name of the form HT-\[HA\]-\[CBT\] where \[HA\] is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@RFC6920], and \[CBT\] is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Each mechanism has a name of the form HT-(HA)-(CBT) where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@RFC5056].
@@ -79,7 +79,7 @@ This 'initiator-message' is defined as follows:
 initiator-message = HMAC(token, "Initiator" || cb-data)
 
 HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded bytes of the token String which acts as shared secret between initiator and responder.
-The initiator-message MUST NOT be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#18]).
+The initiator-message MUST NOT be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
 
 This message is followed by a message from the responder to the initiator. This 'responder-message' is defined as follows:
 

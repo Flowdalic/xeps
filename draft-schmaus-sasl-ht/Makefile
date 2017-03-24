@@ -1,11 +1,16 @@
-.PHONY: all clean
+.PHONY: all clean lint lint-idnits
 
-RFC_NAME := draft-schmaus-sasl-ht
+RFC_NAME := draft-schmaus-sasl-ht-00
 
 all: $(RFC_NAME).txt $(RFC_NAME).html
 
 clean:
 	rm -rf *.xml *.txt
+
+lint: lint-idnits
+
+lint-idnits: $(RFC_NAME).txt
+	idnits --verbose $<
 
 %.txt: %.xml
 	xml2rfc --text $<
