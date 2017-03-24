@@ -93,7 +93,8 @@ Before sending the authentication identity string the initiator **SHOULD** prepa
 
 The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-data)
 
-HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
+HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
+
 The initiator-message **MUST NOT** be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
 
 ## Final Responder Message
