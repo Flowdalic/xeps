@@ -6,7 +6,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Compare-And-Publish</title>
+  <title>Compare-And-Publish PubSub Items</title>
   <abstract>This specification provides a mechanism to atomically Compare-And-Publish items to a PubSub node.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
