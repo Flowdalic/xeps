@@ -43,7 +43,7 @@ this document are to interpreted as described in RFC 6919 [@!RFC6919].
 
 ## Applicability
 
-Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism MUST only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
+Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism **MUST** only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
 In addition, when TLS is used, the client MUST successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
 
 The family of HT-* mechanisms is not applicable for proxy authentication, since they can not carry a authorization identity string (authzid).
@@ -119,7 +119,7 @@ This section describes compliance with SASL mechanism requirements specified in 
 
 #  Security Considerations
 
-To be secure, HT-* MUST be used over a TLS channel that has had the session hash extension [@!RFC7627] negotiated, or session resumption MUST NOT have been used.
+To be secure, HT-* **MUST** be used over a TLS channel that has had the session hash extension [@!RFC7627] negotiated, or session resumption **MUST NOT** have been used.
 
 #  IANA Considerations
 
