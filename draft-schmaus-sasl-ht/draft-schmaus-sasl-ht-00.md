@@ -51,7 +51,7 @@ The family of HT-* mechanisms is not applicable for proxy authentication, since 
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
-Each mechanism has a name of the form HT-(HA)-(CBT) where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Each mechanism has a name of the form HT-(HA)-(CBT) where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@RFC5056].
