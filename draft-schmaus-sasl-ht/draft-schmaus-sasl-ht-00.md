@@ -75,21 +75,37 @@ Table: Example HT-* SASL mechanisms
 # The HT Mechanism
 
 The mechanism consists of a simple exchange of exactly two messages between the initiator and responder.
+
+## Initiator First Message
+
 It starts with the message from the initiator to the responder.
 This 'initiator-message' is defined as follows:
 
-initiator-message = HMAC(token, "Initiator" || cb-data)
+initiator-message = authcid-length authcid-data initiator-hashed-token
 
-HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded bytes of the token string which acts as shared secret between initiator and responder.
-The initiator-message MUST NOT be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
+authcid-length = 4OCTET
+authcid-data = 1*OCTET
+initiator-hashed-token = 1*OCTET
+
+The initiator message starts with an unsigned 32-bit integer in big endian. It denotes length of the authcid-data, which contains the authentication identity.
+Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile [@!RFC7613].
+
+The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-data)
+
+HMAC() is the function defined in [@!RFC2104] with H being the chosen hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
+The initiator-message **MUST NOT** be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
+
+## Final Responder Message
 
 This message is followed by a message from the responder to the initiator. This 'responder-message' is defined as follows:
 
-responder-message = HMAC(token, "Responder" || cb-data)
+responder-message = 1*OCTET
 
-The initiating entity MUST verify the responder-message to achieve mutual authentication.
+The responder-messages value is defined as: HMAC(token, "Responder" || cb-data)
 
-## Compliance with SASL Mechanism Requirements
+The initiating entity **MUST** verify the responder-message to achieve mutual authentication.
+
+# Compliance with SASL Mechanism Requirements
 
 This section describes compliance with SASL mechanism requirements specified in Section 5 of [@!RFC4422].
 
@@ -113,7 +129,7 @@ IANA has added the following family of SASL mechanisms to the SASL Mechanism reg
    Subject: Registration of a new SASL family HT
 
    SASL mechanism name (or prefix for the family): HT-*
-   Security considerations: Section 4 of draft-schmaus-sasl-ht-00 (TODO)
+   Security considerations: Section FIXME of draft-schmaus-sasl-ht-00 (TODO)
    Published specification (optional, recommended): draft-schmaus-sasl-ht-00 (TODO)
    Person & email address to contact for further information:
    IETF SASL WG <kitten@ietf.org>
