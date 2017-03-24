@@ -76,10 +76,11 @@ Table: Defined HT-* SASL mechanisms
 
 The mechanism consists of a simple exchange of exactly two messages between the initiator and responder.
 
+The following syntax specifications use the Augmented Backus-Naur form (ABNF) notation as specified in [@!RFC5234].
+
 ## Initiator First Message
 
-It starts with the message from the initiator to the responder.
-This 'initiator-message' is defined as follows:
+The HT-* SASL mechanism starts with the initiator-message from the initiator to the responder.
 
 initiator-message = authcid-length authcid-data initiator-hashed-token
 
