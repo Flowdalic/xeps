@@ -7,7 +7,7 @@
 <xep>
 <header>
   <title>Compare-And-Publish</title>
-  <abstract>This specification provides an mechanism to atomically Compare-And-Publish items to a PubSub node.</abstract>
+  <abstract>This specification provides a mechanism to atomically Compare-And-Publish items to a PubSub node.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -15,9 +15,8 @@
   <sig>Standards</sig>
   <approver>Council</approver>
   <dependencies>
-    <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
+    <spec>XEP-0030</spec>
+    <spec>XEP-0060</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
@@ -31,23 +30,40 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+
+  <p>This specification provides a mechanism to atomically publish
+  item s to a PubSub node depending on the item ID of the nodes latest
+  item. This allows to prevent race conditions, hence avoiding data
+  loss.</p>
+
 </section1>
-<section1 topic='Requirements' anchor='reqs'>
-  <p>STRONGLY RECOMMENDED.</p>
-</section1>
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
+<section1 topic='Discoverying Support' anchor='disco'>
+
+  <p>If an entity supports the Compared-And-Publish feature it MUST
+  advertise the fact by returning a &lt;feature/&gt; with the 'var'
+  attribute set to 'urn:xmpp:pubsub:cap:0' in response to a &xep0030;
+  query for information.</p>
+
 </section1>
 <section1 topic='Compare-And-Publish PubSub Items' anchor='cap'>
-  <p>Client sends &IQ; with 'pubsub' element qualified by the 'urn:xmpp:pubsub:cap' namespace.</p>
+
+  <p>In order to atomically compare-and-publish an item, a client
+  sends an &IQ; with a 'pubsub' element qualified by the
+  'urn:xmpp:pubsub:cap:0' namespace. The element MUST contain the same
+  attributes and elements as the &lt;publish/&gt; element defined in
+  &xep0060; <em>and</em> it MUST contain a previd attribute containing
+  an item ID.</p>
+
+  <p>The PubSub service MUST only publish the item if the node's
+  latest item ID is equal to the ID found in the 'previd'
+  attribute.</p>
 
   <example caption='Publisher publishes an item using Compare-And-Publish'><![CDATA[
 <iq type='set'
     from='hamlet@denmark.lit/blogbot'
     to='pubsub.shakespeare.lit'
     id='compare-and-publish1'>
-  <pubsub xmlns='urn:xmpp:pubsub:cap'>
+  <pubsub xmlns='urn:xmpp:pubsub:cap:0'>
     <compare-and-publish
         node='princely_musings'
         previd='1'>
@@ -74,6 +90,11 @@ And by opposing end them?
 ]]></example>
 
   <section2 topic='Successfully published an item using Compare-And-Publish'>
+
+	<p>If the 'previd' matched the latest item's ID and if the service
+	was able to successfully process the request then the protocol
+	continues as defined in <cite>XEP-0060 7.1.2</cite>.</p>
+
   </section2>
 
   <section2 topic='Could not publish because newest item ID did not match'>
@@ -81,7 +102,7 @@ And by opposing end them?
     <p>In case the Compare-And-Publish operation failed because the
     latest node id is not the same as given in the 'previd' attribute
     in the request, the server returns an &IQ; result with 'pubsub'
-    element qualified by the 'urn:xmpp:pubsub:cap' namespace which
+    element qualified by the 'urn:xmpp:pubsub:cap:0' namespace which
     contains a &lt;compare-and-publish-failed/&gt; element. The
     element MUST have a 'id' attribute with the ID of the lastest
     item.</p>
@@ -91,7 +112,7 @@ And by opposing end them?
     from='pubsub.shakespeare.lit'
     to='hamlet@denmark.lit/blogbot'
     id='compare-and-ublish1'>
-  <pubsub xmlns='urn:xmpp:pubsub:cap'>
+  <pubsub xmlns='urn:xmpp:pubsub:cap:0'>
     <comapre-and-publish-failed id='2'/>
   </pubsub>
 </iq>
@@ -101,33 +122,42 @@ And by opposing end them?
 
   <section2 topic='Error cases'>
 
-    <p>Error cases as in <cite>XEP-0060 7.1.3</cite></p>
+    <p>All other error cases are handled as specified in
+    <cite>XEP-0060 § 7.1.3</cite></p>
 
   </section2>
 
 </section1>
-<section1 topic='Business Rules' anchor='rules'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Accessibility Considerations' anchor='access'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Internationalization Considerations' anchor='i18n'>
-  <p>OPTIONAL.</p>
-</section1>
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+
+  <p>This extension protocol does not add any further security
+  considerations to the ones mentioned in <cite>XEP-0060 §
+  14.</cite>.</p>
+
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+
+  <p>This document requires no interaction with the Internet Assigned
+  Numbers Authority (IANA).</p>
+
 </section1>
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>REQUIRED.</p>
+
+  <p>This specification defines the following XML namespaces:</p>
+  <ul>
+    <li>urn:xmpp:pubsub:cap:0</li>
+  </ul>
+  	<code caption='Registry Submission'><![CDATA[
+<var>
+	<name>urn:xmpp:pubsub:cap:0</name>
+	<desc>Indicates support for Compare-And-Publish</desc>
+	<doc>XEP-XXXX</doc>
+</var>]]></code>
+
 </section1>
 <section1 topic='XML Schema' anchor='schema'>
-  <p>REQUIRED for protocol specifications.</p>
+
+  <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
+
 </section1>
 </xep>
