@@ -127,21 +127,24 @@ To be secure, HT-* **MUST** be used over a TLS channel that has had the session 
 
 IANA has added the following family of SASL mechanisms to the SASL Mechanism registry established by [@!RFC4422]:
 
-   To: iana@iana.org
-   Subject: Registration of a new SASL family HT
+~~~
+To: iana@iana.org
+Subject: Registration of a new SASL family HT
 
-   SASL mechanism name (or prefix for the family): HT-*
-   Security considerations: Section FIXME of draft-schmaus-sasl-ht-00 (TODO)
-   Published specification (optional, recommended): draft-schmaus-sasl-ht-00 (TODO)
-   Person & email address to contact for further information:
-   IETF SASL WG <kitten@ietf.org>
-   Intended usage: COMMON
-   Owner/Change controller: IESG <iesg@ietf.org>
-   Note: Members of this family MUST be explicitly registered
-   using the "IETF Review" [@!RFC5226] registration procedure.
-   Reviews MUST be requested on the Kitten WG mailing list
-   <kitten@ietf.org> (or a successor designated by the responsible
-   Security AD).
+SASL mechanism name (or prefix for the family): HT-*
+Security considerations: Section FIXME of draft-schmaus-sasl-ht-00 
+Published specification (optional, recommended):
+  draft-schmaus-sasl-ht-00 (TODO)
+Person & email address to contact for further information:
+IETF SASL WG <kitten@ietf.org>
+Intended usage: COMMON
+Owner/Change controller: IESG <iesg@ietf.org>
+Note: Members of this family MUST be explicitly registered
+using the "IETF Review" [@!RFC5226] registration procedure.
+Reviews MUST be requested on the Kitten WG mailing list
+<kitten@ietf.org> (or a successor designated by the responsible
+Security AD).
+~~~
 
 <reference anchor='iana-hash-alg' target='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>
     <front>
