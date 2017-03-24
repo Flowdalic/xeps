@@ -49,10 +49,10 @@ In addition, when TLS is used, the client MUST successfully validate the server'
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
-Each mechanism has a name of the form HT-\[HA\]-\[CBT\] where \[HA\] is the "Hash Name String" of the [@!iana-hash-alg] registry in capital letters, and \[CBT\] is one of 'ENDP' or 'UNIQ'.
+Each mechanism has a name of the form HT-\[HA\]-\[CBT\] where \[HA\] is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@RFC6920], and \[CBT\] is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
-For the definition of this channel binding types refer to the [@!iana-cbt] registry.
+Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@RFC5056].
 
 CBT   | Channel Binding Type 
 ------|-----------------------
@@ -62,12 +62,12 @@ Table: Mapping of CBT to Channel Bindings
 
 The following table lists a few examples of HT-* SASL mechanism names.
 
-Mechanism Name      | Hash Algorithm         | Channel-binding unique prefix
---------------------|------------------------|------------------------------
-HT-SHA-512-ENDP   | SHA-512 (FIPS 180-4)   | tls-server-end-point
-HT-SHA3-512-ENDP  | SHA3-512 (FIPS 202)    | tls-server-end-point
-HT-SHA-512-UNIQ   | SHA-512 (FIPS 180-4)   | tls-unique
-HT-SHA-256-UNIQ   | SHA-256 [@!RFC6920]    | tls-unique
+Mechanism Name      | Hash Algorithm   | Channel-binding unique prefix
+--------------------|------------------|------------------------------
+HT-SHA-512-ENDP     | SHA-512          | tls-server-end-point
+HT-SHA-512-UNIQ     | SHA-512          | tls-unique
+HT-SHA3-512-ENDP    | SHA3-512         | tls-server-end-point
+HT-SHA-256-UNIQ     | SHA-256          | tls-unique
 Table: Example HT-* SASL mechanisms
 
 # The HT Mechanism
@@ -91,13 +91,13 @@ The initiating entity MUST verify the responder-message to achieve mutual authen
 
 This section describes compliance with SASL mechanism requirements specified in Section 5 of [@!RFC4422].
 
-1.  "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA-3-512-ENDP" and "HT-SHA-3-512-UNIQ".
-2.  Definition of server-challenges and client-responses:
-    a)  HT is a client-first mechanism.
-    b)  HT does not send additional data with success.
-3.  HT is capable of transferring authorization identities from the client to the server. (TODO)
-4.  HT does not offer any security layers (HT offers channel binding instead).
-5.  HT has a hash protecting the authorization identity. (TODO)
+1.   "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA-3-512-ENDP" and "HT-SHA-3-512-UNIQ".
+2.   Definition of server-challenges and client-responses:
+     a)  HT is a client-first mechanism.
+     b)  HT does not send additional data with success.
+3.   HT is capable of transferring authorization identities from the client to the server. (TODO)
+4.   HT does not offer any security layers (HT offers channel binding instead).
+5.   HT does not protect the authorization identity.
 
 #  Security Considerations
 
@@ -110,28 +110,20 @@ TODO
 <reference anchor='iana-hash-alg' target='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>
     <front>
         <title>IANA Named Information Hash Algorithm Registry</title>
-        <author initials='J.' surname='MacFarlane' fullname='John MacFarlane'>
-            <organization>University of California, Berkeley</organization>
-            <address>
-                <email>jgm@berkeley.edu</email>
-                <uri>http://johnmacfarlane.net/</uri>
-            </address>
+        <author initials='N.' surname='Williams' fullname='Nicolas Williams'>
+            <organization>IANA</organization>
         </author>
-        <date year='2006'/>
+        <date year='2010'/>
     </front>
 </reference>
 
 <reference anchor='iana-cbt' target='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>
     <front>
         <title>IANA Channel-Binding Types</title>
-        <author initials='J.' surname='MacFarlane' fullname='John MacFarlane'>
-            <organization>University of California, Berkeley</organization>
-            <address>
-                <email>jgm@berkeley.edu</email>
-                <uri>http://johnmacfarlane.net/</uri>
-            </address>
+        <author initials='N.' surname='Williams' fullname='Nicolas Williams'>
+            <organization>IANA</organization>
         </author>
-        <date year='2006'/>
+        <date year='2010'/>
     </front>
 </reference>
 
