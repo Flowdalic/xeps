@@ -25,10 +25,10 @@ This document specifies a new SASL mechanism designed to authenticate using shor
 
 #  Introduction
 
-This section specifies the Hashed Token (HT-*) SASL mechanism.
-This mechanism was designed to be used with short-lived tokens (shared secrets) for authentication.
+This section specifies the the family of Hashed Token (HT-*) SASL mechanisms.
+This mechanism was designed to be used with short-lived tokens, used as shared secrets, for authentication.
 It provides hash agility, mutual authentication and is secured by channel binding.
-Since the token is not salted, and only one iteration is used, the HT mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
+Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
   
 ##  Conventions and Terminology
@@ -41,13 +41,18 @@ Additionally, the key words "**MIGHT**", "**COULD**", "**MAY WISH TO**", "**WOUL
 PROBABLY**", "**SHOULD CONSIDER**", and "**MUST (BUT WE KNOW YOU WON'T)**" in
 this document are to interpreted as described in RFC 6919 [@!RFC6919].
 
+## Applicability
+
+Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism MUST only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
+In addition, when TLS is used, the client MUST successfully validate the server's certificate ([RFC5280],[RFC6125]).
+
 #  The HT-* Family of Mechanisms
 
-Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding type.
+Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
 Each mechanism has a name of the form HT-\[HA\]-\[CBT\] where \[HA\] is the "Hash Name String" of the [@!iana-hash-alg] registry in capital letters, and \[CBT\] is one of 'ENDP' or 'UNIQ'.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
-For more information about channel binding, see [@!RFC5929] and the [@!iana-cbt] registry.
+For the definition of this channel binding types refer to the [@!iana-cbt] registry.
 
 CBT   | Channel Binding Type 
 ------|-----------------------
@@ -60,7 +65,7 @@ The following table lists a few examples of HT-* SASL mechanism names.
 Mechanism Name      | Hash Algorithm         | Channel-binding unique prefix
 --------------------|------------------------|------------------------------
 HT-SHA-512-ENDP   | SHA-512 (FIPS 180-4)   | tls-server-end-point
-HT-SHA3-256-ENDP  | SHA3-512 (FIPS 202)    | tls-server-end-point
+HT-SHA3-512-ENDP  | SHA3-512 (FIPS 202)    | tls-server-end-point
 HT-SHA-512-UNIQ   | SHA-512 (FIPS 180-4)   | tls-unique
 HT-SHA-256-UNIQ   | SHA-256 [@!RFC6920]    | tls-unique
 Table: Example HT-* SASL mechanisms
@@ -81,6 +86,18 @@ This message is followed by a message from the responder to the initiator. This 
 responder-message = HMAC(token, "Responder" || cb-data)
 
 The initiating entity MUST verify the responder-message to achieve mutual authentication.
+
+## Compliance with SASL Mechanism Requirements
+
+This section describes compliance with SASL mechanism requirements specified in Section 5 of [@!RFC4422].
+
+1.  "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA-3-512-ENDP" and "HT-SHA-3-512-UNIQ".
+2.  Definition of server-challenges and client-responses:
+    a)  HT is a client-first mechanism.
+    b)  HT does not send additional data with success.
+3.  HT is capable of transferring authorization identities from the client to the server. (TODO)
+4.  HT does not offer any security layers (HT offers channel binding instead).
+5.  HT has a hash protecting the authorization identity. (TODO)
 
 #  Security Considerations
 
