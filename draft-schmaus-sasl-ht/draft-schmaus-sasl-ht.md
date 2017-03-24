@@ -1,19 +1,21 @@
-% Title = "The Hashed Token SASL Mechanism"
-% category = "info"
-% docName = "draft-schmaus-sasl-ht"
-% ipr= "trust200902"
-% area = "Internet"
-% workgroup = "Common Authentication Technology Next Generation"
-%
-% date = 2017-03-22T00:00:00Z
-%
-% [[author]]
-% initials="F."
-% surname="Schmaus"
-% fullname="Florian Schmaus"
-% organization="University of Erlangen-Nuremberg"
-%  [author.address]
-%  email = "schmaus@cs.fau.de"
+%%%
+Title = "The Hashed Token SASL Mechanism"
+category = "info"
+docName = "draft-schmaus-sasl-ht"
+ipr= "trust200902"
+area = "Internet"
+workgroup = "Common Authentication Technology Next Generation"
+
+date = 2017-03-22T00:00:00Z
+
+[[author]]
+initials="F."
+surname="Schmaus"
+fullname="Florian Schmaus"
+organization="University of Erlangen-Nuremberg"
+ [author.address]
+ email = "schmaus@cs.fau.de"
+%%%
 
 .# Abstract
 
