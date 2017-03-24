@@ -2,7 +2,7 @@
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
   <!ENTITY tls13 "<span class='ref'><link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-19'>draft-ietf-tls-tls13-19</link></span> <note>The Transport Layer Security (TLS) Protocol Version 1.3 &lt;<link url='https://tools.ietf.org/html/draft-ietf-tls-tls13-19'>https://tools.ietf.org/html/draft-ietf-tls-tls13-19</link>&gt;.</note>" >
-  <!ENTITY sasl-ht "<span class='ref'><link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html'>draft-schmaus-sasl-ht</link></span><note>draft-schmaus-sasl-ht: The Hashed Token SASL Mechanism&lt;<link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html'>http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html</link>&gt;.</note>" >
+  <!ENTITY sasl-ht "<span class='ref'><link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht-00.html'>draft-schmaus-sasl-ht-00</link></span><note>draft-schmaus-sasl-ht-00: The Hashed Token SASL Mechanism&lt;<link url='http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html'>http://geekplace.eu/xeps/draft-schmaus-sasl-ht/draft-schmaus-sasl-ht.html</link>&gt;.</note>" >
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
