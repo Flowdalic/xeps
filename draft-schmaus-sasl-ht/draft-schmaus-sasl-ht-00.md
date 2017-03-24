@@ -70,7 +70,7 @@ HT-SHA-512-ENDP     | SHA-512          | tls-server-end-point
 HT-SHA-512-UNIQ     | SHA-512          | tls-unique
 HT-SHA3-512-ENDP    | SHA3-512         | tls-server-end-point
 HT-SHA-256-UNIQ     | SHA-256          | tls-unique
-Table: Example HT-* SASL mechanisms
+Table: Defined HT-* SASL mechanisms
 
 # The HT Mechanism
 
