@@ -19,7 +19,7 @@ organization="University of Erlangen-Nuremberg"
 
 .# Abstract
 
-This document specifies a new SASL mechanism designed to authenticate using short-lived, exclusively emphermeral tokens.
+This document specifies a new SASL mechanism designed to be used with short-lived, exclusively emphermeral tokens.
 
 {mainmatter}
 
@@ -28,6 +28,9 @@ This document specifies a new SASL mechanism designed to authenticate using shor
 This section specifies the the family of Hashed Token (HT-*) SASL mechanisms.
 This mechanism was designed to be used with short-lived tokens, used as shared secrets, for authentication.
 It provides hash agility, mutual authentication and is secured by channel binding.
+
+TODO Add explaination about the intended primary use case (e.g., [@xep-isr-sasl2])?
+
 Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
   
@@ -51,7 +54,11 @@ The family of HT-* mechanisms is not applicable for proxy authentication, since 
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
-Each mechanism has a name of the form HT-(HA)-(CBT) where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Each mechanism has a name of the following form:
+
+F> HT-(HA)-(CBT)
+
+Where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
@@ -85,7 +92,9 @@ The HT-* SASL mechanism starts with the initiator-message from the initiator to 
 initiator-message = authcid-length authcid-data initiator-hashed-token
 
 authcid-length = 4OCTET
+
 authcid-data = 1*OCTET
+
 initiator-hashed-token = 1*OCTET
 
 The initiator message starts with an unsigned 32-bit integer in big endian. It denotes length of the authcid-data, which contains the authentication identity.
@@ -163,6 +172,15 @@ Security AD).
             <organization>IANA</organization>
         </author>
         <date year='2010'/>
+    </front>
+</reference>
+
+<reference anchor='xep-isr-sasl2' target='http://geekplace.eu/xeps/xep-isr-sasl2/xep-isr-sasl2.html'>
+    <front>
+        <title>XEP-XXXX: Instant Stream Resumption</title>
+        <author initials='F.' surname='Schmaus' fullname='Florian Schmaus'>
+        </author>
+        <date year='2017'/>
     </front>
 </reference>
 
