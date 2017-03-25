@@ -59,3 +59,7 @@ While "New HT-*" mitigates the effect of a server-side key theft (the
 server doesn't know the key). The magic is hashed, just like the key
 was in Version1, thus it appears that Version2 provides the same
 robustness as Version1.
+
+Note that Version2 would require XEP-ISR-SASL2 to hand out a key
+string and the magic string, i.e. it would require a change to the
+current state of XEP-ISR-SASL2.
