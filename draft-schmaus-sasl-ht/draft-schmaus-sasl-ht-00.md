@@ -87,9 +87,9 @@ The following syntax specifications use the Augmented Backus-Naur form (ABNF) no
 
 ## Initiator First Message
 
-The HT-* SASL mechanism starts with the initiator-message from the initiator to the responder.
+The HT-* SASL mechanism starts with the initiator-msg, send by the initiator to the responder.
 
-initiator-message = authcid-length authcid-data initiator-hashed-token
+initiator-msg = authcid-length authcid-data initiator-hashed-token
 
 authcid-length = 4OCTET
 
@@ -104,17 +104,17 @@ The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-da
 
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
 
-The initiator-message **MUST NOT** be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
+The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
 
 ## Final Responder Message
 
-This message is followed by a message from the responder to the initiator. This 'responder-message' is defined as follows:
+This message is followed by a message from the responder to the initiator. This 'responder-msg' is defined as follows:
 
-responder-message = 1*OCTET
+responder-msg = 1*OCTET
 
-The responder-messages value is defined as: HMAC(token, "Responder" || cb-data)
+The responder-msgs value is defined as: HMAC(token, "Responder" || cb-data)
 
-The initiating entity **MUST** verify the responder-message to achieve mutual authentication.
+The initiating entity **MUST** verify the responder-msg to achieve mutual authentication.
 
 # Compliance with SASL Mechanism Requirements
 
