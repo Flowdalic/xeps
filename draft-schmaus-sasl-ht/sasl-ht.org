@@ -52,3 +52,10 @@ Client checks if message is HMAC(key, magic) and if HMAC(magic,
 "Responder" || cb-data) matches clients view of the TLS connection,
 then mutual auth success.
 
+Discussion
+==========
+
+While "New HT-*" mitigates the effect of a server-side key theft (the
+server doesn't know the key), its disadvantage is that the key has to
+be transmitted from client to server without being protected using a
+hash algorithm.
