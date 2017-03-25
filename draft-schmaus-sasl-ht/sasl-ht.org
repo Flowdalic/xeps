@@ -1,7 +1,7 @@
 * Mitigate effects of token theft on the server
 
 
-Current HT-*
+Version1 HT-*
 ============
 
 Prelude
@@ -21,7 +21,7 @@ server → client: HMAC(token, "Responder" || cb-data)
 
 Client check if it matches his view, if so, then mutual auth success.
 
-New HT-*
+Version2 HT-*
 ========
 
 Prelude
@@ -56,6 +56,6 @@ Discussion
 ==========
 
 While "New HT-*" mitigates the effect of a server-side key theft (the
-server doesn't know the key), its disadvantage is that the key has to
-be transmitted from client to server without being protected using a
-hash algorithm.
+server doesn't know the key). The magic is hashed, just like the key
+was in Version1, thus it appears that Version2 provides the same
+robustness as Version1.
