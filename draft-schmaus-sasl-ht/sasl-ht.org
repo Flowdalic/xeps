@@ -1,0 +1,54 @@
+* Mitigate effects of token theft on the server
+
+
+Current HT-*
+============
+
+Prelude
+-------
+
+Server creates random token and sends it to client upon request.
+
+SASL Exchange
+-------------
+
+client → server: HMAC(token, "Initiator" || cb-data)
+
+Server checks if it matches his view, if so, then auth success and
+channel binding established.
+
+server → client: HMAC(token, "Responder" || cb-data)
+
+Client check if it matches his view, if so, then mutual auth success.
+
+New HT-*
+========
+
+Prelude
+-------
+
+Server creates random key (token) and random message. Calculates
+magic = HMAC(key, messages).
+
+Upon client request server sends key and magic to the client, and deletes key.
+
+Now
+server knows: message, magic
+client knows: key,     magic
+
+SASL Exchange
+-------------
+
+client → server: key, HMAC(magic, "Initiator" || cb-data)
+
+Server calculates client-magic = HMAC(key, message), and if
+client-magic == magic, and if HMAC(magic, "Initiator" || cb-data)
+matches his view of the TLS connecyion, then auth success and channel
+binding established.
+
+server → client: message, HMAC(magic, "Responder" || cb-data)
+
+Client checks if message is HMAC(key, magic) and if HMAC(magic,
+"Responder" || cb-data) matches clients view of the TLS connection,
+then mutual auth success.
+
