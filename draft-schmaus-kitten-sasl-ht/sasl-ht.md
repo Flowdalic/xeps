@@ -1,4 +1,37 @@
-Version2 HT-* tries to mitigate effects of token theft on the server.
+Introducing SASL-HT
+===================
+
+This SASL mechanism is designed to be used as quick, yet secure,
+mechanism to resume a session. For example an XMPP session may be
+initially authenticated using a strong mechanism like SCRAM, but at
+resumption-time we want a single round trip mechanism. The basic idea
+is the client requests a short-lived, exclusively ephemeral token
+after being authenticated, which can be used to authenticate the
+resumption in an efficient manner.
+
+A typical sequence of actions using SASL-HT:
+
+A) Client initial authenticates using a strong mechanism (e.g., SCRAM)
+B) Client requests secret token
+   <normal client-server interaction here>
+C) Connection between client and server gets interrupted (e.g., WiFi ↔
+   GSM switch)
+D) Client resumes previous session using the secret token from B
+E) Client requests secret token
+   <normal client-server interaction here>
+   [goto C]
+   
+The XMPP community is working on a complement XMPP Extension Protocol
+(XEP) which can be found at
+
+http://geekplace.eu/xeps/xep-isr-sasl2/xep-isr-sasl2.html
+
+Since SASL-HT is meant to be protocol agnostic, other communities
+(SMTP, IMAP, SIP, …) could build such a mechanism based on SASL-HT too
+(if applicable).
+
+The current version of SASL-HT in the draft is Version1. Version2 HT-*
+tries to mitigate effects of token theft on the server.
 
 Version1 HT-*
 ============
