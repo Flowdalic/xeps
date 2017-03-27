@@ -1,5 +1,4 @@
-* Mitigate effects of token theft on the server
-
+Version2 HT-* tries to mitigate effects of token theft on the server.
 
 Version1 HT-*
 ============
