@@ -1,6 +1,6 @@
 .PHONY: all clean lint lint-idnits
 
-RFC_NAME := draft-schmaus-sasl-ht-00
+RFC_NAME := draft-schmaus-kitten-sasl-ht-00
 
 all: $(RFC_NAME).txt $(RFC_NAME).html
 

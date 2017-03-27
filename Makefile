@@ -1,6 +1,6 @@
 FROM_XMPP_GIT := xmpp.css prettify.js prettify.css
 XEPS := $(shell find -mindepth 1 -maxdepth 1 -type d -name 'xep-*')
-SASL-HT := draft-schmaus-sasl-ht
+SASL-HT := draft-schmaus-kitten-sasl-ht
 
 .PHONY: all clean distclean init sync $(XEPS) $(SASL-HT)
 
