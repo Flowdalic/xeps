@@ -141,9 +141,9 @@ To: iana@iana.org
 Subject: Registration of a new SASL family HT
 
 SASL mechanism name (or prefix for the family): HT-*
-Security considerations: Section FIXME of draft-schmaus-sasl-ht-00 
+Security considerations: Section FIXME of draft-schmaus-kitten-sasl-ht-00 
 Published specification (optional, recommended):
-  draft-schmaus-sasl-ht-00 (TODO)
+  draft-schmaus-kitten-sasl-ht-00 (TODO)
 Person & email address to contact for further information:
 IETF SASL WG <kitten@ietf.org>
 Intended usage: COMMON
