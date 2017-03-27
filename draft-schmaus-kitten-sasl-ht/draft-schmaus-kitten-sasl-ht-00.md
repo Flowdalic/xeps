@@ -1,7 +1,7 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
 category = "info"
-docName = "draft-schmaus-sasl-ht-00"
+docName = "draft-schmaus-kitten-sasl-ht-00"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
@@ -19,7 +19,7 @@ organization="University of Erlangen-Nuremberg"
 
 .# Abstract
 
-This document specifies a new SASL mechanism designed to be used with short-lived, exclusively emphermeral tokens.
+This document specifies a new SASL mechanism designed to be used with short-lived, exclusively ephemeral tokens.
 
 {mainmatter}
 
@@ -29,7 +29,7 @@ This section specifies the the family of Hashed Token (HT-*) SASL mechanisms.
 This mechanism was designed to be used with short-lived tokens, used as shared secrets, for authentication.
 It provides hash agility, mutual authentication and is secured by channel binding.
 
-TODO Add explaination about the intended primary use case (e.g., [@xep-isr-sasl2])?
+TODO Add explanation about the intended primary use case (e.g., [@xep-isr-sasl2])?
 
 Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
@@ -112,7 +112,7 @@ This message is followed by a message from the responder to the initiator. This 
 
 responder-msg = 1*OCTET
 
-The responder-msgs value is defined as: HMAC(token, "Responder" || cb-data)
+The responder-msg value is defined as: HMAC(token, "Responder" || cb-data)
 
 The initiating entity **MUST** verify the responder-msg to achieve mutual authentication.
 
@@ -186,6 +186,6 @@ Security AD).
 
 {backmatter}
 
-# Acknowledgements
+# Acknowledgments
 
 Thanks to Thijs Alkemade.
