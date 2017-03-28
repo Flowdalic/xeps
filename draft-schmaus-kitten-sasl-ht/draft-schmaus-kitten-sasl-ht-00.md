@@ -69,11 +69,16 @@ The family of HT-* mechanisms is not applicable for proxy authentication, since 
 #  The HT-* Family of Mechanisms
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
-Each mechanism has a name of the following form:
 
+A HT mechanism name is a string "HT-" followed by the capitalized "Hash Name String", followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
+
+Hence each mechanism has a name of the following form:
+
+F> ~~~
 F> HT-<hash-alg>-<cb-type>
+F> ~~~
 
-Where <hash-alg> is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and <cb-type> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Where \<hash-alg\> is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
@@ -84,7 +89,7 @@ ENDP  | tls-server-end-point
 UNIQ  | tls-unique
 Table: Mapping of CBT to Channel Bindings
 
-The following table lists a few examples of HT-* SASL mechanism names.
+The following table lists the HT-* SASL mechanisms registered this document.
 
 Mechanism Name      | Hash Algorithm   | Channel-binding unique prefix
 --------------------|------------------|------------------------------
@@ -113,13 +118,13 @@ authcid-data = 1*OCTET
 initiator-hashed-token = 1*OCTET
 
 The initiator message starts with an unsigned 32-bit integer in big endian. It denotes length of the authcid-data, which contains the authentication identity.
-Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile [@!RFC7613].
+Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile of [@!RFC7613].
 
 The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-data)
 
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
 
-The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data ([@!I-D.ietf-tls-tls13#19]).
+The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data (see [@!I-D.ietf-tls-tls13#19]).
 
 ## Final Responder Message
 
@@ -139,7 +144,7 @@ This section describes compliance with SASL mechanism requirements specified in 
 2.   Definition of server-challenges and client-responses:
      a)  HT is a client-first mechanism.
      b)  HT does not send additional data with success.
-3.   HT is capable of transferring authorization identities from the client to the server. (TODO)
+3.   HT is capable of transferring authorization identities from the client to the server.
 4.   HT does not offer any security layers (HT offers channel binding instead).
 5.   HT does not protect the authorization identity.
 
