@@ -19,7 +19,7 @@ organization="University of Erlangen-Nuremberg"
 
 .# Abstract
 
-This document specifies a new SASL mechanism designed to be used with short-lived, exclusively ephemeral tokens.
+This document specifies a SASL mechanism designed to be used with short-lived, exclusively ephemeral tokens.
 
 {mainmatter}
 
