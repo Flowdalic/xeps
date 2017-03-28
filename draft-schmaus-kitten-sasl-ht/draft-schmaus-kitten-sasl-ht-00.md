@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-03-22T00:00:00Z
+date = 2017-03-28T00:00:00Z
 
 [[author]]
 initials="F."
@@ -56,9 +56,9 @@ The family of HT-* mechanisms is not applicable for proxy authentication, since 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
 Each mechanism has a name of the following form:
 
-F> HT-(HA)-(CBT)
+F> HT-<hash-alg>-<cb-type>
 
-Where (HA) is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and (CBT) is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Where <hash-alg> is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and <cb-type> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
@@ -141,7 +141,8 @@ To: iana@iana.org
 Subject: Registration of a new SASL family HT
 
 SASL mechanism name (or prefix for the family): HT-*
-Security considerations: Section FIXME of draft-schmaus-kitten-sasl-ht-00 
+Security considerations:
+  Section FIXME of draft-schmaus-kitten-sasl-ht-00 
 Published specification (optional, recommended):
   draft-schmaus-kitten-sasl-ht-00 (TODO)
 Person & email address to contact for further information:
