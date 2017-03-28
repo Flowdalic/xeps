@@ -26,10 +26,25 @@ This document specifies a new SASL mechanism designed to be used with short-live
 #  Introduction
 
 This section specifies the the family of Hashed Token (HT-*) SASL mechanisms.
-This mechanism was designed to be used with short-lived tokens, used as shared secrets, for authentication.
 It provides hash agility, mutual authentication and is secured by channel binding.
 
-TODO Add explanation about the intended primary use case (e.g., [@xep-isr-sasl2])?
+This mechanism was designed to be used with short-lived tokens for quick, one round-trip, re-authentication of a previous session.
+Clients are supposed to request such tokens from the server after being authenticated using a "strong" SASL mechanism (e.g. SCRAM).
+Hence a typical sequence of actions using SASL-HT may look like the following:
+
+F> ~~~
+F> A) Client authenticates using a strong mechanism (e.g., SCRAM)
+F> B) Client requests secret SASL-HT token
+F>    <normal client-server interaction here>
+F> C) Connection between client and server gets interrupted
+F>    (e.g., WiFi ↔ GSM switch)
+F> D) Client resumes previous session using the token from B
+F> E) Client requests secret SASL-HT token
+F>    [goto C]
+F> ~~~
+Figure: Example sequence using SASL-HT
+
+An example application protocol specific extension based on SASL-HT is [@XEP-ISR-SASL2].
 
 Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
@@ -176,7 +191,7 @@ Security AD).
     </front>
 </reference>
 
-<reference anchor='xep-isr-sasl2' target='http://geekplace.eu/xeps/xep-isr-sasl2/xep-isr-sasl2.html'>
+<reference anchor='XEP-ISR-SASL2' target='http://geekplace.eu/xeps/xep-isr-sasl2/xep-isr-sasl2.html'>
     <front>
         <title>XEP-XXXX: Instant Stream Resumption</title>
         <author initials='F.' surname='Schmaus' fullname='Florian Schmaus'>
