@@ -1,4 +1,4 @@
-.PHONY: all clean lint lint-idnits
+.PHONY: all clean lint lint-idnits xml
 
 RFC_NAME := draft-schmaus-kitten-sasl-ht-00
 
@@ -8,6 +8,8 @@ clean:
 	rm -rf *.xml *.txt
 
 lint: lint-idnits
+
+xml: $(RFC_NAME).xml
 
 lint-idnits: $(RFC_NAME).txt
 	idnits --verbose $<
