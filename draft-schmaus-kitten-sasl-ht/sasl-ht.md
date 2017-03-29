@@ -66,20 +66,20 @@ Upon client request server sends key, magic and server-verifier to the
 client, and deletes key.
 
 Now
-server knows: message, magic
-client knows: key,     magic
+server knows: message, magic, server-verifier
+client knows: key,     magic, server-verifier
 
 SASL Exchange
 -------------
 
-client → server: key, HMAC(magic, cb-data)
+client → server: key XOR H(magic), HMAC(magic, cb-data)
 
 Server calculates client-magic = HMAC(key, message), and if
 client-magic == magic, and if HMAC(magic, cb-data)
 matches his view of the TLS connection, then auth success and channel
 binding established.
 
-server → client: message, HMAC(server-verifier, cb-data)
+server → client: message XOR H(server-verifier), HMAC(server-verifier, cb-data)
 
 Client checks if message is HMAC(key, magic) and if
 HMAC(server-verifier, cb-data) matches clients view of the TLS
