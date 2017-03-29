@@ -96,3 +96,9 @@ robustness as Version1.
 Note that Version2 would require XEP-ISR-SASL2 to hand out a key
 string, the magic string and the server-verifier, i.e. it would
 require a change to the current state of XEP-ISR-SASL2.
+
+TODO List
+=========
+
+- Specify token push mechanism in XEP-ISR-SASL2 so that server can
+  periodically push new tokens to clients.
