@@ -1,7 +1,7 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
 category = "info"
-docName = "draft-schmaus-kitten-sasl-ht-00"
+docName = "draft-schmaus-kitten-sasl-ht-01"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
