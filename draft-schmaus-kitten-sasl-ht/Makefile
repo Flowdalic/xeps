@@ -1,17 +1,22 @@
 .PHONY: all clean lint lint-idnits xml
 
-RFC_NAME := draft-schmaus-kitten-sasl-ht-00
+RFC_NAME := draft-schmaus-kitten-sasl-ht
 
-all: $(RFC_NAME).txt $(RFC_NAME).html
+RFCS_MD   := $(wildcard $(RFC_NAME)-*.md)
+RFCS_XML  := $(patsubst %.md, %.xml, $(RFCS_MD))
+RFCS_TXT  := $(patsubst %.md, %.txt, $(RFCS_MD))
+RFCS_HTML := $(patsubst %.md, %.html, $(RFCS_MD))
+
+all: $(RFCS_TXT) $(RFCS_HTML)
 
 clean:
-	rm -rf *.xml *.txt
+	rm -rf *.xml *.txt *.html
 
 lint: lint-idnits
 
-xml: $(RFC_NAME).xml
+xml: $(RFCS_XML)
 
-lint-idnits: $(RFC_NAME).txt
+lint-idnits: $(RFCS_TXT)
 	idnits --verbose $<
 
 %.txt: %.xml
