@@ -1,4 +1,4 @@
-.PHONY: all clean lint lint-idnits xml
+.PHONY: all clean lint lint-out lint-idnits xml
 
 RFC_NAME := draft-schmaus-kitten-sasl-ht
 
@@ -7,6 +7,9 @@ RFCS_XML  := $(patsubst %.md, %.xml, $(RFCS_MD))
 RFCS_TXT  := $(patsubst %.md, %.txt, $(RFCS_MD))
 RFCS_HTML := $(patsubst %.md, %.html, $(RFCS_MD))
 
+IDNITS_OUT_TAG := idnits-out
+RFCS_IDNITS_OUT := $(patsubst %.md, %.$(IDNITS_OUT_TAG).txt, $(RFCS_MD))
+
 all: $(RFCS_TXT) $(RFCS_HTML)
 
 clean:
@@ -14,10 +17,16 @@ clean:
 
 lint: lint-idnits
 
+lint-out: $(RFCS_IDNITS_OUT)
+
 xml: $(RFCS_XML)
 
-lint-idnits: $(RFCS_TXT)
+# Checks the lastest version (using 'lastword') for nits.
+lint-idnits: $(lastword $(RFCS_TXT))
 	idnits --verbose $<
+
+%.$(IDNITS_OUT_TAG).txt: %.xml
+	idnits --verbose $< > $@
 
 %.txt: %.xml
 	xml2rfc --text $<
