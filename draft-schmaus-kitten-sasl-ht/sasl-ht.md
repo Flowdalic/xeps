@@ -32,10 +32,11 @@ Since SASL-HT is meant to be protocol agnostic, other communities
 (SMTP, IMAP, SIP, …) could build such a mechanism based on SASL-HT too
 (if applicable).
 
-The current version of SASL-HT in the draft is Version1. Version2 HT-*
-tries to mitigate effects of token theft on the server.
+The current version of SASL-HT in the draft is Simple HT
+variant. Enhanced HT-* tries to mitigate effects of token theft on the
+server but introduces additional complexity.
 
-Version1 HT-*
+Simple HT-*
 ============
 
 Prelude
@@ -55,7 +56,7 @@ server → client: HMAC(token, "Responder" || cb-data)
 
 Client check if it matches his view, if so, then mutual auth success.
 
-Version2 HT-*
+Enhanced HT-*
 ========
 
 Prelude
@@ -90,12 +91,12 @@ connection, then mutual auth success.
 Discussion
 ==========
 
-"Version2 HT-*" mitigates the effect of a server-side key theft (the
+"Enhanced HT-*" mitigates the effect of a server-side key theft (the
 server doesn't know the key). The magic is hashed, just like the key
-was in Version1, thus it appears that Version2 provides the same
-robustness as Version1.
+was in Simple, thus it appears that Enhanced provides the same
+robustness as Simple HT.
 
-Note that Version2 would require XEP-ISR-SASL2 to hand out a key
+Note that Enhanced HT would require XEP-ISR-SASL2 to hand out a key
 string, the magic string and the server-verifier, i.e. it would
 require a change to the current state of XEP-ISR-SASL2.
 
