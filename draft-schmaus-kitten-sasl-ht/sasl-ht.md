@@ -11,6 +11,7 @@ resumption in an efficient manner.
 
 A typical sequence of actions using SASL-HT:
 
+```
 A) Client initial authenticates using a strong mechanism (e.g., SCRAM)
 B) Client requests secret token
    <normal client-server interaction here>
@@ -20,6 +21,7 @@ D) Client resumes previous session using the secret token from B
 E) Client requests secret token
    <normal client-server interaction here>
    [goto C]
+```
    
 The XMPP community is working on a complement XMPP Extension Protocol
 (XEP) which can be found at
