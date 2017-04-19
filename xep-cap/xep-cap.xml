@@ -6,7 +6,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Compare-And-Publish PubSub Items</title>
+  <title>Atomically Compare-And-Publish PubSub Items</title>
   <abstract>This specification provides a mechanism to atomically Compare-And-Publish items to a PubSub node.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
@@ -24,19 +24,21 @@
   &flow;
   <revision>
     <version>0.0.1</version>
-    <date>2017-03-14</date>
+    <date>2017-04-20</date>
     <initials>fs</initials>
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
+
 <section1 topic='Introduction' anchor='intro'>
 
   <p>This specification provides a mechanism to atomically publish
-  item s to a PubSub node depending on the item ID of the nodes latest
-  item. This allows to prevent race conditions, hence avoiding data
-  loss.</p>
+  items to a PubSub node depending on the item ID of the node's latest
+  item. This allows to prevent race conditions and avoids data
+  loss in certain situations.</p>
 
 </section1>
+
 <section1 topic='Discoverying Support' anchor='disco'>
 
   <p>If an entity supports the Compared-And-Publish feature it MUST
@@ -45,6 +47,7 @@
   query for information.</p>
 
 </section1>
+
 <section1 topic='Compare-And-Publish PubSub Items' anchor='cap'>
 
   <p>In order to atomically compare-and-publish an item, a client
@@ -128,6 +131,7 @@ And by opposing end them?
   </section2>
 
 </section1>
+
 <section1 topic='Security Considerations' anchor='security'>
 
   <p>This extension protocol does not add any further security
@@ -135,12 +139,14 @@ And by opposing end them?
   14.</cite>.</p>
 
 </section1>
+
 <section1 topic='IANA Considerations' anchor='iana'>
 
   <p>This document requires no interaction with the Internet Assigned
   Numbers Authority (IANA).</p>
 
 </section1>
+
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
 
   <p>This specification defines the following XML namespaces:</p>
