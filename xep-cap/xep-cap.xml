@@ -116,7 +116,7 @@ And by opposing end them?
     to='hamlet@denmark.lit/blogbot'
     id='compare-and-ublish1'>
   <pubsub xmlns='urn:xmpp:pubsub:cap:0'>
-    <comapre-and-publish-failed id='2'/>
+    <compare-and-publish-failed id='2'/>
   </pubsub>
 </iq>
 ]]></example>
