@@ -1,12 +1,12 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
-category = "info"
+category = "exp"
 docName = "draft-schmaus-kitten-sasl-ht-01"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-03-28T00:00:00Z
+date = 2017-07-06T00:00:00Z
 
 [[author]]
 initials="F."
@@ -15,6 +15,14 @@ fullname="Florian Schmaus"
 organization="University of Erlangen-Nuremberg"
  [author.address]
  email = "schmaus@cs.fau.de"
+
+[[author]]
+initials="C."
+surname="Egger"
+fullname="Christoph Egger"
+organization="University of Erlangen-Nuremberg"
+ [author.address]
+ email = "egger@cs.fau.de"
 %%%
 
 .# Abstract
@@ -70,9 +78,9 @@ The family of HT-* mechanisms is not applicable for proxy authentication, since 
 
 Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
 
-A HT mechanism name is a string "HT-" followed by the capitalized "Hash Name String", followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
+A HT mechanism name is a string beginning with "HT-" followed by the capitalized name of the used hash, followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
 
-Hence each mechanism has a name of the following form:
+Hence each HT mechanism has a name of the following form:
 
 F> ~~~
 F> HT-<hash-alg>-<cb-type>
@@ -125,6 +133,8 @@ The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-da
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
 
 The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data (see [@!I-D.ietf-tls-tls13#19]).
+
+TODO: Add note why HMAC() is used even if it's not required for "modern" hash algorithms.
 
 ## Final Responder Message
 
