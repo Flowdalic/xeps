@@ -51,11 +51,8 @@
   <p>In order to initiate an encrypted file transfer, the initiator includes a key-element in the jingle-request. This key-element contains an encryption key which is used to encrypt/decryt the transferred key. In both file offers and file requests, it is the initiator, which dictates this key. The key is encrypted using the encryption method of the initiators choice. The initiator and responder must establish a session beforehand.</p>
   
   <section2 topic='File offer'>
-  <p>In this scenario Romeo wants to send an encrypted text file over to Juliet. He chooses to use their existing OMEMO session to do so. First, he generates a fresh TODO-AES key and IV. This will later be used to encrypt and decrypt the file. In order to be transmitted, key and IV have to be serialized. Key and IV are both Base64 encoded and appended in the following form:</p>
-  <example caption='Key and IV get serialized'><![CDATA[
-KEY:HEREISYOURKEY|IV:HEREYOUFINDIV
-]]></example>
-  <p>This text is encrypted using the established secure encryption method. The resulting OMEMO element is sent as part of the security element along with the rest of the jingle stanza over to Juliet.</p>
+  <p>In this scenario Romeo wants to send an encrypted text file over to Juliet. He chooses to use their existing OMEMO session to do so. First, he generates a fresh TODO-AES key and IV. This will later be used to encrypt and decrypt the file. In order to be transmitted, key and IV have to be serialized. For this purpose, key and iv are appended and then encrypted. The exact encoding of different key types can be found below.</p>
+  <p>The resulting array is encrypted using the established secure encryption method. The resulting OMEMO element is sent as part of the security element along with the rest of the jingle stanza over to Juliet.</p>
   <example caption="Romeo initiates an encrypted file offer"><![CDATA[
 <iq from='romeo@montague.example/dr4hcr0st3lup4c'
     id='nzu25s8'
@@ -88,7 +85,10 @@ KEY:HEREISYOURKEY|IV:HEREYOUFINDIV
                    priority='8257636'
                    type='direct'/>
       </transport>
-      <security xmlns='TODO' name='a-file-offer' type='omemo'>
+      <security xmlns='urn:xmpp:jingle:jet:0'
+                name='a-file-offer'
+                cipher='urn:xmpp:ciphers:aes-256-gcm-nopadding'
+                type='urn:xmpp:omemo:0'>
         <encrypted xmlns='urn:xmpp:omemo:0'>
           <header sid='27183'>
             <key rid='31415'>BASE64ENCODED...</key>
@@ -102,7 +102,7 @@ KEY:HEREISYOURKEY|IV:HEREYOUFINDIV
   </jingle>
 </iq>]]></example>
 
-    <p>Juliet decrypts the OMEMO element using her session with Romeo to retrieve the key and IV. Both Juliet and Romeo then carry on with the session negotiation as described in &xep0234;. Before Romeo starts transmitting the file, he encrypts it using the key and IV. He then transmitts the encrypted file over to Juliet.</p>
+    <p>Juliet decrypts the OMEMO element using her session with Romeo to retrieve the serialized key and iv. She splits both according to the rules below to retrieve the key and iv. Both Juliet and Romeo then carry on with the session negotiation as described in &xep0234;. Before Romeo starts transmitting the file, he encrypts it using the key and IV. He then transmitts the encrypted file over to Juliet.</p>
     <p>When Juliet received the file, she uses the decrypted key and IV to decrypt the received file.</p>
   </section2>
   
@@ -134,7 +134,10 @@ KEY:HEREISYOURKEY|IV:HEREYOUFINDIV
                    priority='8257636'
                    type='direct'/>
       </transport>
-      <security xmlns='TODO' name='a-file-request' type='openpgp'>
+      <security xmlns='urn:xmpp:jingle:jet:0'
+                name='a-file-request'
+                cipher='urn:xmpp:ciphers:aes-256-gcm-nopadding'
+                type='urn:xmpp:openpgp:0'>
         <signcrypt xmlns='urn:xmpp:openpgp:0'>
           <to jid='romeo@montague.example'/>
           <time stamp='2014-07-10T17:06:00+02:00'/>
@@ -150,13 +153,38 @@ KEY:HEREISYOURKEY|IV:HEREYOUFINDIV
   </section2>
 </section1>
 
+<section1 topic='Ciphers'>
+  <p>In order to encrypt the transported bytestream, the sender must transmit a cipher key to the recipient. There are multiple options available:</p>
+  <table caption='Available ciphers, configurations and their namespaces'>
+    <tr>
+      <th>Namespace</th>
+      <th>Type</th>
+      <th>Length (bits)</th>
+      <th>Parameters</th>
+      <th>Serialization</th>
+    </tr>
+    <tr>
+      <td>urn:xmpp:ciphers:aes-128-gcm-nopadding:0</td>
+      <td>AES</td>
+      <td>128</td>
+      <td>GCM/NoPadding</td>
+      <td>128BitKey::128BitIV</td>
+    </tr>
+    <tr>
+      <td>urn:xmpp:ciphers:aes-256-gcm-nopadding:0</td>
+      <td>AES</td>
+      <td>256</td>
+      <td>GCM/NoPadding</td>
+      <td>256BitKey::256BitIV</td>
+    </tr>
+  </table>
+  <p>The column 'serialization' describes, how the key and iv are serialized. "::" means plain concatenation of byte arrays.</p>
+</section1>
+
 <section1 topic='Open Questions'>
   <p>This is only a rough draft and there is still a ton of questions left to be answered. Here is a small non-exhaustive list of things I can think of:</p>
   <ul>
-    <li>What cipher is used to encrypt the file? Examples would be AES-GCM128/256...</li>
     <li>How exactly are interrupted transfers resumed? How (long) are keys/IVs cached?</li>
-    <li>Is it in the scope of this approach to hide metadata?</li>
-    <li>How are transferred files authenticated? (See OMEMO audit)</li>
     <li>May it be desirable to split data into chunks?</li>
     <li>Please add to this list :)</li>
   </ul>
