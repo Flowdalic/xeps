@@ -1,13 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY secret "&lt;secret/&gt;">
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Jingle Encrypted Transfers</title>
-  <abstract>This specification defines a method that allows file transfers via Jingle File Transfer to be end-to-end encrypted using established encryption schemes like OpenPGP or OMEMO.</abstract>
+  <title>Jingle Encrypted Transports</title>
+  <abstract>This specification defines a method that allows to use established encryption schemes like OpenPGP or OMEMO for end-to-end encryption of Jingle transports.</abstract>
   &LEGALNOTICE;
   <number>XXXX</number>
   <status>ProtoXEP</status>
@@ -44,16 +45,52 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
-  <p>&xep0234; has the disadvantage, that transmitted files are not encrypted (aside from regular TLS transport encryption), which means that intermediate nodes like the XMPP server(s) have access to the transferred data. Considering that end-to-end encryption becomes more and more important for communications, this is a major flaw that needs to be addressed.</p>
-  <p>This document defines a method to enable two communication partners to utilize an already established secure channel (eg. an OMEMO session) to exchange an encryption key which can then be used to encrypt/decrypt the offered/requested file.</p>
+  <p>Jingle Encrypted Transports (JET) strives to provide a modular and easily extensible way to wrap Jingle Transports in an additional end-to-end encryption layer. The focus of this specification lays on being modular. It should be possible to extend existing Jingle use scenarios with end-to-end encryption by simply adding a JET element to the negotiation.</p>
 </section1>
-<section1 topic='How it works' anchor='how'>
-  <p>In order to initiate an encrypted file transfer, the initiator includes a key-element in the jingle-request. This key-element contains an encryption key which is used to encrypt/decryt the transferred key. In both file offers and file requests, it is the initiator, which dictates this key. The key is encrypted using the encryption method of the initiators choice. The initiator and responder must establish a session beforehand.</p>
+<section1 topic='Terminology' anchor='terminology'>
+  <p>JET uses multiple encryption layers, so it is necessary to declare a distinct denomination for the different keys involved.</p>
+  <table caption='Denomination of keys used in the protocol'>
+    <tr>
+      <th>Designation</th>
+      <th>Abbrevation</th>
+      <th>Usage</th>
+    </tr>
+    <tr>
+      <td>Transport Key</td>
+      <td>TK</td>
+      <td>(Symmetric) key that is used to encrypt/decrypt the bytestreams sent/received through Jingle transports. This key encrypts the data two entities want to exchange. Examples for TK can be found under <link url='#ciphers'>"Ciphers"</link>.</td>
+    </tr>
+    <tr>
+      <td>Initialization Vector</td>
+      <td>IV</td>
+      <td>Initialization vector that is used together with TK.</td> 
+    </tr>
+    <tr>
+      <td>Transport Secret</td>
+      <td>TS</td>
+      <td>Serialization of TK and TI.</td> 
+    </tr>
+    <tr>
+      <td>Envelope Element</td>
+      <td>EE</td>
+      <td>Output of an established end-to-end encryption methods when encrypting TS. Examples for such methods could be &xep0384; or &xep0374;.</td> 
+    </tr>
+  </table>
+</section1>
+<section1 topic='Principle' anchor='principle'>
+  <p>Lets assume Romeo wants to initiate an encrypted Jingle session with Juliet. Prior to the Jingle session initiation, an already existing, established and (ideally) authenticated end-to-end encryption session between Romeo and Juliet MUST exist. Examples for suitable encryption sessions are &xep0384; and &xep0374;. This session is needed to transfer the Transport Secret from Romeo to Juliet.</p>
+  <p>When this precondition is met, Romeo initially generates a transport key (TK) and associated initialization vector (IV). These will later be used by the sender to encrypt, and respectively by the recipient to decrypt data that is exchanged. This protocol defines a set of usable <link url='#ciphers'>ciphers</link> from which Romeo might choose. TK and IV are serialized to create the transport secret (TS).</p>
+  <p>Next Romeo uses her established encryption session with Juliet to encrypt TS. The resulting envelope element (EE) will be part of the Jingle session initiation as child of the JET &secret; element.</p>
+  <p>When Juliet receives Romeos session request, she decrypts EE to retrieve TS, from which she can deserialize TK and IV. Now she and Romeo can go on with the session negotiation. Once the session is established, data can be encrypted and exchanged.</p>
+</section1>
+<section1 topic='Encrypted Jingle File Transfer using JET' anchor='jft'>
+  <p>&xep0234; has the disadvantage, that transmitted files are not encrypted (aside from regular TLS transport encryption), which means that intermediate nodes like XMPP/proxy server(s) have access to the transferred data. Considering that end-to-end encryption becomes more and more important to protect free speech and personal expression, this is a major flaw that needs to be addressed.</p>
+  <p>In order to initiate an encrypted file transfer, the initiator includes a JET &secret; in the Jingle file transfer request.</p>
   
   <section2 topic='File offer'>
-  <p>In this scenario Romeo wants to send an encrypted text file over to Juliet. He chooses to use their existing OMEMO session to do so. First, he generates a fresh TODO-AES key and IV. This will later be used to encrypt and decrypt the file. In order to be transmitted, key and IV have to be serialized. For this purpose, key and iv are appended and then encrypted. The exact encoding of different key types can be found below.</p>
-  <p>The resulting array is encrypted using the established secure encryption method. The resulting OMEMO element is sent as part of the security element along with the rest of the jingle stanza over to Juliet.</p>
-  <example caption="Romeo initiates an encrypted file offer"><![CDATA[
+    <p>In this scenario Romeo wants to send an encrypted text file over to Juliet. He chooses to use their existing &xep0384; session to do so. First, he generates a fresh AES-256 transport key and IV. TK and IV are serialized into TS which is then encrypted using Romeos OMEMO session with Juliet.</p>
+    <p>The resulting OMEMO element (EE) is sent as part of the security element along with the rest of the jingle stanza over to Juliet.</p>
+    <example caption="Romeo initiates an encrypted file offer"><![CDATA[
 <iq from='romeo@montague.example/dr4hcr0st3lup4c'
     id='nzu25s8'
     to='juliet@capulet.example/yn0cl4bnw0yr3vym'
@@ -102,12 +139,12 @@
   </jingle>
 </iq>]]></example>
 
-    <p>Juliet decrypts the OMEMO element using her session with Romeo to retrieve the serialized key and iv. She splits both according to the rules below to retrieve the key and iv. Both Juliet and Romeo then carry on with the session negotiation as described in &xep0234;. Before Romeo starts transmitting the file, he encrypts it using the key and IV. He then transmitts the encrypted file over to Juliet.</p>
-    <p>When Juliet received the file, she uses the decrypted key and IV to decrypt the received file.</p>
+    <p>Juliet decrypts the OMEMO element (EE) using her session with Romeo to retrieve TS from which she deserializes TK and IV. Both Juliet and Romeo then carry on with the session negotiation as described in &xep0234;. Before Romeo starts transmitting the file, he encrypts it using TK and IV. He then transmitts the encrypted file over to Juliet.</p>
+    <p>When Juliet received the file, she uses the TK and IV to decrypt the received file.</p>
   </section2>
   
   <section2 topic='File Request'>
-    <p>Juliet might want to request a file transfer from Romeo. This can be the case, when Romeo hosts the file. In order to do so, she sends him a key and IV which Romeo will use to encrypt the file before sending it to Juliet. In this example we assume, that Romeo and Juliet secured their communications using &xep0374;.</p>
+    <p>Juliet might want to request a file transfer from Romeo. This can be the case, when Romeo hosts the file. In order to do so, she sends generates TK and IV, creates TS from those and encrypts TS with an encryption method of her choice to get EE. TK and IV will be used by Romeo to encrypt the requested file before sending it to Juliet. In this example we assume, that Romeo and Juliet secured their communications using &xep0374;.</p>
     <example caption="Juliet initiates an encrypted file request"><![CDATA[
 <iq from='juliet@capulet.example/yn0cl4bnw0yr3vym'
     id='wsn361c3'
@@ -153,8 +190,8 @@
   </section2>
 </section1>
 
-<section1 topic='Ciphers'>
-  <p>In order to encrypt the transported bytestream, the sender must transmit a cipher key to the recipient. There are multiple options available:</p>
+<section1 topic='Ciphers' anchor='ciphers'>
+  <p>In order to encrypt the transported bytestream, the initiator must transmit a cipher key to the responder. There are multiple options available:</p>
   <table caption='Available ciphers, configurations and their namespaces'>
     <tr>
       <th>Namespace</th>
@@ -181,12 +218,23 @@
   <p>The column 'serialization' describes, how the key and iv are serialized. "::" means plain concatenation of byte arrays.</p>
 </section1>
 
+<section1 topic='Security Considerations' anchor='security'>
+  <p>The initiator SHOULD NOT use the generated key TK as IV, but instead generate a seperate random IV.</p>
+  <p>Instead of falling back to unencrypted transfer in case something goes wrong, implementations MUST instead abort the Jingle session, informing the user.</p>
+  <p>IMPORTANT: This approach does not deal with metadata. In case of &xep0234;, an attacker with access to the sent stanzas can for example still see the name of the file and other information included in the &lt;file/&gt; element.</p>
+</section1>
+
 <section1 topic='Open Questions'>
   <p>This is only a rough draft and there is still a ton of questions left to be answered. Here is a small non-exhaustive list of things I can think of:</p>
   <ul>
     <li>How exactly are interrupted transfers resumed? How (long) are keys/IVs cached?</li>
     <li>May it be desirable to split data into chunks?</li>
     <li>Please add to this list :)</li>
+  </ul>
+</section1>
+<section1 topic='TODO'>
+  <ul>
+    <li>Service discovery</li>
   </ul>
 </section1>
 </xep>
