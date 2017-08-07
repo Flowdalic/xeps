@@ -132,7 +132,7 @@
             <key rid='12321'>BASE64ENCODED...</key>
             <iv>BASE64ENCODED...</iv>
           </header>
-          <payload>BASE64-ENCODED-ENCRYPTED-KEY</payload>
+          <payload>BASE64-ENCODED-ENCRYPTED-SECRET</payload>
         </encrypted>
       </security>
     </content>
@@ -180,7 +180,7 @@
           <time stamp='2014-07-10T17:06:00+02:00'/>
           <rpad>f0rm1l4n4-mT8y33j!Y%fRSrcd^ZE4Q7VDt1L%WEgR!kv</rpad>
           <payload>
-            <body xmlns='jabber:client'>BASE64-ENCODED-ENCRYPTED-KEY</body>
+            <body xmlns='jabber:client'>BASE64-ENCODED-ENCRYPTED-SECRET</body>
           </payload>
         </signcrypt>
       </security>
@@ -205,14 +205,14 @@
       <td>AES</td>
       <td>128</td>
       <td>GCM/NoPadding</td>
-      <td>128BitKey::128BitIV</td>
+      <td>128BitKey::96BitIV</td>
     </tr>
     <tr>
       <td>urn:xmpp:ciphers:aes-256-gcm-nopadding:0</td>
       <td>AES</td>
       <td>256</td>
       <td>GCM/NoPadding</td>
-      <td>256BitKey::256BitIV</td>
+      <td>256BitKey::96BitIV</td>
     </tr>
   </table>
   <p>The column 'serialization' describes, how the key and iv are serialized. "::" means plain concatenation of byte arrays.</p>
@@ -222,6 +222,8 @@
   <p>The initiator SHOULD NOT use the generated key TK as IV, but instead generate a seperate random IV.</p>
   <p>Instead of falling back to unencrypted transfer in case something goes wrong, implementations MUST instead abort the Jingle session, informing the user.</p>
   <p>IMPORTANT: This approach does not deal with metadata. In case of &xep0234;, an attacker with access to the sent stanzas can for example still see the name of the file and other information included in the &lt;file/&gt; element.</p>
+  <p>When using OX as encryption method, clients might want to protect against replay 
+attacks</p> 
 </section1>
 
 <section1 topic='Open Questions'>
