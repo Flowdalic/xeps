@@ -134,7 +134,7 @@ HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* has
 
 The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data (see [@!I-D.ietf-tls-tls13#19]).
 
-TODO: Add note why HMAC() is used even if it's not required for "modern" hash algorithms.
+TODO: Add note why HMAC() is used even if it is not required when modern hash algorithms are used.
 
 ## Final Responder Message
 
