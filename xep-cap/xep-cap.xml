@@ -73,7 +73,7 @@
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <publish node='princely_musings'>
       <item id='2'>
-        <entry xmlns='http://www.w3.org/2005/Atom'>
+        <entry xmlns='https://example.org'>
           <title>Soliloquy</title>
           <summary>
 To be, or not to be: that is the question:
@@ -82,11 +82,6 @@ The slings and arrows of outrageous fortune,
 Or to take arms against a sea of troubles,
 And by opposing end them?
           </summary>
-          <link rel='alternate' type='text/html'
-                href='http://denmark.lit/2003/12/13/atom03'/>
-          <id>tag:denmark.lit,2003:entry-32397</id>
-          <published>2003-12-13T18:30:02Z</published>
-          <updated>2003-12-13T18:30:02Z</updated>
         </entry>
       </item>
     </publish>
