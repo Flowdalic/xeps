@@ -23,6 +23,12 @@
   <shortname>cap</shortname>
   &flow;
   <revision>
+    <version>0.0.2</version>
+    <date>2017-08-25</date>
+    <initials>fs</initials>
+    <remark><p>Use PubSub publish-options preconditions.</p></remark>
+  </revision>
+  <revision>
     <version>0.0.1</version>
     <date>2017-04-20</date>
     <initials>fs</initials>
@@ -51,26 +57,22 @@
 <section1 topic='Compare-And-Publish PubSub Items' anchor='cap'>
 
   <p>In order to atomically compare-and-publish an item, a client
-  sends an &IQ; with a 'pubsub' element qualified by the
-  'urn:xmpp:pubsub:cap:0' namespace. The element MUST contain the same
-  attributes and elements as the &lt;publish/&gt; element defined in
-  &xep0060; <em>and</em> it MUST contain a previd attribute containing
-  an item ID.</p>
+  sends a <cite>XEP-0060</cite> &lt;publish/&gt; IQ with a
+  'pubsub#prev_item_id' precondition publishing option. The option
+  field's value MUST contain an item ID.</p>
 
   <p>The PubSub service MUST only publish the item if the node's
-  latest item ID is equal to the ID found in the 'previd'
-  attribute.</p>
+  latest item ID is equal to the ID found in the 'pubsub#prev_item_id'
+  field.</p>
 
-  <example caption='Publisher publishes an item using Compare-And-Publish'><![CDATA[
+      <example caption='Atomically publishing with Compare-And-Publish'><![CDATA[
 <iq type='set'
     from='hamlet@denmark.lit/blogbot'
     to='pubsub.shakespeare.lit'
-    id='compare-and-publish1'>
-  <pubsub xmlns='urn:xmpp:pubsub:cap:0'>
-    <compare-and-publish
-        node='princely_musings'
-        previd='1'>
-      <item>
+    id='pub1'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <publish node='princely_musings'>
+      <item id='2'>
         <entry xmlns='http://www.w3.org/2005/Atom'>
           <title>Soliloquy</title>
           <summary>
@@ -88,45 +90,43 @@ And by opposing end them?
         </entry>
       </item>
     </publish>
+    <publish-options>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'>
+          <value>http://jabber.org/protocol/pubsub#publish-options</value>
+        </field>
+        <field var='pubsub#prev_item_id'>
+          <value>1</value>
+        </field>
+      </x>
+    </publish-options>
   </pubsub>
 </iq>
 ]]></example>
-
-  <section2 topic='Successfully published an item using Compare-And-Publish'>
-
-	<p>If the 'previd' matched the latest item's ID and if the service
-	was able to successfully process the request then the protocol
-	continues as defined in <cite>XEP-0060 7.1.2</cite>.</p>
-
-  </section2>
 
   <section2 topic='Could not publish because newest item ID did not match'>
 
     <p>In case the Compare-And-Publish operation failed because the
     latest node id is not the same as given in the 'previd' attribute
-    in the request, the server returns an &IQ; result with 'pubsub'
-    element qualified by the 'urn:xmpp:pubsub:cap:0' namespace which
-    contains a &lt;compare-and-publish-failed/&gt; element. The
-    element MUST have a 'id' attribute with the ID of the lastest
-    item.</p>
+    in the request, the server returns an &lt;conflict/&gt; error of
+    type 'modify' which a pubsub-specific condition of
+    &gt;precondition-not-met/&lt; and a
+    &lt;compare-and-publish-failed/&gt; element qualifed by the
+    'urn:xmpp:pubsub:cap:0' namespace. The element MUST have a 'id'
+    attribute with the ID of the lastest item.</p>
 
-   <example caption='Service returns IQ response notifying of failed Compare-And-Publish operation'><![CDATA[
-<iq type='result'
+    <example caption='Service returns IQ response notifying of failed Compare-And-Publish operation'><![CDATA[
+<iq type='error'
     from='pubsub.shakespeare.lit'
-    to='hamlet@denmark.lit/blogbot'
-    id='compare-and-ublish1'>
-  <pubsub xmlns='urn:xmpp:pubsub:cap:0'>
-    <compare-and-publish-failed id='2'/>
-  </pubsub>
+    to='hamlet@denmark.lit/elsinore'
+    id='retract1'>
+  <error type='modify'>
+    <conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+    <precondition-not-met xmlns='http://jabber.org/protocol/pubsub#errors'/>
+    <compare-and-publish-failed xmlns='urn:xmpp:pubsub:cap:0' id='2'/>
+  </error>
 </iq>
 ]]></example>
-
-  </section2>
-
-  <section2 topic='Error cases'>
-
-    <p>All other error cases are handled as specified in
-    <cite>XEP-0060 § 7.1.3</cite></p>
 
   </section2>
 
@@ -153,17 +153,34 @@ And by opposing end them?
   <ul>
     <li>urn:xmpp:pubsub:cap:0</li>
   </ul>
-  	<code caption='Registry Submission'><![CDATA[
+    <code caption='Registry Submission'><![CDATA[
 <var>
-	<name>urn:xmpp:pubsub:cap:0</name>
-	<desc>Indicates support for Compare-And-Publish</desc>
-	<doc>XEP-XXXX</doc>
+    <name>urn:xmpp:pubsub:cap:0</name>
+    <desc>Indicates support for Compare-And-Publish</desc>
+    <doc>XEP-XXXX</doc>
 </var>]]></code>
 
+    <p>This specification defines the following &gt;publish-options/&lt; fields:</p>
+    <ul>
+      <li>pubsub#prev_item_id</li>
+    </ul>
+    <code caption='Registry Submission'><![CDATA[
+<field var='pubsub#prev-item-id'
+         type='text-single'
+         label='Precondition: The latest item ID value of the node'/>]]></code>
+
 </section1>
+
 <section1 topic='XML Schema' anchor='schema'>
 
   <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
 
 </section1>
+
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to Kim Alvefur and Dave Cridland for their feedback.</p>
+
+</section1>
+
 </xep>
