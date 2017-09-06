@@ -178,6 +178,55 @@
   </jingle>
 </iq>]]></example>
   </section2>
+
+  <section2 topic='Encrypted ranged transfers'>
+    <p>&xep0234; defines a way for parties to request ranged transfers. This can be used to resume interrupted transfers etc. In case of an interrupted transfer, the receiving party might be able to decrypt parts of the received file. When requesting a resumption of the transfer, the recipient therefore can use the index of the last successfully decrypted byte of the file as offset in the ranged transfer. Since a resumed transfer takes place in a new session, the old transport secret might no longer be available to either party. For that reason the receiver creates a new TS for the session-initiation. The sending party then encrypts and sends only the requested parts of the file.</p>
+    <example caption="Romeo requests the resumption of an interrupted transfer using a fresh transport secret"><![CDATA[
+<iq from='romeo@montague.example/dr4hcr0st3lup4c'
+    id='wsn361c3'
+    to='juliet@capulet.example/yn0cl4bnw0yr3vym'
+    type='set'>
+  <jingle xmlns='urn:xmpp:jingle:1'
+          action='session-initiate'
+          initiator='romeo@montague.example/dr4hcr0st3lup4c'
+          sid='uj3b2'>
+    <content creator='initiator' name='restart' senders='responder'>
+      <description xmlns='urn:xmpp:jingle:apps:file-transfer:5'>
+        <file>
+          <range offset='270336'/>
+          <hash xmlns='urn:xmpp:hashes:2'
+                algo='sha-1'>w0mcJylzCn+AfvuGdqkty2+KP48=</hash>
+        </file>
+      </description>
+      <transport xmlns='urn:xmpp:jingle:transports:s5b:1'
+             mode='tcp'
+                 sid='vj3hs98y'>
+        <candidate cid='hft54dqy'
+                   host='192.168.4.1'
+                   jid='romeo@montague.example/dr4hcr0st3lup4c'
+                   port='5086'
+                   priority='8257636'
+                   type='direct'/>
+        <candidate cid='hutr46fe'
+                   host='24.24.24.1'
+                   jid='romeo@montague.example/dr4hcr0st3lup4c'
+                   port='5087'
+                   priority='8258636'
+                   type='direct'/>
+      </transport>
+      <security xmlns='urn:xmpp:jingle:jet:0'
+                name='restart'
+                cipher='urn:xmpp:ciphers:aes-256-gcm-nopadding'
+                type='urn:xmpp:encryption:stub:0'>
+        <encrypted xmlns='urn:xmpp:encryption:stub:0'>
+          <payload>BASE64-ENCODED-ENCRYPTED-SECRET</payload>
+        </encrypted>
+      </security>
+    </content>
+  </jingle>
+</iq>]]></example>
+  </section2>
+
 </section1>
 
 <section1 topic='Ciphers' anchor='ciphers'>
