@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-07-06T00:00:00Z
+date = 2017-09-29T08:00:00Z
 
 [[author]]
 initials="F."
@@ -134,7 +134,7 @@ HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* has
 
 The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data (see [@!I-D.ietf-tls-tls13#19]).
 
-TODO: Add note why HMAC() is used even if it is not required when modern hash algorithms are used.
+TODO: Add note why HMAC() is always involved, even if HMAC() is usually not required when modern hash algorithms are used.
 
 ## Final Responder Message
 
