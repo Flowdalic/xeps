@@ -62,26 +62,20 @@
 
 <section1 topic='Compare-And-Publish PubSub Items' anchor='cap'>
 
-  <section2 topic='The Compare-And-Publish ID (CAP-ID)' anchor='cap-id'>
+  <section2 topic='PubSub Item Compare-And-Publish Value (CAP-V)' anchor='cap-v'>
 
-    <p>PubSub services supporting the Compare-And-Publish PubSub extension MUST include a Comapre-and-Publish Identifier
-    (CAP-ID) for every item in every response.</p>
+    <p>PubSub services supporting the Compare-And-Publish PubSub extension MUST include a Comapre-and-Publish value
+    (CAP-V) for every item in every response. The CAP-V value MUST change if the content of the item changed and
+    different item content under the same node MUST NOT yield the same CAP-V. A simple computation of the CAP-ID would
+    be to hash the String representation of the item's content.</p>
 
-    <p>The requirements for the CAP-ID are as follows:</p>
-    <ol>
-      <li>Its value MUST change if the content of the item changes</li>
-      <li>Its value MUST be unique for the given node</li>
-    </ol>
+	<p>CAP-Vs are assoicated with PubSub node's items via the item ID. The maping information is placed by the PubSub
+	service in a &lt;cap-v-map/&gt; extension element, qualified by the 'urn:xmpp:pubsub:cap:0' namespace, as child
+	element of the &lt;items/&gt; element. The &lt;cap-v-map/&gt; element contains one or more &lt;cap-v-map-entry/&gt;
+	elements, of which each MUST have a 'item-id' and a 'cap-value' attribute. The former contains the PubSub item ID
+	value and the later contains the according CAP-V of the item.</p>
 
-    <p>A simple computation of the CAP-ID would be to hash the String representation of the item's content.</p>
-
-	<p>CAP-IDs are assoicated with a PubSub node's item via the item ID. The maping information is placed by the PubSub
-	service in a &lt;cap-id-map/&gt; extension element, qualified by the 'urn:xmpp:pubsub:cap:0' namespace, as child
-	element of the &lt;items/&gt; element. The &lt;cap-id-map/&gt; element contains one or more
-	&lt;cap-id-map-entry/&gt; elements, of which each MUST have a 'item-id' and a 'cap-id' attribute. The former
-	containing the PubSub item ID value and the later containing the according CAP-ID of the item.</p>
-
-    <example caption='Service returns some items and their according CAP-IDs'><![CDATA[
+    <example caption='Service returns some items and their according CAP-Vs'><![CDATA[
 <iq type='result'
     from='pubsub.shakespeare.lit'
     to='francisco@denmark.lit/barracks'
@@ -117,14 +111,17 @@ O, what a rogue and peasant slave am I!
           </summary>
         </entry>
       </item>
-      <cap-id-map xmlns='urn:xmpp:pubsub:cap:0'>
-        <cap-id-map-entry
-          item-id='368866411b877c30064a5f62b917cffe' cap-id='35a204c2-5d6c-43a2-8e0d-a235a627b04a'/>
-        <cap-id-map-entry
-          item-id='3300659945416e274474e469a1f0154c' cap-id='166b7c04-ed4d-4872-aa56-a58268da84e2'/>
-        <cap-id-map-entry
-          item-id='4e30f35051b7b8b42abe083742187228' cap-id='67f7f792-f2ee-4918-8894-36a3c4a6dd5f'/>
-      </cap-id>
+      <cap-v-map xmlns='urn:xmpp:pubsub:cap:0'>
+        <cap-value-map-entry
+          item-id='368866411b877c30064a5f62b917cffe'
+          cap-value='35a204c2-5d6c-43a2-8e0d-a235a627b04a'/>
+        <cap-value-map-entry
+          item-id='3300659945416e274474e469a1f0154c'
+          cap-value='166b7c04-ed4d-4872-aa56-a58268da84e2'/>
+        <cap-value-map-entry
+          item-id='4e30f35051b7b8b42abe083742187228'
+          cap-value='67f7f792-f2ee-4918-8894-36a3c4a6dd5f'/>
+      </cap-v-map>
     </items>
   </pubsub>
 </iq>
@@ -135,11 +132,11 @@ O, what a rogue and peasant slave am I!
   <section2 topic='PubSub publishing using Compare-And-Publish'>
 
     <p>In order to atomically compare-and-publish an item, a client sends a <cite>XEP-0060</cite> &lt;publish/&gt; IQ
-    with a 'pubsub#prev_item_cap_id' precondition publishing option, set to the value of a currently assumed CAP-ID of
-    the latest item.</p>
+    with a 'pubsub#prev_item_cap_value' precondition publishing option, set to the value of the currently assumed CAP-V
+    of the latest item of the node.</p>
 
     <p>The PubSub service MUST only publish the item if the node's
-  latest item CAP-ID is equal to the CAP-ID found in the 'pubsub#prev_item_cap_id'
+  latest item CAP-V is equal to the CAP-V found in the 'pubsub#prev_item_cap_value'
   field.</p>
 
     <example caption='Atomically publishing with Compare-And-Publish'><![CDATA[
@@ -167,7 +164,7 @@ And by opposing end them?
         <field var='FORM_TYPE' type='hidden'>
           <value>http://jabber.org/protocol/pubsub#publish-options</value>
         </field>
-        <field var='pubsub#prev_item_cap_id'>
+        <field var='pubsub#prev_item_cap_value'>
           <value>1</value>
         </field>
       </x>
@@ -180,14 +177,11 @@ And by opposing end them?
 
   <section2 topic='Could not publish because newest item ID did not match'>
 
-    <p>In case the Compare-And-Publish operation failed because the
-    latest node id is not the same as given in the 'previd' attribute
-    in the request, the server returns an &lt;conflict/&gt; error of
-    type 'modify' which a pubsub-specific condition of
-    &gt;precondition-not-met/&lt; and a
-    &lt;compare-and-publish-failed/&gt; element qualifed by the
-    'urn:xmpp:pubsub:cap:0' namespace. The element MUST have a 'cap-id'
-    attribute with the CAP-ID of the lastest item.</p>
+    <p>In case the Compare-And-Publish operation failed because the latest node id is not the same
+    as given in the 'previd' attribute in the request, the server returns an &lt;conflict/&gt; error
+    of type 'modify' which a pubsub-specific condition of &lt;precondition-not-met/&gt; and a
+    &lt;compare-and-publish-failed/&gt; element qualifed by the 'urn:xmpp:pubsub:cap:0'
+    namespace. The element MUST have a 'cap-id' attribute with the CAP-V of the lastest item.</p>
 
     <example caption='Service returns IQ response notifying of failed Compare-And-Publish operation'><![CDATA[
 <iq type='error'
@@ -215,7 +209,7 @@ And by opposing end them?
   matches that of an existing item, the pubsub service MUST overwrite the existing item and generate a new event
   notification."
   </p>
-  Which means that the content of an item could change without its ID.
+  Which means that the content of an item could change without its ID, rendering the item ID unusable for CAP.
   </p>
 
 </section1>
@@ -253,9 +247,9 @@ And by opposing end them?
       <li>pubsub#prev_item_cap_id</li>
     </ul>
     <code caption='Registry Submission'><![CDATA[
-<field var='pubsub#prev-item-id'
+<field var='pubsub#prev-item-cap-value'
          type='text-single'
-         label='Precondition: The latest item&apos; CAP-ID value of the node'/>]]></code>
+         label='Precondition: The assumed value of the latest item&apos; CAP-V of the node'/>]]></code>
 
 </section1>
 
@@ -274,6 +268,6 @@ And by opposing end them?
 </xep>
 
 <!-- Local Variables: -->
-<!-- fill-column: 120 -->
+<!-- fill-column: 100 -->
 <!-- indent-tabs-mode: nil -->
 <!-- End: -->
