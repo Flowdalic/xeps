@@ -201,15 +201,15 @@ And by opposing end them?
 
 <section1 topic='Rationale' anchor='rationale'>
 
-  <p>Unfortunately it was not possible to re-use the PubSub item ID for the "Atomically Compare-And-Publish"
-  purpose. This is mostly due <cite>XEP-0060 § 12.8</cite> stating that:
+  <p>Unfortunately it was not possible to re-use the PubSub item ID for the "Atomically
+  Compare-And-Publish" purpose. This is mostly due <cite>XEP-0060 § 12.8</cite> stating that:</p>
   <p class='box'>
   "If a publisher publishes an item and the ItemID
   matches that of an existing item, the pubsub service MUST overwrite the existing item and generate a new event
   notification."
   </p>
-  Which means that the content of an item could change without its ID, rendering the item ID unusable for CAP.
-  </p>
+  <p> Which means that the content of an item could change without its ID, rendering the item ID
+  unusable for CAP. </p>
 
   <p>Injecting a "cap"-namespaced attribute carrying the item's CAP-V into PubSub's &lt;item/&gt;
   would be a very elegant approach to assign CAP-Vs to PubSub items (and the favored one of the
