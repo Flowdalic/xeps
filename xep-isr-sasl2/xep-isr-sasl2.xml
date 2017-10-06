@@ -339,7 +339,7 @@
     xmlns:stream='http://etherx.jabber.org/streams'>
 
 <authenticate xmlns='urn:xmpp:sasl:1' mechanism='HT-SHA-256-ENDP'>
-  <initial-response></initial-response>
+  <initial-response>[base64 encoded SASL data]</initial-response>
   <inst-resume xmlns='urn:xmpp:isr:0' with-isr-token='true'/>
     <resume xmlns='urn:xmpp:sm:3'
             h='some-sequence-number'
@@ -363,7 +363,7 @@
 
   <example caption='Successful Instant Stream Resumption'><![CDATA[
 <success xmlns='urn:xmpp:sasl:1'>z
-  <success-data></success-data>
+  <additional-data></additional-data>
   <inst-resumed xmlns='urn:xmpp:isr:o'
                 token='006b1a29-c549-41c7-a12c-2a931822f8c0'>
     <resumed xmlns='urn:xmpp:sm:3' h='354' previd='123'/>
