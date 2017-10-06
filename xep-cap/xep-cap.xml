@@ -24,7 +24,7 @@
   &flow;
   <revision>
     <version>0.0.3</version>
-    <date>2017-09-29</date>
+    <date>2017-10-06</date>
     <initials>fs</initials>
     <remark><p>Use a custom item ID (CAP-ID).</p></remark>
   </revision>
@@ -212,13 +212,17 @@ And by opposing end them?
   Which means that the content of an item could change without its ID, rendering the item ID unusable for CAP.
   </p>
 
+  <p>Injecting a "cap"-namespaced attribute carrying the item's CAP-V into PubSub's &lt;item/&gt;
+  would be a very elegant approach to assign CAP-Vs to PubSub items (and the favored one of the
+  XEP's author). But the usage of namespaces attributes within XMPP is controversial. Therefore this
+  XEP resorts to using the &lt;cap-v-map/&gt; approach for now.</p>
+
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>This extension protocol does not add any further security
-  considerations to the ones mentioned in <cite>XEP-0060 §
-  14.</cite>.</p>
+  <p>This extension protocol does not add any further security considerations to the ones mentioned
+  in <cite>XEP-0060 § 14.</cite>.</p>
 
 </section1>
 
