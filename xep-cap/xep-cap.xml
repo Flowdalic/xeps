@@ -135,9 +135,8 @@ O, what a rogue and peasant slave am I!
     with a 'pubsub#prev_item_cap_value' precondition publishing option, set to the value of the currently assumed CAP-V
     of the latest item of the node.</p>
 
-    <p>The PubSub service MUST only publish the item if the node's
-  latest item CAP-V is equal to the CAP-V found in the 'pubsub#prev_item_cap_value'
-  field.</p>
+    <p>The PubSub service MUST only publish the item if the node's latest item CAP-V is equal to the
+    CAP-V found in the 'pubsub#prev_item_cap_value' field.</p>
 
     <example caption='Atomically publishing with Compare-And-Publish'><![CDATA[
 <iq type='set'
