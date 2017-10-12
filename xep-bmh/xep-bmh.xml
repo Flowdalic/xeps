@@ -127,8 +127,11 @@
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>REQUIRED.</p>
 </section1>
+
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>TODO: Establish a registry</p>
+
+  <p>TODO: Is it sensible to establish a registry for this?</p>
+
 </section1>
 
 <section1 topic='XML Schema' anchor='schema'>
