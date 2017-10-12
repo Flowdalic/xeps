@@ -122,10 +122,15 @@
 -->
 
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+
+  <p>TODO REQUIRED.</p>
+
 </section1>
+
 <section1 topic='IANA Considerations' anchor='iana'>
-  <p>REQUIRED.</p>
+
+  <p>TODO REQUIRED.</p>
+
 </section1>
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
