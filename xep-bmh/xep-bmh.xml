@@ -28,9 +28,14 @@
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
+
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+
+  <p>TODO Provides hints to the recipient of &MESSAGE;s when they are used to exchange markup
+  formatted &BODY;s. Also specifies a mechanism to discover support of various markup dialects</p>
+
 </section1>
+
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
