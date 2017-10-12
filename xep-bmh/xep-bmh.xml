@@ -37,19 +37,39 @@
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
 </section1>
-<section1 topic='Use Cases' anchor='usecases'>
+<section1 topic='Exchanging messages with markup formatted bodies' anchor='exchanging'>
   <p>TOOD</p>
 
   <example caption='A message stanza with a body markup hint'><![CDATA[
 <<message to='mercutio@verona.lit' from='romeo@montague.lit/orchard'>
   <body>
-   Typical message body text.
+1. Ingredients
+
+    - spaghetti
+    - marinara sauce
+    - salt
+
+2. Cooking
+
+   Bring water to boil, add a pinch of salt and spaghetti. Cook until pasta is **tender**.
+
+3. Serve
+
+   Drain the pasta on a plate. Add heated sauce.
+
+   > No man is lonely eating spaghetti; it requires so much attention.
+
+*Bon appetit!*
   </body>
   <body-markup-hint language='urn:xmpp:bmh:commonmark:1'/>
 </message>
 ]]></example>
 
-  <p>TODO2</p>
+</section1>
+
+<section1 topic="Markup Languages" anchor='languages'>
+
+  <p>This list is not comprehensive and not meant to be.</p>
 
   <table caption="Defined Markup Languages">
     <tr>
@@ -71,10 +91,20 @@
 
 </section1>
 
-<!--
-<section1 topic='Business Rules' anchor='rules'>
-  <p>OPTIONAL.</p>
+<section1 topic='Discovering Support' anchor='discovery'>
+
+  <p>TODO: Via disco#info</p>
+
 </section1>
+
+<section1 topic='Business Rules' anchor='rules'>
+
+  <p>There MUST be only one &lt;body-markup-hint/&gt; per &MESSAGE; stanza, and it applies to all
+  &BODY; elements within the same stanza.</p>
+
+</section1>
+
+<!--
 <section1 topic='Implementation Notes' anchor='impl'>
   <p>OPTIONAL.</p>
 </section1>
