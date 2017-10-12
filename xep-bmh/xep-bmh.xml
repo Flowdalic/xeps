@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Body Markup Hints</title>
+  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>bmh</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2017-10-14</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+</section1>
+<section1 topic='Requirements' anchor='reqs'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Glossary' anchor='glossary'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>TOOD</p>
+
+  <example caption='A message stanza with a body markup hint'><![CDATA[
+<<message to='mercutio@verona.lit' from='romeo@montague.lit/orchard'>
+  <body>
+   Typical message body text.
+  </body>
+  <body-markup-hint language='urn:xmpp:bmh:commonmark:1'/>
+</message>
+]]></example>
+
+  <p>TODO2</p>
+
+  <table caption="Defined Markup Languages">
+    <tr>
+      <th>Language</th>
+      <th>Name</th>
+      <th>Specification Link</th>
+    </tr>
+    <tr>
+      <td>urn:xmpp:bmh:commonmark:0</td>
+      <td>CommonMark</td>
+      <td><link url='http://spec.commonmark.org/'>http://spec.commonmark.org/</link></td>
+    </tr>
+    <tr>
+      <td>urn:xmpp:bmh:rst:0</td>
+      <td>reStructuredText</td>
+      <td><link   url='http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html'>http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html</link></td>
+    </tr>
+  </table>
+
+</section1>
+
+<!--
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+-->
+
+<section1 topic='Security Considerations' anchor='security'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>TODO: Establish a registry</p>
+</section1>
+
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to everyone who provided feedback.</p>
+
+</section1>
+
+</xep>
+
+<!-- Local Variables: -->
+<!-- fill-column: 100 -->
+<!-- indent-tabs-mode: nil -->
+<!-- End: -->

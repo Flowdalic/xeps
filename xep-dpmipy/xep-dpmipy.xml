@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Client Side Ping Controll (or "Don't Ping Me, I'll Ping You")</title>
+  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0001</spec>
+    <spec>Etc.</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>dpmipy</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2017-10-14</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>TODO/WIP TEXT: Defines a mechanism allowing the client to tell the server that the client will
+  never keep the connection idle longer then a certain period of time. This avoid the patholgical
+  case where pings from send by the server to check if the connection is still alive wakes a
+  sleeping client up.</p>
+
+</section1>
+<section1 topic='Requirements' anchor='reqs'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Glossary' anchor='glossary'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+
+<!--
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+-->x
+
+<section1 topic='Security Considerations' anchor='security'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>REQUIRED.</p>
+</section1>
+
+<section1 topic='XML Schema' anchor='schema'>
+
+  <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
+
+</section1>
+
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to everyone who provided feedback.</p>
+
+</section1>
+
+</xep>
+
+<!-- Local Variables: -->
+<!-- fill-column: 100 -->
+<!-- indent-tabs-mode: nil -->
+<!-- End: -->
