@@ -7,7 +7,7 @@
 <xep>
 <header>
   <title>Body Markup Hints</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <abstract>This document specifies hints about the markup language used in &BODY; elements.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -31,22 +31,47 @@
 
 <section1 topic='Introduction' anchor='intro'>
 
-  <p>TODO Provides hints to the recipient of &MESSAGE;s when they are used to exchange markup
-  formatted &BODY;s. Also specifies a mechanism to discover support of various markup dialects</p>
+  <p>This document specifies hints about the markup language used in &BODY; elements found in
+  &MESSAGE; stanzas. It also specifies a mechanism to discover support of various markup
+  dialects</p>
 
 </section1>
 
-<section1 topic='Requirements' anchor='reqs'>
-  <p>STRONGLY RECOMMENDED.</p>
+<section1 topic="Markup Languages" anchor='languages'>
+
+  <p>This list is not comprehensive and not meant to be.</p>
+
+  <table caption="Defined Markup Languages">
+    <tr>
+      <th>Language Identifier</th>
+      <th>Name</th>
+      <th>Specification Link</th>
+    </tr>
+    <tr>
+      <td>urn:xmpp:bmh:commonmark:0</td>
+      <td>CommonMark</td>
+      <td><link url='http://spec.commonmark.org/'>http://spec.commonmark.org/</link></td>
+    </tr>
+    <tr>
+      <td>urn:xmpp:bmh:rst:0</td>
+      <td>reStructuredText</td>
+      <td><link   url='http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html'>http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html</link></td>
+    </tr>
+  </table>
+
+  <p>TODO: Shall we define your own subset of e.g. CommonMark, XMPPMark? :)</p>
+
 </section1>
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
-</section1>
+
 <section1 topic='Exchanging messages with markup formatted bodies' anchor='exchanging'>
-  <p>TOOD</p>
+
+  <p>If the &BODY; element contains text which is "formatted" with a markup language, then the
+  sending client MAY adds a &lt;body-markup-hint/&gt; element qualified by the 'urn:xmpp:bmh:0'
+  namespace with the 'language' attribute set to the Language Identifier of the used markup
+  language.</p>
 
   <example caption='A message stanza with a body markup hint'><![CDATA[
-<<message to='mercutio@verona.lit' from='romeo@montague.lit/orchard'>
+<message to='mercutio@verona.lit' from='romeo@montague.lit/orchard'>
   <body>
 1. Ingredients
 
@@ -66,39 +91,33 @@
 
 *Bon appetit!*
   </body>
-  <body-markup-hint xmlns='urn:xmpp:bmh:0' language='urn:xmpp:bmh:commonmark:0'/>
+  <body-markup-hint xmlns='urn:xmpp:bmh:0'
+                    language='urn:xmpp:bmh:commonmark:0'/>
 </message>
 ]]></example>
 
 </section1>
 
-<section1 topic="Markup Languages" anchor='languages'>
-
-  <p>This list is not comprehensive and not meant to be.</p>
-
-  <table caption="Defined Markup Languages">
-    <tr>
-      <th>Language</th>
-      <th>Name</th>
-      <th>Specification Link</th>
-    </tr>
-    <tr>
-      <td>urn:xmpp:bmh:commonmark:0</td>
-      <td>CommonMark</td>
-      <td><link url='http://spec.commonmark.org/'>http://spec.commonmark.org/</link></td>
-    </tr>
-    <tr>
-      <td>urn:xmpp:bmh:rst:0</td>
-      <td>reStructuredText</td>
-      <td><link   url='http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html'>http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html</link></td>
-    </tr>
-  </table>
-
-</section1>
-
 <section1 topic='Discovering Support' anchor='discovery'>
 
-  <p>TODO: Via disco#info</p>
+  <p>It is RECOMMENDED that entities announce the supported body markup languages in its service
+  discovery information as specified in &xep0030;. Every markup language is announces as a
+  &lt;feature/&gt; element with the 'var' attribute set to the language identifier of the supported
+  language.</p>
+
+      <example caption='A service discovery information with the supported body markup languages'><![CDATA[
+<iq xmlns='jabber:client'
+    from='eros@example.org'
+    to='rocinante@example.org'
+    id='info1'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    ...
+    <feature var='urn:xmpp:bmh:commonmark:0'/>
+    ...
+  </query>
+</iq>]]>
+</example>
 
 </section1>
 
@@ -123,13 +142,13 @@
 
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>TODO REQUIRED.</p>
+  <p>TODO; Discuss.</p>
 
 </section1>
 
 <section1 topic='IANA Considerations' anchor='iana'>
 
-  <p>TODO REQUIRED.</p>
+  <p>This document requires no interaction with &IANA;.</p>
 
 </section1>
 
@@ -144,7 +163,7 @@
   <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
 
 </section1>
-x
+
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
   <p>Thanks to everyone who provided feedback.</p>
