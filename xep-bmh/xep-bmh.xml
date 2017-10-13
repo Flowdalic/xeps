@@ -71,7 +71,7 @@
   language.</p>
 
   <example caption='A message stanza with a body markup hint'><![CDATA[
-<message from='eros@example.org' to='rocinante@example.org'>
+<message from='holden@rocinante.example.org' to='naomi@rocinante.example.org'>
   <body>
 1. Ingredients
 
@@ -106,9 +106,8 @@
   language.</p>
 
       <example caption='A service discovery information with the supported body markup languages'><![CDATA[
-<iq xmlns='jabber:client'
-    from='eros@example.org'
-    to='rocinante@example.org'
+<iq from='julie@eros.example.org'
+    to='miller@rocinante.example.org'
     id='info1'
     type='result'>
   <query xmlns='http://jabber.org/protocol/disco#info'>
