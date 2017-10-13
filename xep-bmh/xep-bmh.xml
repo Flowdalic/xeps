@@ -66,7 +66,7 @@
 
 *Bon appetit!*
   </body>
-  <body-markup-hint language='urn:xmpp:bmh:commonmark:1'/>
+  <body-markup-hint xmlns='urn:xmpp:bmh:0' language='urn:xmpp:bmh:commonmark:0'/>
 </message>
 ]]></example>
 
@@ -140,9 +140,11 @@
 </section1>
 
 <section1 topic='XML Schema' anchor='schema'>
-  <p>REQUIRED for protocol specifications.</p>
-</section1>
 
+  <p>TODO: Add after the XEP leaves the 'experimental' state.</p>
+
+</section1>
+x
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
   <p>Thanks to everyone who provided feedback.</p>
