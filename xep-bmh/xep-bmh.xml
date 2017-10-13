@@ -101,7 +101,7 @@
 <section1 topic='Discovering Support' anchor='discovery'>
 
   <p>It is RECOMMENDED that entities announce the supported body markup languages in its service
-  discovery information as specified in &xep0030;. Every markup language is announces as a
+  discovery information as specified in &xep0030;. Every markup language is announced as a
   &lt;feature/&gt; element with the 'var' attribute set to the language identifier of the supported
   language.</p>
 
@@ -142,7 +142,7 @@
 
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>TODO; Discuss.</p>
+  <p>TODO: Discuss.</p>
 
 </section1>
 
