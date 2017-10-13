@@ -7,6 +7,10 @@ MKFILE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 XEP := $(shell basename $(MKFILE_DIR))
 FROM_XMPP_GIT := xep.xsl xep.dtd xep.ent xmpp.css prettify.css prettify.js
 
+ifneq ($(wildcard xep-official.xml),)
+all: xep-official.html
+endif
+
 all: $(XEP).html
 
 xep.xsl: ../xsf-xeps/xep.xsl
@@ -27,9 +31,12 @@ prettify.css: ../xsf-xeps/prettify.css
 prettify.js: ../xsf-xeps/prettify.js
 	cp $^ $@
 
-$(XEP).html: $(XEP).xml $(FROM_XMPP_GIT)
+%.html: %.xml $(FROM_XMPP_GIT)
 	xsltproc $^ --output $@
 
 clean:
 	rm -f $(XEP).html
 	rm -r $(FROM_XMPP_GIT)
+ifneq ($(wildcard xep-official.xml),)
+	rm -f xep-official.html
+endif
