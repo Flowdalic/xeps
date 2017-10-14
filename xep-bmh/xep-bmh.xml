@@ -66,7 +66,7 @@
 <section1 topic='Exchanging messages with markup formatted bodies' anchor='exchanging'>
 
   <p>If the &BODY; element contains text which is "formatted" with a markup language, then the
-  sending client MAY adds a &lt;body-markup-hint/&gt; element qualified by the 'urn:xmpp:bmh:0'
+  sending client MAY adds a &lt;body-markup-hint/&gt; element qualified by the 'https://xmpp.org/extensions/bmh/0/'
   namespace with the 'language' attribute set to the Language Identifier of the used markup
   language.</p>
 
@@ -91,7 +91,7 @@
 
 *Bon appetit!*
   </body>
-  <body-markup-hint xmlns='urn:xmpp:bmh:0'
+  <body-markup-hint xmlns='https://xmpp.org/extensions/bmh/0/'
                     language='urn:xmpp:bmh:commonmark:0'/>
 </message>
 ]]></example>
