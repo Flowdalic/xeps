@@ -102,7 +102,6 @@
       <ul>
         <li>Bump SASL2 namespace to urn:xmpp:sasl:1, and as result:</li>
         <li>Rename 'key' to 'token'</li>
-        <li>Remove 'with-isr-token' attribute</li>
       </ul>
     </remark>
   </revision>
@@ -318,6 +317,14 @@
   namespace, which must contain a &lt;resume/&gt; element as defined
   in &xep0198;.</p>
 
+  <p>If the with-isr-token' attribute is set to 'false', then the
+  SASL mechanism is performed as when traditionally authenticating
+  the XMPP session. If the value of the attribute is 'true', which is
+  the default value for this attribute, then the "password" given to
+  the SASL mechanism is the ISR token. Note that this implies that only
+  SASL mechanisms which take a password/token can be used this
+  way.</p>
+
   <p>All ISR implementations MUST support the
   HT-SHA-256-ENDP mechanism.</p>
 
@@ -333,7 +340,7 @@
 
 <authenticate xmlns='urn:xmpp:sasl:1' mechanism='HT-SHA-256-ENDP'>
   <initial-response>[base64 encoded SASL data]</initial-response>
-  <inst-resume xmlns='urn:xmpp:isr:0'/>
+  <inst-resume xmlns='urn:xmpp:isr:0' with-isr-token='true'/>
     <resume xmlns='urn:xmpp:sm:3'
             h='some-sequence-number'
             previd='some-long-sm-id'/>
@@ -432,7 +439,8 @@
     <p>As specified in the &xep0388; § 2.6.3, sole SASL authentication
     may not be sufficient for authentication. In this case, the remote
     entity sends a &lt;continue/&gt; element as defined in &xep0388;
-    to request the local entity to perform another task.</p>
+    to request the local entity to perform another
+    task.</p>
 
     <example caption='Server requires Multi SASL Mechanism ISR'><![CDATA[
 <continue xmlns='urn:xmpp:sasl:1'>
