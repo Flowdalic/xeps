@@ -39,11 +39,12 @@
 
 <section1 topic="Markup Languages" anchor='languages'>
 
-  <p>This list is not comprehensive and not meant to be.</p>
+  <p>This list is not comprehensive and not meant to be. Every markup language in the following list
+  is reasonably readable when treated as plain text.</p>
 
   <table caption="Defined Markup Languages">
     <tr>
-      <th>Language Identifier</th>
+      <th>Markup Language Identifier</th>
       <th>Name</th>
       <th>Specification Link</th>
     </tr>
@@ -141,7 +142,9 @@
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
 
-  <p>TODO: Is it sensible to establish a registry for this?</p>
+  <p>The &REGISTRAR; includes 'https://xmpp.org/extensions/bmh/0/' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+
+  <p>TODO: Is it sensible to establish a registry for Markup Language Identifiers?</p>
 
 </section1>
 
