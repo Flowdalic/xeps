@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-09-29T08:00:00Z
+date = 2017-10-16T08:00:00Z
 
 [[author]]
 initials="F."
