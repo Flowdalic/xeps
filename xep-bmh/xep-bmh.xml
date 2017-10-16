@@ -66,10 +66,13 @@
 
 <section1 topic='Exchanging messages with markup formatted bodies' anchor='exchanging'>
 
-  <p>If the &BODY; element contains text which is "formatted" with a markup language, then the
-  sending client MAY adds a &lt;body-markup-hint/&gt; element qualified by the 'https://xmpp.org/extensions/bmh/0/'
-  namespace with the 'language' attribute set to the Language Identifier of the used markup
-  language.</p>
+  <p>If the textual content of a &MESSAGE; contains text which is enriched using a markup language,
+  then the sending client MAY adds a &lt;body-markup-hint/&gt; element qualified by the
+  'https://xmpp.org/extensions/bmh/0/' namespace with the 'language' attribute set to the Language
+  Identifier of the used markup language.</p>
+
+  <p>Note that textual content here means either the content found in &BODY; elements or the
+  encrypted textual content, which was encrypted using one of the methods described in &xep0380;</p>
 
   <example caption='A message stanza with a body markup hint'><![CDATA[
 <message from='holden@rocinante.example.org' to='naomi@rocinante.example.org'>
