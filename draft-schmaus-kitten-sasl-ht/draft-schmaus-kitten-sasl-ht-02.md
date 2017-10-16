@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-07-06T00:00:00Z
+date = 2017-09-29T08:00:00Z
 
 [[author]]
 initials="F."
@@ -56,16 +56,12 @@ An example application protocol specific extension based on SASL-HT is [@XEP-ISR
 
 Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
-  
+
 ##  Conventions and Terminology
 
 The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**",
 "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this
 document are to be interpreted as described in RFC 2119 [@!RFC2119].
-
-Additionally, the key words "**MIGHT**", "**COULD**", "**MAY WISH TO**", "**WOULD
-PROBABLY**", "**SHOULD CONSIDER**", and "**MUST (BUT WE KNOW YOU WON'T)**" in
-this document are to interpreted as described in RFC 6919 [@!RFC6919].
 
 ## Applicability
 
@@ -91,9 +87,9 @@ In case of 'ENDP', the tls-server-end-point channel binding type is used.
 In case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
 
-CBT   | Channel Binding Type 
+CBT   | Channel Binding Type
 ------|-----------------------
-ENDP  | tls-server-end-point 
+ENDP  | tls-server-end-point
 UNIQ  | tls-unique
 Table: Mapping of CBT to Channel Bindings
 
@@ -134,7 +130,7 @@ HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* has
 
 The initiator-msg **MUST NOT** be included in TLS 1.3 0-RTT early data (see [@!I-D.ietf-tls-tls13#19]).
 
-TODO: Add note why HMAC() is used even if it is not required when modern hash algorithms are used.
+TODO: Add note why HMAC() is always involved, even if HMAC() is usually not required when modern hash algorithms are used.
 
 ## Final Responder Message
 
@@ -172,7 +168,7 @@ Subject: Registration of a new SASL family HT
 
 SASL mechanism name (or prefix for the family): HT-*
 Security considerations:
-  Section FIXME of draft-schmaus-kitten-sasl-ht-00 
+  Section FIXME of draft-schmaus-kitten-sasl-ht
 Published specification (optional, recommended):
   draft-schmaus-kitten-sasl-ht-00 (TODO)
 Person & email address to contact for further information:
