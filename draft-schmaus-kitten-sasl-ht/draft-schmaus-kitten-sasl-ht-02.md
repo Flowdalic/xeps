@@ -122,7 +122,7 @@ authcid-data = 1*OCTET
 initiator-hashed-token = 1*OCTET
 
 The initiator message starts with an unsigned 32-bit integer in big endian. It denotes length of the authcid-data, which contains the authentication identity.
-Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile of [@!RFC7613].
+Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile of [@!RFC8265].
 
 The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-data)
 
@@ -149,7 +149,7 @@ This section describes compliance with SASL mechanism requirements specified in 
 1.   "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA-3-512-ENDP" and "HT-SHA-3-512-UNIQ".
 2.   Definition of server-challenges and client-responses:
      a)  HT is a client-first mechanism.
-     b)  HT does not send additional data with success.
+     b)  HT does send additional data with success.
 3.   HT is capable of transferring authorization identities from the client to the server.
 4.   HT does not offer any security layers (HT offers channel binding instead).
 5.   HT does not protect the authorization identity.
@@ -157,6 +157,8 @@ This section describes compliance with SASL mechanism requirements specified in 
 #  Security Considerations
 
 To be secure, HT-* **MUST** be used over a TLS channel that has had the session hash extension [@!RFC7627] negotiated, or session resumption **MUST NOT** have been used.
+
+It is RECOMMENDED that implementations peridically require a full authentication using a strong SASL mechanism which does not use the HT-* token.
 
 #  IANA Considerations
 
@@ -215,4 +217,5 @@ Security AD).
 
 # Acknowledgments
 
-Thanks to Thijs Alkemade.
+This document benefited from discussions on the KITTEN WG mailing list.
+The authors would like to specially thank Thijs Alkemade and Sam Whited for their comments on this topic.
