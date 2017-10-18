@@ -122,7 +122,7 @@ authcid-data = 1*OCTET
 initiator-hashed-token = 1*OCTET
 
 The initiator message starts with an unsigned 32-bit integer in big endian. It denotes length of the authcid-data, which contains the authentication identity.
-Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCaseMapped profile of [@!RFC8265].
+Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCasePreserved profile of [@!RFC8265].
 
 The initiator-hashed-token value is defined as: HMAC(token, "Initiator" || cb-data)
 
@@ -218,4 +218,4 @@ Security AD).
 # Acknowledgments
 
 This document benefited from discussions on the KITTEN WG mailing list.
-The authors would like to specially thank Thijs Alkemade and Sam Whited for their comments on this topic.
+The authors would like to specially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.
