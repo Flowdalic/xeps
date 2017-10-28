@@ -133,7 +133,7 @@ initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
 
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT-* hash algorithm, 'cb-data' represents the data provided by the channel binding type, and 'token' are the UTF-8 encoded octets of the token string which acts as shared secret between initiator and responder.
 
-The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@I-D.ietf-tls-tls13#21].
+The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#21].
 If this is the case, then the initiating entity **MUST NOT** include any further appliction protocol payload in the early data besides the HT-* initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
