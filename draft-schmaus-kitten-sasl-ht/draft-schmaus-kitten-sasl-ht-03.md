@@ -43,16 +43,20 @@ Hence a typical sequence of actions using SASL-HT may look like the following:
 F> ~~~
 F> A) Client authenticates using a strong mechanism (e.g., SCRAM)
 F> B) Client requests secret SASL-HT token
+F> C) Service returns SASL-HT token
 F>    <normal client-server interaction here>
-F> C) Connection between client and server gets interrupted
-F>    (e.g., WiFi ↔ GSM switch)
-F> D) Client resumes previous session using the token from B
-F> E) Client requests secret SASL-HT token
+F> D) Connection between client and server gets interrupted.
+F>    For example because of a WiFi ↔ GSM switch
+F> E) Client resumes previous session using SASL-HT
+F> F) Service revokes the sucessfully used SASL-hT token
+F> G) Client requests new secret SASL-HT token
 F>    [goto C]
 F> ~~~
 Figure: Example sequence using SASL-HT
 
+The HT-* mechanism requires an accompanying application protocol specific extension, which allows clients to requests a new SASL-HT token.
 An example application protocol specific extension based on SASL-HT is [@XEP-ISR-SASL2].
+This XMPP ([@RFC6120]) extension protocol allows, amoungst other things, B) and C),
 
 Since the token is not salted, and only one hash iteration is used, the HT-* mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
@@ -65,7 +69,9 @@ document are to be interpreted as described in RFC 2119 [@!RFC2119].
 
 ## Applicability
 
-Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism **MUST** only be used over channels protected by TLS, or over similar integrity-protected and authenticated channels.
+Because this mechanism transports information that should not be controlled by an attacker, the HT-* mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see [@!RFC5246]), or over similar integrity-protected and authenticated channels.
+Also the application protoocl specific extension which requests a new SASL-HT token **SHOULD** only be used over similar protected channels.
+
 In addition, when TLS is used, the client MUST successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
 
 The family of HT-* mechanisms is not applicable for proxy authentication, since they can not carry a authorization identity string (authzid).
@@ -149,9 +155,17 @@ The responder **MUST** abort the SASL authentication if the early data contains 
 > TODO: Add note why HMAC() is always involved, even if HMAC() is
 > usually not required when modern hash algorithms are used.
 
+## Initiator authentication
+
+Upon receiving the initiator-msg, the responder calculates itself the value of initiator-hashed-token and compares it with the received value found in the initiator-msg.
+If both values are equal, then the initiator has been successfully authenticated.
+
+If the responder was able to authenticate the initiator then the used token **MUST** be revoked immediately. 
+
 ## Final Responder Message
 
-This message is followed by a message from the responder to the initiator.
+After the initiator was authenticated the responder continues the SASL authentication by sending the responder-msg to the initiator.
+
 The ABNF for responder-msg is:
 
 responder-msg = 1*OCTET
