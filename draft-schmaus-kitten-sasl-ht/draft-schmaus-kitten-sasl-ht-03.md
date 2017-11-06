@@ -28,7 +28,7 @@ organization="University of Erlangen-Nuremberg"
 .# Abstract
 
 This document specifies the family of Hashed Token SASL mechanisms, which are meant to be used for quick re-authentication of a previous session.
-The SASL mechanism's authentication sequence is only one round-trip, which is achieved by the usage of short-lived, exclusively ephemeral hashed tokens.
+The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip, which is achieved by the usage of short-lived, exclusively ephemeral hashed tokens.
 It further provides hash agility, mutual authentication and is secured by channel binding.
 
 {mainmatter}
