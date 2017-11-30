@@ -152,7 +152,7 @@
 
   <p>Every ISR enabled entity SHOULD support the HT-SHA-256-ENDP
   mechanism, support for HT-SHA-256-UNIQ is RECOMMENDED. The family
-  of <cite>HT SASL<cite> mechanisms is specified in &sasl-ht;.</p>
+  of <cite>HT SASL</cite> mechanisms is specified in &sasl-ht;.</p>
 
 </section1>
 
