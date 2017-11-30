@@ -144,9 +144,9 @@
 </stream:features>
 ]]></example>
 
-  <p>Every ISR enabled entity MUST support the HT-SHA-256-ENDP
+  <p>Every ISR enabled entity SHOULD support the HT-SHA-256-ENDP
   mechanism, support for HT-SHA-256-UNIQ is RECOMMENDED. The family
-  of SASL <cite>HT-*</cite> mechanisms is specified in &sasl-ht;.</p>
+  of <cite>HT SASL<cite> mechanisms is specified in &sasl-ht;.</p>
 
 </section1>
 
@@ -264,9 +264,6 @@
   the SASL mechanism is the ISR token. Note that this implies that only
   SASL mechanisms which take a password/token can be used this
   way.</p>
-
-  <p>All ISR implementations MUST support the
-  HT-SHA-256-ENDP mechanism.</p>
 
   <example caption='Initiating entity requests instant stream resumption via the Extensible SASL Profile (XEP-0388)'><![CDATA[
 <?xml version='1.0'?>
