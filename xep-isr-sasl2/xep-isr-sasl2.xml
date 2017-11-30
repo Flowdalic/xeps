@@ -34,10 +34,10 @@
     <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
-    <version>0.0.5-SNAPSHOT</version>
-    <date>2017-XX-XX</date>
+    <version>0.0.5</version>
+    <date>2017-11-30</date>
     <initials>fs</initials>
-    <remark><p>WIP</p></remark>
+    <remark><p>Minor changes</p></remark>
   </revision>
   <revision>
     <version>0.0.4</version>
