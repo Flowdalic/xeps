@@ -264,7 +264,7 @@
   in &xep0198;.</p>
 
   <p>The only defined attributed of the &lt;inst-resume/&gt; element is the 'with-isr-token'
-  attribute, whose value, if ommited, defaults to 'true'. If is set to 'false', then the
+  attribute, whose value, if omitted, defaults to 'true'. If is set to 'false', then the
   SASL mechanism is performed as when traditionally authenticating
   the XMPP session. If the value of the attribute is 'true' then the "password" given to
   the SASL mechanism is the ISR token. Note that this implies that only
