@@ -121,26 +121,36 @@ The following syntax specifications use the Augmented Backus-Naur form (ABNF) no
 ## Initiator First Message
 
 The HT mechanism starts with the initiator-msg, send by the initiator to the responder.
-The follwing lists the ABNF syntax for the initiator-msg:
+The follwing lists the ABNF grammar for the initiator-msg:
 
-initiator-msg = authcid-length authcid-data initiator-hashed-token
-
-authcid-length = 2OCTET
-
-authcid-data = 1*OCTET
-
+~~~
+initiator-msg = authcid NUL initiator-hashed-token
+authcid = 1*SAFE ; MUST accept up to 255 octets
 initiator-hashed-token = 1*OCTET
 
-The initiator-msg starts with an unsigned 16-bit integer in big endian.
-It denotes length of the authcid-data, which contains the authentication identity.
-Before sending the authentication identity string the initiator **SHOULD** prepare the data with the UsernameCasePreserved profile of [@!RFC8265].
+NUL    = %0x00 ; The null octet
+SAFE   = UTF1 / UTF2 / UTF3 / UTF4
+         ;; any UTF-8 encoded Unicode character except NUL
 
-The authcid-data is followed by initiator-hashed-token.
+UTF1   = %x01-7F ;; except NUL
+UTF2   = %xC2-DF UTF0
+UTF3   = %xE0 %xA0-BF UTF0 / %xE1-EC 2(UTF0) /
+         %xED %x80-9F UTF0 / %xEE-EF 2(UTF0)
+UTF4   = %xF0 %x90-BF 2(UTF0) / %xF1-F3 3(UTF0) /
+         %xF4 %x80-8F 2(UTF0)
+UTF0   = %x80-BF
+~~~
+
+The initiator first message starts with the authentication identity (authcid, see[@!RFC4422]) as UTF-8 [@!RFC3629] encoded string.
+It is followed by initiator-hashed-token separated by as single null octet.
+
 The value of the initiator-hashed-token is defined as follows:
 
+~~~
 initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
+~~~
 
-HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 [@!RFC3629] encoded octets of the SASL-HT token string which acts as shared secret between initiator and responder.
+HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as shared secret between initiator and responder.
 
 The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#21].
 If this is the case, then the initiating entity **MUST NOT** include any further appliction protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
@@ -172,11 +182,15 @@ After the initiator was authenticated the responder continues the SASL authentic
 
 The ABNF for responder-msg is:
 
+~~~
 responder-msg = 1*OCTET
+~~~
 
 The responder-msg value is defined as follows:
 
+~~~
 responder-msg := HMAC(token, "Responder" || cb-data)
+~~~
 
 The initiating entity **MUST** verify the responder-msg to achieve mutual authentication.
 
