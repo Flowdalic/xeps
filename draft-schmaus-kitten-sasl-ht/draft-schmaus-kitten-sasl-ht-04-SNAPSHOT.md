@@ -58,7 +58,7 @@ F> ~~~
 Figure: Example sequence using the Hashed Token (HT) SASL mechanism
 
 The HT mechanism requires an accompanying, application protocol specific, extension, which allows clients to requests a new SASL-HT token (see [Section 5](#requirements-for-the-applicationprotocol-extension)).
-One example for such an application protocol specific extension based on HT is [@XEP-ISR-SASL2].
+One example for such an application protocol specific extension based on HT is [@XEP-0397].
 This XMPP [@RFC6120] extension protocol allows, amoungst other things, B) and C),
 
 Since the SASL-HT token is not salted, and only one hash iteration is used, the HT mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
@@ -267,12 +267,12 @@ Security AD).
     </front>
 </reference>
 
-<reference anchor='XEP-ISR-SASL2' target='http://geekplace.eu/xeps/xep-isr-sasl2/xep-isr-sasl2.html'>
+<reference anchor='XEP-0397' target='https://xmpp.org/extensions/xep-0397.html'>
     <front>
-        <title>XEP-XXXX: Instant Stream Resumption</title>
+        <title>XEP-0397: Instant Stream Resumption</title>
         <author initials='F.' surname='Schmaus' fullname='Florian Schmaus'>
         </author>
-        <date year='2017'/>
+        <date year='2018'/>
     </front>
 </reference>
 
