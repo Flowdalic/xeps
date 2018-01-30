@@ -284,4 +284,4 @@ Security AD).
 
 This document benefited from discussions on the KITTEN WG mailing list.
 The authors would like to specially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.
-Also thanks to Alexander Würstlein, who came up with the idea to pin the token to a SASL mechanism for increased security.
+Furthermore we would like to thank Alexander Würstlein, who came up with the idea to pin the token to a SASL mechanism for increased security.
