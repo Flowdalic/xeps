@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2017-11-11T19:00:00Z
+date = 2018-02-03T19:00:00Z
 
 [[author]]
 initials="F."
@@ -69,7 +69,7 @@ You may want to look at [@RFC5802] for that.
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
 "MAY", and "OPTIONAL" in this document are to be interpreted as
-described in [BCP 14](https://tools.ietf.org/html/bcp14) [@!RFC2119] [@!RFC8174] when, and only when, they
+described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they
 appear in all capitals, as shown here.
 
 ## Applicability
@@ -154,7 +154,7 @@ initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
 
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as shared secret between initiator and responder.
 
-The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#21].
+The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#23].
 If this is the case, then the initiating entity **MUST NOT** include any further appliction protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
