@@ -142,7 +142,7 @@
     clients engage in an OpenPGP secured IM
     conversation by exchanging &openpgp; extension elements. They MUST
     use the &signcrypt; OpenPGP content element specified in
-    <cite>XEP-0373</cite><link url='./xep-0373.html#exchange'>§ 3.1</link>.</p>
+    <cite>XEP-0373</cite> <link url='./xep-0373.html#exchange'>§ 3.1</link>.</p>
 
     <p>The child elements of the OpenPGP content element's &payload;
     can be seen as stanza extension elements which are encrypted and
@@ -237,7 +237,7 @@
 
   <section2 topic='Protocol Namespaces' anchor='registrar-ns'>
 
-    <p>The &REGISTRAR; includes 'urn:xmpp:openpgp:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
+    <p>The &REGISTRAR; includes 'urn:xmpp:openpgp:im:0' in its registry of protocol namespaces (see &NAMESPACES;).</p>
 
   </section2>
 
@@ -258,3 +258,8 @@
   </p>
 </section1>
 </xep>
+
+<!-- Local Variables: -->
+<!-- fill-column: 100 -->
+<!-- indent-tabs-mode: nil -->
+<!-- End: -->
