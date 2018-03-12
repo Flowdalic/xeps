@@ -285,7 +285,7 @@
 
     <p>The public key data, as specified in <cite>RFC 4880</cite>, is stored in a PEP data
     node. Note that OpenPGP's ASCII Armor is not used, instead the XMPP client MUST encode the
-    public key using Base64. The name of the PEP node MUST be "urn:xmpp:openpgp:0:pubkeys" followed by
+    public key using Base64. The name of the PEP node MUST be "urn:xmpp:openpgp:0:public-keys" followed by
     fingerprint string of the OpenPGP public-key contained in the data node. The fingerprint string
     is obtained as follows: (TODO) As specified in <cite>RFC 4880 § 12.2.</cite> and whatever gnupg
     does (hex, allcaps) minus whitespace.</p>
@@ -293,7 +293,7 @@
     <example caption='Saving the public key in the PEP data node.'><![CDATA[
 <iq type='set' from='juliet@example.org/balcony' id='publish1'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <publish node='urn:xmpp:openpgp:0:pubkeys:1357B01865B2503C18453D208CAC2A9678548E35'>
+    <publish node='urn:xmpp:openpgp:0:public-keys:1357B01865B2503C18453D208CAC2A9678548E35'>
       <item>
         <pubkey xmlns='urn:xmpp:openpgp:0' date='TODO-optional-here'>
           BASE64_OPENPGP_PUBLIC_KEY
@@ -311,7 +311,7 @@
     OpenPGP key ID to the metadata node, the publisher MUST ensure that the public key is available
     at the corresponding data node.</p>
 
-    <p> (TODO). The metadata node ID is 'urn:xmpp:openpgp:0:pubkeys'. It contains of a pubkeys-list
+    <p> (TODO). The metadata node ID is 'urn:xmpp:openpgp:0:public-keys'. It contains of a public-keys-list
     element qualified by the 'urn:xmpp:openpgp:0' namespace containing one or more pubkey-metadata
     elements. Every pubkey-metadata element MUST have a 'v4-fingerprint' attribute and a 'date'
     attribute. An OpenPGP V4 fingerprint MUST NOT occur in the list more than once.</p>
@@ -319,9 +319,9 @@
     <example caption='Publishing a public key to the metadata node.'><![CDATA[
 <iq type='set' from='juliet@example.org/balcony' id='publish1'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <publish node='urn:xmpp:openpgp:0:pubkeys'>
+    <publish node='urn:xmpp:openpgp:0:public-keys'>
       <item>
-        <pubkeys-list xmlns='urn:xmpp:openpgp:0'>
+        <public-keys-list xmlns='urn:xmpp:openpgp:0'>
           <pubkey-metadata
             v4-fingerprint='1357B01865B2503C18453D208CAC2A9678548E35'
             date='TODO-required-here'
@@ -330,7 +330,7 @@
             v4-fingerprint='67819B343B2AB70DED9320872C6464AF2A8E4C02'
             date='TODO-required-here'
             />
-        </pubkeys-list>
+        </public-keys-list>
       </item>
     </publish>
   </pubsub>
@@ -348,7 +348,7 @@
     type='get'
     id='getpub'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <items node='urn:xmpp:openpgp:0:pubkeys:1357B01865B2503C18453D208CAC2A9678548E35'
+    <items node='urn:xmpp:openpgp:0:public-keys:1357B01865B2503C18453D208CAC2A9678548E35'
            max_items='1'/>
   </pubsub>
 </iq>]]></example>
@@ -359,7 +359,7 @@
     type='result'
     id='getpub'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <items node='urn:xmpp:openpgp:0:pubkeys:1357B01865B2503C18453D208CAC2A9678548E35'>
+    <items node='urn:xmpp:openpgp:0:public-keys:1357B01865B2503C18453D208CAC2A9678548E35'>
       <item>
         <pubkey xmlns='urn:xmpp:openpgp:0' date='TODO-optional-here'>
           BASE64_OPENPGP_PUBLIC_KEY
@@ -387,7 +387,7 @@
   <section2 topic='TODO: xep115 notify' anchor='xep115-notify'>
 
     <p>Entities which are subscribed to the metadata node or advertise the
-    "urn:xmpp:openpgp:0:pubkeys+notify" feature via &xep0115; (see <cite>XEP-0060 § 9.2</cite>)
+    "urn:xmpp:openpgp:0:public-keys+notify" feature via &xep0115; (see <cite>XEP-0060 § 9.2</cite>)
     receive a notification upon a node update.</p>
 
   </section2>
@@ -395,6 +395,10 @@
 </section1>
 
 <section1 topic='Synchronizing the Secret Key with a Private PEP Node' anchor='synchro-pep'>
+
+  <p>TODO: Also split in metadata and data node? Probably not, because it could cause stale secret
+  keys on the service (since it is not possible to list all PEP nodes starting with
+  e.g. urn:xmpp:openpgp:0:secret-keys and delete old ones. We could split later anyways.</p>
 
     <p>A private PEP node is used to allow XMPP clients to synchronize
     the user's secret OpenPGP key. Where private PEP node is defined: A
