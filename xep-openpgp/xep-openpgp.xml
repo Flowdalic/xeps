@@ -290,7 +290,7 @@
 
     <p>The <em>OpenPGP v4 fingerprint string</em> is obtained as follows: First the raw bytes of the
     fingerprint are computed as specified in <cite>RFC 4880 § 12.2.</cite>. Then the bytes are
-    encoded as a hexadecimal string using uppercase characters<note>This matches the representation
+    encoded as a hexadecimal string using upper case characters<note>This matches the representation
     used by GnuPG minus the SPACE separation</note>.</p>
 
     <p>The data node MUST contain an &lt;pubkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
