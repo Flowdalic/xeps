@@ -295,8 +295,8 @@
 
     <p>The data node MUST contain an &lt;pubkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
     namespace. An optional 'date' attribute holds the information about the last modification of the
-    key as DateTime profile (see &xep0082;). The element MUST include a &lt;data/&gt; element which
-    contains the data of the key Base64 encoded.</p>
+    key as DateTime format of <cite>XEP-0082</cite>. The element MUST include a &lt;data/&gt;
+    element which contains the data of the key Base64 encoded.</p>
 
     <example caption='Saving the public key in the data node.'><![CDATA[
 <iq type='set' from='juliet@example.org/balcony' id='publish1'>
@@ -326,8 +326,8 @@
     or more &lt;pubkey-metadata/&gt; elements. Every pubkey-metadata element MUST have a
     'v4-fingerprint' attribute, containing the OpenPGP v4 fingerprint string, and a 'date'
     attribute, containing the time the key was published or updated in <cite>XEP-0082</cite>
-    DateTime profile format. An OpenPGP V4 fingerprint MUST NOT occur in the list more than
-    once.</p>
+    DateTime format of <cite>XEP-0082</cite>. An OpenPGP V4 fingerprint MUST NOT occur in the list
+    more than once.</p>
 
     <example caption='Publishing a public key to the metadata node.'><![CDATA[
 <iq type='set' from='juliet@example.org/balcony' id='publish1'>
