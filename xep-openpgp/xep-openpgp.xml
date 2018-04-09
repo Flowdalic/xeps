@@ -325,9 +325,8 @@
     &lt;public-keys-list/&gt; element qualified by the 'urn:xmpp:openpgp:0' namespace containing one
     or more &lt;pubkey-metadata/&gt; elements. Every pubkey-metadata element MUST have a
     'v4-fingerprint' attribute, containing the OpenPGP v4 fingerprint string, and a 'date'
-    attribute, containing the time the key was published or updated in <cite>XEP-0082</cite>
-    DateTime format of <cite>XEP-0082</cite>. An OpenPGP V4 fingerprint MUST NOT occur in the list
-    more than once.</p>
+    attribute, containing the time the key was published or updated in DateTime format of
+    <cite>XEP-0082</cite>. An OpenPGP V4 fingerprint MUST NOT occur in the list more than once.</p>
 
     <example caption='Publishing a public key to the metadata node.'><![CDATA[
 <iq type='set' from='juliet@example.org/balcony' id='publish1'>
