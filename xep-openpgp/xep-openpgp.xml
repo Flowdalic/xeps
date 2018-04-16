@@ -47,8 +47,8 @@
     <jid>valodim@stratum0.org</jid>
   </author>
   <revision>
-    <version>0.3.0-SNAPSHOT</version>
-    <date>2018-XX-XX</date>
+    <version>0.3.0</version>
+    <date>2018-04-16</date>
     <initials>fs</initials>
     <remark>
       Split public keys into metadata and data nodes.
