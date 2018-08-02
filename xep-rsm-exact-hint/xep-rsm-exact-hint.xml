@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>A 'Exact' Hint for Result Set Management</title>
+  <abstract>TODO.</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0059</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>rsm-exact</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2018-06-02</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <p>TODO</p>
+</section1>
+<section1 topic='Requirements' anchor='reqs'>
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Glossary' anchor='glossary'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+      <p>The responding entity SHOULD also include the number of items in the full result set encapsulated in a &lt;count/&gt; element. The number of items may be approximate. The responding entity may signal an exact number by extending &lt;count/&gt; by an attribute with the name 'exact' and its value set to 'true'. Alternatively it may set the valule of the 'exact' attribute to 'false', to signal the inexactness of the number. Note that the 'exact' attribute is optional and has no default value, meaning that the absence of the 'exact' attribute neither signals exactness or inexactness. Hence it is RECOMMENDED for responding entities to set the 'exact' attribute.</p>
+	<p>The &lt;first/&gt; element SHOULD include an 'index' attribute. This integer specifies the position within the full set of the first item in the page. The position may be approximate. The responding entity may signal an exact position by extending &lt;first/&gt; by an attribute with the name 'exact-index' with its value set to 'true'. Alternatively it may set the valule of the 'exact-index' attribute to 'false', to signal the inexactness of the position. Note that the 'exact-index' attribute is optional and has no default value, meaning that the absence of the 'exact-index' attribute neither signals exactness or inexactness. Hence it is RECOMMENDED for responding entities to set the 'exact-index' attribute.</p>
+    <example caption='Returning the First Page of a Result Set'><![CDATA[
+<iq type='result' from='users.jabber.org' to='stpeter@jabber.org/roundabout' id='page1'>
+  <query xmlns='jabber:iq:search'>
+    <item jid='stpeter@jabber.org'>
+      <first>Peter</first>
+      <last>Saint-Andre</last>
+      <nick>Pete</nick>
+    </item>
+    .
+    [8 more items]
+    .
+    <item jid='peterpan@neverland.lit'>
+      <first>Peter</first>
+      <last>Pan</last>
+      <nick>Pete</nick>
+    </item>
+    <set xmlns='http://jabber.org/protocol/rsm'>
+      <first index='0' exact-index='true'>stpeter@jabber.org</first>
+      <last>peterpan@neverland.lit</last>
+      <count exact='true'>800</count>
+    </set>
+  </query>
+</iq>
+]]></example>
+    <example caption='Returning the Item Count'><![CDATA[
+<iq type='result' from='users.jabber.org' to='stpeter@jabber.org/roundabout' id='count1'>
+  <query xmlns='jabber:iq:search'>
+    <set xmlns='http://jabber.org/protocol/rsm'>
+      <count exact='true'>800</count>
+    </set>
+  </query>
+</iq>
+]]></example>
+
+  <p>STRONGLY RECOMMENDED.</p>
+</section1>
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Security Considerations' anchor='security'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+</xep>
