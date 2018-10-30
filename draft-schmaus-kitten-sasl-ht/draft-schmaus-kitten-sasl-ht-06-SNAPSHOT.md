@@ -6,7 +6,7 @@ ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2018-05-08T19:00:00Z
+date = 2018-11-04T12:00:01Z
 
 [[author]]
 initials="F."
@@ -29,14 +29,14 @@ organization="University of Erlangen-Nuremberg"
 
 This document specifies the family of Hashed Token SASL mechanisms, which are meant to be used for quick re-authentication of a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
-This is achieved by the usage of short-lived, exclusively ephemeral hashed tokens.
+The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
 It further provides hash agility, mutual authentication and is secured by channel binding.
 
 {mainmatter}
 
 # Introduction
 
-This specification describes the the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) [@!RFC4422] mechanisms.
+This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) [@!RFC4422] mechanisms.
 The HT mechanism is designed to be used with short-lived, exclusively ephemeral tokens, called SASL-HT tokens, and allow for quick, one round-trip, re-authentication of a previous session.
 
 Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) being secured by channel binding.
@@ -51,15 +51,15 @@ F> C) Service returns SASL-HT token
 F>    <normal client-server interaction here>
 F> D) Connection between client and server gets interrupted,
 F>    for example because of a WiFi ↔ GSM switch
-F> E) Client resumes previous session using HT and token from C)
-F> F) Service revokes the sucessfully used SASL-HT token
+F> E) Client resumes the previous session using HT and token from C)
+F> F) Service revokes the successfully used SASL-HT token
 F>    [goto B]
 F> ~~~
 Figure: Example sequence using the Hashed Token (HT) SASL mechanism
 
 The HT mechanism requires an accompanying, application protocol specific, extension, which allows clients to requests a new SASL-HT token (see [Section 5](#requirements-for-the-applicationprotocol-extension)).
 One example for such an application protocol specific extension based on HT is [@XEP-0397].
-This XMPP [@RFC6120] extension protocol allows, amoungst other things, B) and C),
+This XMPP [@RFC6120] extension protocol allows, amongst other things, B) and C),
 
 Since the SASL-HT token is not salted, and only one hash iteration is used, the HT mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
 You may want to look at [@RFC5802] for that.
@@ -75,17 +75,17 @@ appear in all capitals, as shown here.
 ## Applicability
 
 Because this mechanism transports information that should not be controlled by an attacker, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see [@!RFC5246]), or over similar integrity-protected and authenticated channels.
-Also the application protoocl specific extension which requests a new SASL-HT token **SHOULD** only be used over similar protected channels.
+Also, the application protcol specific extension which requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
 
-In addition, when TLS is used, the client **MUST** successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
+Also, when TLS is used, the client **MUST** successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
 
-The family of HT mechanisms is not applicable for proxy authentication, since they can not carry a authorization identity string (authzid).
+The family of HT mechanisms is not applicable for proxy authentication since they can not carry an authorization identity string (authzid).
 
 # The HT Family of Mechanisms
 
-Each mechanism in this family differs by the choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
+Each mechanism in this family differs by choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
 
-A HT mechanism name is a string beginning with "HT-" followed by the capitalized name of the used hash, followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
+An HT mechanism name is a string beginning with "HT-" followed by the capitalised name of the used hash, followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
 
 Hence each HT mechanism has a name of the following form:
 
@@ -93,9 +93,9 @@ F> ~~~
 F> HT-<hash-alg>-<cb-type>
 F> ~~~
 
-Where \<hash-alg\> is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
-In case of 'ENDP', the tls-server-end-point channel binding type is used.
-In case of 'UNIQ', the tls-unique channel binding type is used.
+Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+In the case of 'ENDP', the tls-server-end-point channel binding type is used.
+In the case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
 
 CBT   | Channel Binding Type
@@ -116,14 +116,14 @@ Table: Defined HT SASL mechanisms
 
 # The HT Authentication Exchange
 
-The mechanism consists of a simple exchange of exactly two messages between the initiator and responder.
+The mechanism consists of a simple exchange of precisely two messages between the initiator and responder.
 
 The following syntax specifications use the Augmented Backus-Naur form (ABNF) notation as specified in [@!RFC5234].
 
 ## Initiator First Message
 
 The HT mechanism starts with the initiator-msg, send by the initiator to the responder.
-The follwing lists the ABNF grammar for the initiator-msg:
+The following lists the ABNF grammar for the initiator-msg:
 
 ~~~
 initiator-msg = authcid NUL initiator-hashed-token
@@ -152,10 +152,10 @@ The value of the initiator-hashed-token is defined as follows:
 initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
 ~~~
 
-HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as shared secret between initiator and responder.
+HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as a shared secret between initiator and responder.
 
 The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#23].
-If this is the case, then the initiating entity **MUST NOT** include any further appliction protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
+If this is the case, then the initiating entity **MUST NOT** include any further application protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
 > TODO: It should be possible to exploit TLS 1.3 early data for "0.5"
@@ -213,15 +213,15 @@ This section describes compliance with SASL mechanism requirements specified in 
 It is **REQUIRED** that the application-protocol specific extension provides a mechanism to request a SASL-HT token in form of a Unicode string.
 The returned token **MUST** have been newly generated by a cryptographically secure random number generator and MUST contain at least 128 bit of entropy.
 
-It is **RECOMMENDED** that the the protocol allows the requestor to signal the name of the SASL mechanism which he intends to use with the token.
+It is **RECOMMENDED** that the protocol allows the requestor to signal the name of the SASL mechanism which he intends to use with the token.
 If a token is used with a different mechanism than the one which was signalled upon requesting the token, then the authentication **MUST** fail.
-This allows to pin the token to a SASL mechanism, which increases the security because it makes it impossible for an attacker to downgrade the SASL mechanism.
+This allows pinning the token to a SASL mechanism, which increases the security because it makes it impossible for an attacker to downgrade the SASL mechanism.
 
 # Security Considerations
 
 To be secure, the HT mechanism **MUST** be used over a TLS channel that has had the session hash extension [@!RFC7627] negotiated, or session resumption **MUST NOT** have been used.
 
-It is **RECOMMENDED** that implementations peridically require a full authentication using a strong SASL mechanism which does not use the SASL-HT token.
+It is **RECOMMENDED** that implementations periodically require a full authentication using a strong SASL mechanism which does not use the SASL-HT token.
 
 It is of vital importance that the SASL-HT token is generated by a cryptographically secure random generator. See [@!RFC4086] for more information about Randomness Requirements for Security.
 
@@ -283,5 +283,5 @@ Security AD).
 # Acknowledgments
 
 This document benefited from discussions on the KITTEN WG mailing list.
-The authors would like to specially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.
-Furthermore we would like to thank Alexander Würstlein, who came up with the idea to pin the token to a SASL mechanism for increased security.
+The authors would like to especially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.
+Furthermore, we would like to thank Alexander Würstlein, who came up with the idea to pin the token to a SASL mechanism for increased security.
