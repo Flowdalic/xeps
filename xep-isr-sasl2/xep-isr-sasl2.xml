@@ -14,8 +14,8 @@
   stream resumption, based on Stream Management (XEP-0198), allowing
   XMPP entities to instantaneously resume an XMPP stream.</abstract>
   &LEGALNOTICE;
-  <number>xxxx</number>
-  <status>ProtoXEP</status>
+  <number>0397</number>
+  <status>Experimental</status>
   <type>Standards Track</type>
   <sig>Standards</sig>
   <approver>Council</approver>
@@ -34,10 +34,16 @@
     <jid>flo@geekplace.eu</jid>
   </author>
   <revision>
-    <version>0.0.6-SNAPSHOT</version>
-    <date>2017-XX-XX</date>
+    <version>0.1.1-SNAPSHOT</version>
+    <date>2018-XX-XX</date>
     <initials>fs</initials>
     <remark><p>WIP</p></remark>
+  </revision>
+  <revision>
+    <version>0.1.0</version>
+    <date>2018-01-22</date>
+    <initials>XEP Editor (jwi)</initials>
+    <remark><p>Accepted by council vote from 2017-12-13.</p></remark>
   </revision>
   <revision>
     <version>0.0.5</version>
