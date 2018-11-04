@@ -1,7 +1,7 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
 category = "exp"
-docName = "draft-schmaus-kitten-sasl-ht-05-SNAPSHOT"
+docName = "draft-schmaus-kitten-sasl-ht-06-SNAPSHOT"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
@@ -98,11 +98,11 @@ In the case of 'ENDP', the tls-server-end-point channel binding type is used.
 In the case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
 
-CBT   | Channel Binding Type
+cb-type   | Channel Binding Type
 ------|-----------------------
 ENDP  | tls-server-end-point
 UNIQ  | tls-unique
-Table: Mapping of CBT to Channel Bindings
+Table: Mapping of cb-type to Channel Bindings Types
 
 The following table lists the HT SASL mechanisms registered by this document.
 
