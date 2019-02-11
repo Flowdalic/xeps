@@ -5,6 +5,7 @@
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 XEP := $(shell basename $(MKFILE_DIR))
+XEP_XML := $(XEP).xml
 FROM_XMPP_GIT := xep.xsl xep.dtd xep.ent xmpp.css prettify.css prettify.js
 
 ifneq ($(wildcard xep-official.xml),)
@@ -14,7 +15,16 @@ OFFICIAL_XEP_FOUND := false
 endif
 
 ifeq ($(OFFICIAL_XEP_FOUND), true)
-all: xep-official.html
+all: xep-official.html xml-colordiff.html
+
+XML_DIFF_PREREQUISITES := $(XEP_XML) xep-official.xml
+COLORDIFF_PIPE := wdiff -n $(XML_DIFF_PREREQUISITES) |colordiff
+.PHONY: xml-colordiff
+xml-colordiff:
+	$(COLORDIFF_PIPE) |less -R
+
+xml-colordiff.html: $(XML_DIFF_PREREQUISITES)
+	$(COLORDIFF_PIPE) |aha > $@
 endif
 
 ifeq (,$(shell which htmldiff 2> /dev/null))
@@ -64,3 +74,4 @@ clean:
 	rm -f $(FROM_XMPP_GIT)
 	rm -f $(DIFF_HTML)
 	rm -f xep-official.html
+	rm -f xml-colordiff.html
