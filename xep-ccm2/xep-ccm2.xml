@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Client Certificate Management 2.0</title>
+  <abstract>TODO</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>ccm2</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2019-02-XX</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <p>Certificate self-management for clients.</p>
+  <section2 topic='Difference from XEP-0257' anchor='differences-xep257'>
+    <p>&xep0257; defines similar mechanisms as this document. But this
+    specification makes deliberately the following changes:</p>
+    <ul>
+      <li>Using certificate signing requests instead of certificates</li>
+      <li>Cert names do not need to be unique</li>
+      <li> Listing certificates does include a last used timestamp</li>
+      <li>No way to disable the certificate</li>
+      <li>All (currently three) mechanisms can be implemented individually</li>
+    </ul>
+  </section2>
+</section1>
+<section1 topic='Adding a X.509 Certificate' anchor='add-cert'>
+  <section2 topic='Protocol for adding a X.509 Certificate' anchor='add-cert-protocol'>
+    <example caption='Client Uploads an X.509 Certificate Signing Request.'><![CDATA[
+<iq type='set'
+    from='hamlet@shakespeare.lit/denmark'
+    id='1'>
+  <add-certificate-request xmlns='urn:xmpp:ccm2:add-cert:0'>
+    <name>Mobile Client</name>
+    <x509certificate-signing-request>
+      MIICCTCCAXKgAwIBAgIJALhU0Id6xxwQMA0GCSqGSIb3DQEBBQUAMA4xDDAKBgNV
+      BAMTA2ZvbzAeFw0wNzEyMjgyMDA1MTRaFw0wODEyMjcyMDA1MTRaMA4xDDAKBgNV
+      BAMTA2ZvbzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA0DPcfeJzKWLGE22p
+      RMINLKr+CxqozF14DqkXkLUwGzTqYRi49yK6aebZ9ssFspTTjqa2uNpw1U32748t
+      qU6bpACWHbcC+eZ/hm5KymXBhL3Vjfb/dW0xrtxjI9JRFgrgWAyxndlNZUpN2s3D
+      hKDfVgpPSx/Zp8d/ubbARxqZZZkCAwEAAaNvMG0wHQYDVR0OBBYEFJWwFqmSRGcx
+      YXmQfdF+XBWkeML4MD4GA1UdIwQ3MDWAFJWwFqmSRGcxYXmQfdF+XBWkeML4oRKk
+      EDAOMQwwCgYDVQQDEwNmb2+CCQC4VNCHesccEDAMBgNVHRMEBTADAQH/MA0GCSqG
+      SIb3DQEBBQUAA4GBAIhlUeGZ0d0msNVxYWAXg2lRsJt9INHJQTCJMmoUeTtaRjyp
+      ffJtuopguNNBDn+MjrEp2/+zLNMahDYLXaTVmBf6zvY0hzB9Ih0kNTh23Fb5j+yK
+      QChPXQUo0EGCaODWhfhKRNdseUozfNWOz9iTgMGw8eYNLllQRL//iAOfOr/8
+    </x509certificate-signing-request>
+  </add-certificate-request>
+</iq>
+]]></example>
+    <example caption='Server responds to an X.509 Certificate Signing Request.'><![CDATA[
+<iq type='result'
+    to='hamlet@shakespeare.lit/denmark'
+    id='1'>
+  <add-certificate-result xmlns='urn:xmpp:ccm2:add-cert:0'>
+    <x509certificate>
+      MIICCTCCAXKgAwIBAgIJALhU0Id6xxwQMA0GCSqGSIb3DQEBBQUAMA4xDDAKBgNV
+      BAMTA2ZvbzAeFw0wNzEyMjgyMDA1MTRaFw0wODEyMjcyMDA1MTRaMA4xDDAKBgNV
+      BAMTA2ZvbzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA0DPcfeJzKWLGE22p
+      RMINLKr+CxqozF14DqkXkLUwGzTqYRi49yK6aebZ9ssFspTTjqa2uNpw1U32748t
+      qU6bpACWHbcC+eZ/hm5KymXBhL3Vjfb/dW0xrtxjI9JRFgrgWAyxndlNZUpN2s3D
+      hKDfVgpPSx/Zp8d/ubbARxqZZZkCAwEAAaNvMG0wHQYDVR0OBBYEFJWwFqmSRGcx
+      YXmQfdF+XBWkeML4MD4GA1UdIwQ3MDWAFJWwFqmSRGcxYXmQfdF+XBWkeML4oRKk
+      EDAOMQwwCgYDVQQDEwNmb2+CCQC4VNCHesccEDAMBgNVHRMEBTADAQH/MA0GCSqG
+      SIb3DQEBBQUAA4GBAIhlUeGZ0d0msNVxYWAXg2lRsJt9INHJQTCJMmoUeTtaRjyp
+      ffJtuopguNNBDn+MjrEp2/+zLNMahDYLXaTVmBf6zvY0hzB9Ih0kNTh23Fb5j+yK
+      QChPXQUo0EGCaODWhfhKRNdseUozfNWOz9iTgMGw8eYNLllQRL//iAOfOr/8
+    </x509certificate>
+  </add-certificate-result>
+</iq>
+]]></example>
+  </section2>
+  <section2 topic='Determing Support for Adding a X.509 Certificate' anchor='determing-support-add-cert'>
+    <p>If the server supports adding a X.509 certificate, it MUST
+    advertise the fact by include the feature
+    'urn:xmpp:ccm2:add-cert:0'</p>
+  </section2>
+</section1>
+<section1 topic='Listing all X.509 Certificates' anchor='list-certs'>
+  <section2 topic='Protocol for listing all X.509 Certificates' anchor='add-cert-protocol'>
+    <example caption='Client Requests List of X.509 Certificates'><![CDATA[
+<iq type='get'
+    from='hamlet@shakespeare.lit/denmark'
+    id='2'>
+  <list-certificates-request xmlns='urn:xmpp:ccm2:list-certs:0'/>
+</iq>
+]]></example>
+  <example caption='Server Sends List of Known X.509 Certificates'><![CDATA[
+<iq type='result'
+    to='hamlet@shakespeare.lit/denmark'
+    id='2'>
+  <list-of-certficiates xmlns='urn:xmpp:ccm2:list-certs:0'>
+    <x509certificate last-used=''>
+      <name>Mobile Client</name>
+      <x509cert>
+        ...
+      </x509cert>
+      <users>
+        <resource>Phone</resource>
+      </users>
+    </x509certificate>
+    <x509certificate last-used=''>
+      <name>Laptop</name>
+      <x509cert>
+        ...
+      </x509cert>
+    </x509certificate>
+    <x509certificate>
+      <name>Desktop</name>
+      <x509cert>
+        ...
+      </x509cert>
+    </x509certificate>
+  </list-of-certificates>
+</iq>
+]]></example>
+    <p>Note that the certificate for 'Desktop' was never used, since the
+certificate has no last-used timestamp attribute.</p>
+  </section2>
+  <section2 topic='Determing Support for Listing all Certificates' anchor='determing-support-listing-certs'>
+    <p>If the server supports listing all X.509 certificate, it MUST
+    advertise the fact by include the feature
+    'urn:xmpp:ccm2:list-certs:0'</p>
+  </section2>
+</section1>
+<section1 topic='Revoking a X.509 Certificate' anchor='revoke-cert'>
+  <section2 topic='Protocol for adding a X.509 Certificate' anchor='add-cert-protocol'>
+      <example caption='Client revokes an X.509 Certificate'><![CDATA[
+<iq type='set'
+    from='hamlet@shakespeare.lit/denmark'
+    id='revoke'>
+  <revoke-certificate xmlns='urn:xmpp:ccm2:revoke-cert1'>
+    <fingerprint hash='TODO'>[CERT FINGERPRINT IN HEX(?)]</name>
+  </revoke-certificate>
+</iq>
+]]></example>
+  </section2>
+  <section2 topic='Determing Support for Revoking a X.509 Certificate' anchor='determing-support-add-cert'>
+    <p>If the server supports adding a X.509 certificate, it MUST
+    advertise the fact by include the feature
+    'urn:xmpp:ccm2:revoke-cert:0'</p>
+  </section2>
+</section1>
+<section1 topic='Security Considerations' anchor='security'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+</xep>
