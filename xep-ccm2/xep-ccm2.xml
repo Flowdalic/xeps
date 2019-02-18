@@ -91,7 +91,7 @@
   <section2 topic='Determing Support for Adding a X.509 Certificate' anchor='determing-support-add-cert'>
     <p>If the server supports adding a X.509 certificate, it MUST
     advertise the fact by include the feature
-    'urn:xmpp:ccm2:add-cert:0'</p>
+    'urn:xmpp:ccm2:add-cert:0' in response to a &xep0030; request.</p>
   </section2>
 </section1>
 <section1 topic='Listing all X.509 Certificates' anchor='list-certs'>
@@ -138,7 +138,7 @@ certificate has no last-used timestamp attribute.</p>
   <section2 topic='Determing Support for Listing all Certificates' anchor='determing-support-listing-certs'>
     <p>If the server supports listing all X.509 certificate, it MUST
     advertise the fact by include the feature
-    'urn:xmpp:ccm2:list-certs:0'</p>
+    'urn:xmpp:ccm2:list-certs:0'  in response to a &xep0030; request.</p>
   </section2>
 </section1>
 <section1 topic='Revoking a X.509 Certificate' anchor='revoke-cert'>
@@ -147,8 +147,8 @@ certificate has no last-used timestamp attribute.</p>
 <iq type='set'
     from='hamlet@shakespeare.lit/denmark'
     id='revoke'>
-  <revoke-certificate xmlns='urn:xmpp:ccm2:revoke-cert1'>
-    <fingerprint hash='TODO'>[CERT FINGERPRINT IN HEX(?)]</name>
+  <revoke-certificate xmlns='urn:xmpp:ccm2:revoke-cert:0'>
+    <fingerprint hash='TODO (needed?)'>[CERT FINGERPRINT IN HEX(?)]</name>
   </revoke-certificate>
 </iq>
 ]]></example>
@@ -156,7 +156,8 @@ certificate has no last-used timestamp attribute.</p>
   <section2 topic='Determing Support for Revoking a X.509 Certificate' anchor='determing-support-add-cert'>
     <p>If the server supports adding a X.509 certificate, it MUST
     advertise the fact by include the feature
-    'urn:xmpp:ccm2:revoke-cert:0'</p>
+    'urn:xmpp:ccm2:revoke-cert:0' in response to a &xep0030;
+    request.</p>
   </section2>
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
