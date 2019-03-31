@@ -2,6 +2,9 @@
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY content "&lt;content/&gt;">
   <!ENTITY envelope "&lt;envelope/&gt;">
+  <!ENTITY time "&lt;time/&gt;">
+  <!ENTITY rpad "&lt;rpad/&gt;">
+  <!ENTITY to "&lt;to/&gt;">
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
 ]>
@@ -23,7 +26,7 @@
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED</shortname>
+  <shortname>SCE</shortname>
   <author>
     <firstname>Paul</firstname>
     <surname>Schaub</surname>
@@ -58,6 +61,36 @@
   </dl>
 </section1>
 
+<section1 topic='Property Elements TODO: better name' anchor='property_elements'>
+  <p>In order to prevent certain attacks, different crypto property elements can be added into the &content; element.</p>
+
+  <table caption='Overview about different crypto property elements'>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+      <th>Usage</th>
+    </tr>
+    <tr>
+      <td>&rpad;</td>
+      <td>Random-length random-content padding</td>
+      <td>Prevent known ciphertext and message length correlation attacks</td>
+    </tr>
+    <tr>
+      <td>&time;</td>
+      <td>Timestamp</td>
+      <td>Prevent replay attacks using old messages</td>
+    </tr>
+    <tr>
+      <td>&to;</td>
+      <td>Recipient of the message</td>
+      <td>Prevent spoofing of the recipient</td>
+    </tr>
+  </table>
+
+  <p>Encryption protocols that make use of Stanza Content Encryption MUST define their own profiles that describe mandatory behaviour of how those elements are used. They MAY also define and add their own crypto property elements.</p>
+
+</section1>
+
 <section1 topic='Use Cases' anchor='usecases'>
   <p>The main use case of Stanza Content Encryption is the use of end-to-end encryption protocols in combination with extension protocols that store sensitive information in other places than the message body. Some end-to-end encryption protocols like &xep0384; are historically limited to encryption of the message body only. This approach excludes other extension elements from the protected domain of the payload element, exposing them to potential attackers.</p>
 
@@ -84,10 +117,12 @@
 
   <example caption='Content element containing the messages body and the OBB element' anchor='example_content'><![CDATA[
 <content xmlns='urn:xmpp:sce:0'>
-  <body xmlns='jabber:client'>[...]</body>
-  <x xmlns='jabber:x:oob'>
-    <url>https://en.wikipedia.org/wiki/Fight_Club#Plot</url>
-  </x>
+  <payload>
+    <body xmlns='jabber:client'>[...]</body>
+    <x xmlns='jabber:x:oob'>
+      <url>https://en.wikipedia.org/wiki/Fight_Club#Plot</url>
+    </x>
+  </payload>
 </content>]]>
   </example>
 
