@@ -47,10 +47,18 @@
   <p>While the latter allows for encryption of arbitrary extension elements, protocols such as &xep0384; are limited to only encrypt the body of a message. This approach is not very flexible and prevents the combined usage with XMPP extension protocols such as &xep0385; or &xep0308; as their extension elements cannot be included in the encrypted part of the message, therefore leaking information about the message content.</p>
 
   <p>This extension protocol proposes a solution to aforementioned issues by generalizing the OpenPGP Content Elements (eg. <link url="https://xmpp.org/extensions/xep-0373.html#example-2">&lt;signcrypt&gt;</link>) introduced by &xep0373; for the use with other encryption protocols.</p>
+
 </section1>
 
 <section1 topic='Requirements' anchor='reqs'>
   <p>This proposal widens the security guarantees given by the used encryption mechanism from just the body of the message to all contents of the &content; element. It is intended to serve as a "one size fits all" solution for extension element encryption in XMPP.</p>
+
+  <p>In order to achieve its goal, Stanze Content Encryption does the following:</p>
+  <ul>
+    <li>Define elements that hold sensitive information and their encrypted form</li>
+    <li>Speficy rules about how extension elements are encrypted and embedded in the message</li>
+    <li>Specify rules about which elements are allowed inside and outside the protected domain</li>
+  </ul>
 </section1>
 
 <section1 topic='Glossary' anchor='glossary'>
