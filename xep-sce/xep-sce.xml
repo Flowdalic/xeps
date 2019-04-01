@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY content "&lt;content/&gt;">
+  <!ENTITY envelope "&lt;envelope/&gt;">
+  <!ENTITY time "&lt;time/&gt;">
+  <!ENTITY rpad "&lt;rpad/&gt;">
+  <!ENTITY to "&lt;to/&gt;">
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Stanza Content Encryption</title>
+  <abstract>The Stanza Content Encryption (SCE) protocol is intended as a way to allow clients to exchange arbitrary extension elements using different end-to-end encryption schemes.</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0001</spec>
+    <spec>Etc.</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>SCE</shortname>
+  <author>
+    <firstname>Paul</firstname>
+    <surname>Schaub</surname>
+    <email>vanitasvitae@fsfe.org</email>
+    <jid>vanitasvitae@jabberhead.tk</jid>
+  </author>
+  <revision>
+    <version>0.0.1</version>
+    <date>2019-03-31</date>
+    <initials>ps</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+
+<section1 topic='Introduction' anchor='intro'>
+  <p>There is a number of different end-to-end encryption mechanisms that can be used to secure user communication against unauthorized access from malicious servers. TODO: formulation. Popular examples for this are &xep0384; and &xep0373;.</p>
+
+  <p>While the latter allows for encryption of arbitrary extension elements, protocols such as &xep0384; are limited to only encrypt the body of a message. This approach is not very flexible and prevents the combined usage with XMPP extension protocols such as &xep0385; or &xep0308; as their extension elements cannot be included in the encrypted part of the message, therefore leaking information about the message content.</p>
+
+  <p>This extension protocol proposes a solution to aforementioned issues by generalizing the OpenPGP Content Elements (eg. <link url="https://xmpp.org/extensions/xep-0373.html#example-2">&lt;signcrypt&gt;</link>) introduced by &xep0373; for the use with other encryption protocols.</p>
+
+</section1>
+
+<section1 topic='Requirements' anchor='reqs'>
+  <p>This proposal widens the security guarantees given by the used encryption mechanism from just the body of the message to all contents of the &content; element. It is intended to serve as a "one size fits all" solution for extension element encryption in XMPP.</p>
+
+  <p>In order to achieve its goal, Stanze Content Encryption does the following:</p>
+  <ul>
+    <li>Define elements that hold sensitive information and their encrypted form</li>
+    <li>Speficy rules about how extension elements are encrypted and embedded in the message</li>
+    <li>Specify rules about which elements are allowed inside and outside the protected domain</li>
+  </ul>
+</section1>
+
+<section1 topic='Glossary' anchor='glossary'>
+  <dl>
+    <di><dt>Envelope Element &envelope;</dt><dd>An XMPP extension element which is used to hold the encrypted &content; element.</dd></di>
+    <di><dt>Content Element &content;</dt><dd>An element which is used to contain all of those extension elements that need to be encrypted.
+            The XML representation of this element is encrypted and then embedded into the &envelope; element.</dd></di>
+  </dl>
+</section1>
+
+<section1 topic='Property Elements TODO: better name' anchor='property_elements'>
+  <p>In order to prevent certain attacks, different crypto property elements can be added into the &content; element.</p>
+
+  <table caption='Overview about different crypto property elements'>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+      <th>Usage</th>
+    </tr>
+    <tr>
+      <td>&rpad;</td>
+      <td>Random-length random-content padding</td>
+      <td>Prevent known ciphertext and message length correlation attacks</td>
+    </tr>
+    <tr>
+      <td>&time;</td>
+      <td>Timestamp</td>
+      <td>Prevent replay attacks using old messages</td>
+    </tr>
+    <tr>
+      <td>&to;</td>
+      <td>Recipient of the message</td>
+      <td>Prevent spoofing of the recipient</td>
+    </tr>
+  </table>
+
+  <p>Encryption protocols that make use of Stanza Content Encryption MUST define their own profiles that describe mandatory behaviour of how those elements are used. They MAY also define and add their own crypto property elements.</p>
+
+</section1>
+
+<section1 topic='Use Cases' anchor='usecases'>
+  <p>The main use case of Stanza Content Encryption is the use of end-to-end encryption protocols in combination with extension protocols that store sensitive information in other places than the message body. Some end-to-end encryption protocols like &xep0384; are historically limited to encryption of the message body only. This approach excludes other extension elements from the protected domain of the payload element, exposing them to potential attackers.</p>
+
+  <example caption='The Narrator sends an imperfectly encrypted message, leaking dangerous information about the conversation through the OOB extension element' anchor='example_leaking_encryption'><![CDATA[
+<message from='narrator@jabber.org'
+         to='viewer@jabber.org'>
+  <encrypted xmlns='eu.siacs.conversations.axolotl'>
+    <header sid='27183'>
+      ...
+    </header>
+    <payload>
+      SSBnb3QgaW4gZXZlcnlvbmUncyBob3N0aWxlIGxpdHRsZSBmYWNlLiBZZXMsIHRoZXNlIGFyZSBi
+      cnVpc2VzIGZyb20gZmlnaHRpbmcuIFllcywgSSdtIGNvbWZvcnRhYmxlIHdpdGggdGhhdC4gSSBh
+      bSBlbmxpZ2h0ZW5lZC4=
+    </payload>
+  </encrypted>
+  <x xmlns='jabber:x:oob'>
+    <url>https://en.wikipedia.org/wiki/Fight_Club#Plot</url>
+  </x>
+</message>]]>
+  </example>
+
+  <p>The example above obviously leaks information about the communication through the unencrypted OOB extension element.</p>
+
+  <example caption='Content element containing the messages body and the OBB element' anchor='example_content'><![CDATA[
+<content xmlns='urn:xmpp:sce:0'>
+  <payload>
+    <body xmlns='jabber:client'>[...]</body>
+    <x xmlns='jabber:x:oob'>
+      <url>https://en.wikipedia.org/wiki/Fight_Club#Plot</url>
+    </x>
+  </payload>
+</content>]]>
+  </example>
+
+  <p>The &content; element is then serialized into XML and encrypted using the encryption mechanism in place. The result is embedded in the &envelope; element and appended to the message.</p>
+
+  <example caption='Same message as in the previous example but encrypted using Stanza Content Encryption to also protect the OBB extension element' anchor='example_proper_encryption'><![CDATA[
+<message from='narrator@jabber.org'
+         to='viewer@jabber.org'>
+  <encrypted xmlns='eu.siacs.conversations.axolotl'>
+    <header sid='27183'>
+      ...
+    </header>
+    <envelope xmlns='urn:xmpp:sce:0>
+      PGNvbnRlbnQgeG1sbnM9J3Vybjp4bXBwOnNjZTowJz48cGF5bG9hZD48Ym9keSB4bWxucz0namFi
+      YmVyOmNsaWVudCc+SSBnb3QgaW4gZXZlcnlvbmUncyBob3N0aWxlIGxpdHRsZSBmYWNlLiBZZXMs
+      IHRoZXNlIGFyZSBicnVpc2VzIGZyb20gZmlnaHRpbmcuIFllcywgSSdtIGNvbWZvcnRhYmxlIHdp
+      dGggdGhhdC4gSSBhbSBlbmxpZ2h0ZW5lZC48L2JvZHk+PHggeG1sbnM9J2phYmJlcjp4Om9vYic+
+      PHVybD5odHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9GaWdodF9DbHViI1Bsb3Q8L3VybD48
+      L3g+PC9wYXlsb2FkPjwvY29udGVudD4=
+    </envelope>
+  </encrypted>
+</message>]]>
+  </example>
+
+  </section1>
+<section1 topic='Business Rules' anchor='rules'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Accessibility Considerations' anchor='access'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Internationalization Considerations' anchor='i18n'>
+  <p>OPTIONAL.</p>
+</section1>
+<section1 topic='Security Considerations' anchor='security'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <p>REQUIRED.</p>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+</xep>
