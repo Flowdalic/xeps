@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY time-stamp "&lt;time-stamp/&gt;">
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>XMPP Traceroute</title>
+  <abstract>TODO</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>sts</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2019-04-19</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>Use case: Debug and statistics.</p>
+  
+</section1>
+<section1 topic='XMPP Traceroute' anchor='xmpp-traceroute'>
+
+  <p>Extension element is added by entities. The 'stamp' attributes
+  contians the timestamp when the entity received the stanza. A
+  missing 'by' attribute determines the timestamp when the orignating
+  entity send the message.</p>
+
+  <example caption='A XEP-0199 Ping with Traceroute Request'><![CDATA[
+<iq from='romeo@mantague.lit/home' to='juliet@capulet.lit/balcony' id='s2c1' type='get'>
+  <ping xmlns='urn:xmpp:ping'>
+    <traceroute xmlns='urn:xmpp:traceroute:0'>
+      <send by='romeo@montague.lit/home'
+         to='montague.lit'
+         timestamp='TODO'>
+        <connection-security>TLS...</connection-security>
+      </send>
+    </traceroute>
+  </ping>
+</iq>]]></example>
+</section1>
+
+  <example caption='A XEP-0199 Ping with Traceroute Request'><![CDATA[
+<iq from='juliet@capulet.lit/chamber'
+    to='romeo@montague.lit/home'
+    id='e2e1'
+    type='result'>
+  <traceroute xmlns='urn:xmpp:traceroute:0'>
+   <send by='romeo@montague.lit/home'
+         to='montague.lit'
+         timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+   </send>
+   <received by='montague.lit'
+             from='romeo@mantague.lit/home'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </received>
+   <send by='montague.lit'
+         to='capulet.lit'
+         timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+   </send>
+   <received by='capulet.lit'
+             from='montague.lit'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </received>
+   <send by='capulet.lit'
+         to='juliet@capulet.lit/balcony'
+         timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+   </send>
+   <received by='juliet@capulet.lit/balcony'
+             from='capulet.lit'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </received>
+   <!-- Ping arrived at destination -->
+   <send by='juliet@capulet.lit/balcony'
+             to='capulet.lit'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </send>
+   <received by='capulet.lit'
+             from='juliet@capulet.lit/balcony'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </received>
+   <send by='capulet.lit'
+             to='montague.lit'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </send>
+   <received by='montage.lit'
+             from='capulet.lit'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </received>
+   <send by='montage.lit'
+             to='romeo@montague.lit/home'
+             timestamp='TODO'>
+     <connection-security>TLS...</connection-security>
+     <!-- More optional metadata here -->
+   </send>
+  </traceroute>
+</iq>]]></example>
+
+
+<section1 topic='Discovering Support' anchor='disco'>
+  <p>An entity that follows the buisness rules and supports XMPP
+  traceroute SHOULD announce the 'urn:xmpp:traceroute:0'
+  namespace in its disco features.</p>
+  <example caption='Client sends service discovery request'><![CDATA[
+<iq from='romeo@montague.tld/garden'
+    id='somethingrandom'
+    to='example.com'
+    type='get'>
+  <query xmlns='http://jabber.org/protocol/disco#info' />
+</iq>
+]]></example>
+  <example caption='Compliant servers include the traceroute namespace in its features'><![CDATA[
+<iq from='example.com'
+    to='romeo@montague.tld/garden'
+    id='somethingrandom'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    …
+    <feature var='urn:xmpp:traceroute:0'/>
+    …
+  </query>
+</iq>
+]]></example>
+</section1>
+
+<section1 topic='Security Considerations' anchor='security'>
+
+  <p>TODO</p>
+
+</section1>
+
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>This document requires no interaction with &IANA;.</p>
+</section1>
+
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <section2 topic='Protocol Namespaces' anchor='ns'>
+    <p>This specification defines the following XML namespaces:</p>
+    <ul>
+      <li>urn:xmpp:traceroute:0</li>
+    </ul>
+    <p>The &REGISTRAR; shall include the foregoing namespaces in its registry of protocol namespaces (see &NAMESPACES;) and in its disco features registry (&DISCOFEATURES;) as defined in &xep0030;.</p>
+<code caption='Registration'><![CDATA[
+<var>
+  <name>urn:xmpp:stanza-timestamps:0</name>
+  <desc>Indicates that an entity adds stanza-ids and follows the business rules described in the XEP</desc>
+  <doc>XEP-TIMESTAMPS</doc>
+</var>
+]]></code>
+  </section2>
+</section1>
+
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to Kim Alvefur.</p>
+
+</section1>
+</xep>

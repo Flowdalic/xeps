@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY time-stamp "&lt;time-stamp/&gt;">
+  <!ENTITY % ents SYSTEM 'xep.ent'>
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>Stanza Timestamps</title>
+  <abstract>TODO</abstract>
+  &LEGALNOTICE;
+  <number>xxxx</number>
+  <status>ProtoXEP</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>sts</shortname>
+  &flow;
+  <revision>
+    <version>0.0.1</version>
+    <date>2019-04-19</date>
+    <initials>fs</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>Entities receiving a &xep0203; marked are unable to determine if
+  the delay is missing because the stanza was not delayed or because
+  the service does not add delay. This is due a missing service disco
+  possiblity for 203 with the according semantics.</p>
+  
+</section1>
+<section1 topic='Stanza Timestamps' anchor='stanza-timestamps'>
+
+  <p>Extension element is added by entities. The 'stamp' attributes
+  contians the timestamp when the entity received the stanza. A
+  missing 'by' attribute determines the timestamp when the orignating
+  entity send the message.</p>
+
+  <example caption='A message stanza with a stanza timestamp.'><![CDATA[
+<message xmlns='jabber:client'
+         to='user@example.com'>
+  <body>Typical body text</body>
+  <time-stamp xmlns='urn:xmpp:stanza-timestamps:0'
+              value='xep82-date'/>
+  <time-stamp xmlns='urn:xmpp:stanza-timestamps:0'
+              value='xep82-date'
+              by='example.com'/>
+</message>]]></example>
+</section1>
+
+<section1 topic='Business Rules' anchor='rules'>
+  <ol>
+	<li>Stanza timestamp generating entities, which encounter a &time-stamp; element where the 'by' attribute matches the 'by' attribute they would otherwise set, MUST ovverride that element.</li>
+	<li>Entities, which are routing stanzas, SHOULD NOT strip any elements qualified by the 'urn:xmpp:stanza-timestamps:0' namespace from stanzas unless.</li>
+	<li>Stanzas MUST possess, in the direct child level of the stanza, at most one &time-stamp; extension element with the same XMPP address as value of the 'by' attribute.</li>
+	<li>The value of the 'by' attribute MUST be the XMPP address of the entity adding the timestap of the element. Note that XMPP addresses are normalized as defined in &rfc6122;. TODO update RFC reference.</li>
+  </ol>
+</section1>
+
+<section1 topic='Discovering Support' anchor='disco'>
+  <p>An entity that follows the buisness rules and adds timestamps to
+  its stanzas SHOULD announce the 'urn:xmpp:stanza-timestamps:0'
+  namespace in its disco features.</p>
+  <example caption='Client sends service discovery request to the room'><![CDATA[
+<iq from='romeo@montague.tld/garden'
+    id='somethingrandom'
+    to='room@muc.example.com'
+    type='get'>
+  <query xmlns='http://jabber.org/protocol/disco#info' />
+</iq>
+]]></example>
+  <example caption='Servers include the stanza timestamps namespace in its features'><![CDATA[
+<iq from='room@muc.example.com'
+    to='romeo@montague.tld/garden'
+    id='somethingrandom'
+    type='result'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    …
+    <feature var='urn:xmpp:stanza-timestamps:0'/>
+    …
+  </query>
+</iq>
+]]></example>
+</section1>
+
+<section1 topic='Security Considerations' anchor='security'>
+
+  <p>Avoid address leaks of originating entities. Entites should
+  verify the timestap by checking if the entity whose address is found
+  in the 'by' attribute announces the according XEP-0030 feature.</p>
+
+</section1>
+
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>This document requires no interaction with &IANA;.</p>
+</section1>
+
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <section2 topic='Protocol Namespaces' anchor='ns'>
+    <p>This specification defines the following XML namespaces:</p>
+    <ul>
+      <li>urn:xmpp:sid:0</li>
+    </ul>
+    <p>The &REGISTRAR; shall include the foregoing namespaces in its registry of protocol namespaces (see &NAMESPACES;) and in its disco features registry (&DISCOFEATURES;) as defined in &xep0030;.</p>
+<code caption='Registration'><![CDATA[
+<var>
+  <name>urn:xmpp:stanza-timestamps:0</name>
+  <desc>Indicates that an entity adds stanza-ids and follows the business rules described in the XEP</desc>
+  <doc>XEP-TIMESTAMPS</doc>
+</var>
+]]></code>
+  </section2>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <p>REQUIRED for protocol specifications.</p>
+</section1>
+<section1 topic='Acknowledgements' anchor='acknowledgements'>
+
+  <p>Thanks to Kim Alvefur.</p>
+
+</section1>
+</xep>
