@@ -48,7 +48,7 @@
   </ping>
 </iq>]]></example>
 
-  <example caption='A XEP-0199 Pont with the Traced Route'><![CDATA[
+  <example caption='A XEP-0199 Pong with the Traced Route'><![CDATA[
 <iq from='juliet@capulet.lit/chamber'
     to='romeo@montague.lit/home'
     id='e2e1'
