@@ -35,90 +35,141 @@
 </section1>
 <section1 topic='XMPP Traceroute' anchor='xmpp-traceroute'>
 
-  <example caption='A XEP-0199 Ping with Traceroute Request'><![CDATA[
-<iq from='romeo@mantague.lit/home' to='juliet@capulet.lit/balcony' id='s2c1' type='get'>
-  <ping xmlns='urn:xmpp:ping'>
-    <traceroute xmlns='urn:xmpp:traceroute:0'>
-      <send by='romeo@montague.lit/home'
-         to='montague.lit'
-         timestamp='TODO'>
-        <connection-security>TLS...</connection-security>
-      </send>
-    </traceroute>
-  </ping>
+  <example caption='A Traceroute IQ Request'><![CDATA[
+<iq from='romeo@mantague.lit/home' to='juliet@capulet.lit/balcony' id='trace-id-1' type='get'>
+  <traceroute xmlns='urn:xmpp:traceroute:0'>
+    <send by='romeo@montague.lit/home'
+       to='montague.lit'
+       timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+    </send>
+  </traceroute>
 </iq>]]></example>
+
+  <p>Hops supporting XMPP traceroute SHOULD fill out 'by', 'to' and
+  'timestamp'. All other information is OPTIONAL.</p>
 
   <example caption='A XEP-0199 Pong with the Traced Route'><![CDATA[
 <iq from='juliet@capulet.lit/chamber'
     to='romeo@montague.lit/home'
-    id='e2e1'
+    id='trace-id-1'
     type='result'>
-  <traceroute xmlns='urn:xmpp:traceroute:0'>
-   <send by='romeo@montague.lit/home'
+  <traceroute-result xmlns='urn:xmpp:traceroute:0'>
+    <send by='romeo@montague.lit/home'
          to='montague.lit'
          timestamp='TODO'>
-      <connection-security>TLS...</connection-security>
-   </send>
-   <received by='montague.lit'
+      <connection>
+        <security>TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384</connection-security>
+        <local>
+          <ip>TODO</ip>
+          <port></port>
+        </local>
+        <remote>
+          <ip>TODO</ip>
+          <port></port>
+        </remote>
+        <id>2EkSZzyn</id>
+      </connection>
+    </send>
+    <received by='montague.lit'
              from='romeo@mantague.lit/home'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <connecton-metadata>ID: 1234</connection-metadata>
+      <connection>
+      …
+      </connection>
      <!-- More optional metadata here -->
-   </received>
-   <send by='montague.lit'
+    </received>
+    <send by='montague.lit'
          to='capulet.lit'
          timestamp='TODO'>
-      <connection-security>TLS...</connection-security>
-   </send>
-   <received by='capulet.lit'
+      <connection>
+      …
+      </connection>
+    </send>
+    <received by='capulet.lit'
              from='montague.lit'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </received>
-   <send by='capulet.lit'
+      <connection>
+      …
+      </connection>
+    </received>
+    <send by='capulet.lit'
          to='juliet@capulet.lit/balcony'
          timestamp='TODO'>
-      <connection-security>TLS...</connection-security>
-   </send>
-   <received by='juliet@capulet.lit/balcony'
+      <connection>
+      …
+      </connection>
+    </send>
+    <received by='juliet@capulet.lit/balcony'
              from='capulet.lit'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </received>
-   <!-- Ping arrived at destination -->
-   <send by='juliet@capulet.lit/balcony'
+    </received>
+    <!-- Ping arrived at destination -->
+    <send by='juliet@capulet.lit/balcony'
              to='capulet.lit'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </send>
-   <received by='capulet.lit'
+    </send>
+    <received by='capulet.lit'
              from='juliet@capulet.lit/balcony'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </received>
-   <send by='capulet.lit'
+      <connection>
+      …
+      </connection>
+    </received>
+    <send by='capulet.lit'
              to='montague.lit'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </send>
-   <received by='montage.lit'
+      <connection>
+      …
+      </connection>
+    </send>
+    <received by='montage.lit'
              from='capulet.lit'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </received>
-   <send by='montage.lit'
+      <connection>
+      …
+      </connection>
+    </received>
+    <send by='montage.lit'
              to='romeo@montague.lit/home'
              timestamp='TODO'>
-     <connection-security>TLS...</connection-security>
-     <!-- More optional metadata here -->
-   </send>
+      <connection>
+      …
+      </connection>
+    </send>
+  </traceroute>
+</iq>]]></example>
+
+    <example caption='A Traceroute IQ Request'><![CDATA[
+<iq from='romeo@mantague.lit/home' to='juliet@capulet.lit/balcony' id='trace-id-2' type='get'>
+  <traceroute xmlns='urn:xmpp:traceroute:0' immediate='true'>
+    <send by='romeo@montague.lit/home'
+       to='montague.lit'
+       timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+    </send>
+  </traceroute>
+</iq>]]></example>
+
+    <example caption='A Traceroute immediate message, same hop but forwards'><![CDATA[
+<message from='capulet.lit' to='romeo@mantague.lit/home' id='s2c1' type='get'>
+  <traceroute-immediate-result xmlns='urn:xmpp:traceroute:0' id='trace-id-2' >
+    <send by='romeo@montague.lit/home'
+       to='montague.lit'
+       timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+    </send>
+  </traceroute>
+</iq>]]></example>
+
+    <example caption='A Traceroute immediate message, same hop but backwards'><![CDATA[
+<message from='capulet.lit' to='romeo@mantague.lit/home' id='s2c1' type='get'>
+  <traceroute-immediate-result xmlns='urn:xmpp:traceroute:0' id='trace-id-2' >
+    <send by='romeo@montague.lit/home'
+       to='montague.lit'
+       timestamp='TODO'>
+      <connection-security>TLS...</connection-security>
+    </send>
   </traceroute>
 </iq>]]></example>
 
