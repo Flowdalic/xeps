@@ -54,7 +54,7 @@
 <section1 topic='Requirements' anchor='reqs'>
   <p>This proposal widens the scope of the security guarantees given by the used encryption mechanism from just the body of the message to all contents of the &content; element. It is intended to serve as a "one size fits all" solution for extension element encryption in XMPP.</p>
 
-  <p>In order to achieve its goal, Stanze Content Encryption does the following:</p>
+  <p>In order to achieve its goal, Stanza Content Encryption does the following:</p>
   <ul>
     <li>Define elements that hold sensitive information and their encrypted form</li>
     <li>Speficy rules about how extension elements are encrypted and embedded in the message</li>
@@ -147,7 +147,7 @@
     <header sid='27183'>
       ...
     </header>
-    <envelope xmlns='urn:xmpp:sce:0>
+    <envelope xmlns='urn:xmpp:sce:0'>
       PGNvbnRlbnQgeG1sbnM9J3Vybjp4bXBwOnNjZTowJz48cGF5bG9hZD48Ym9keSB4bWxucz0namFi
       YmVyOmNsaWVudCc+SSBnb3QgaW4gZXZlcnlvbmUncyBob3N0aWxlIGxpdHRsZSBmYWNlLiBZZXMs
       IHRoZXNlIGFyZSBicnVpc2VzIGZyb20gZmlnaHRpbmcuIFllcywgSSdtIGNvbWZvcnRhYmxlIHdp
