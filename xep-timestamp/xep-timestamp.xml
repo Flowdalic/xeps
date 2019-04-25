@@ -35,7 +35,13 @@
   the delay is missing because the stanza was not delayed or because
   the service does not add delay. This is due a missing service disco
   possiblity for 203 with the according semantics.</p>
-  
+
+  <p>Furthermore xep203 appears to be designed to avoid an timestamp
+  in case there is no delay. However this can be considered a
+  premature and unnecessary optimization which causes confusion (see
+  for example
+  https://medium.com/miquido/successful-migration-to-a-custom-xmpp-solution-76fcdecb0928).</p>
+
 </section1>
 <section1 topic='Stanza Timestamps' anchor='stanza-timestamps'>
 
