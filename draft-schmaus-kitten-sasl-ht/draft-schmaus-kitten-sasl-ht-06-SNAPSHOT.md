@@ -27,16 +27,16 @@ organization="University of Erlangen-Nuremberg"
 
 .# Abstract
 
-This document specifies the family of Hashed Token SASL mechanisms, which are meant to be used for quick re-authentication of a previous session.
+This document specifies the family of Hashed Token SASL mechanisms which enable a proof-of-possession-based authentication scheme and are meant to be used for quick re-authentication of a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
 The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
-It further provides hash agility, mutual authentication and is secured by channel binding.
+The SASL mechanism specified herin further provides hash agility, mutual authentication and is secured by channel binding.
 
 {mainmatter}
 
 # Introduction
 
-This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) [@!RFC4422] mechanisms.
+This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) [@!RFC4422] mechanisms, which enable a proof-of-possession-based authentication scheme.
 The HT mechanism is designed to be used with short-lived, exclusively ephemeral tokens, called SASL-HT tokens, and allow for quick, one round-trip, re-authentication of a previous session.
 
 Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) being secured by channel binding.
@@ -154,7 +154,7 @@ initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
 
 HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as a shared secret between initiator and responder.
 
-The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!I-D.ietf-tls-tls13#23].
+The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!RFC8446].
 If this is the case, then the initiating entity **MUST NOT** include any further application protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
