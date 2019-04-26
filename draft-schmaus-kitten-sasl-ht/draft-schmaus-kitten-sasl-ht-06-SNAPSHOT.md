@@ -102,7 +102,7 @@ cb-type   | Channel Binding Type
 ------|-----------------------
 ENDP  | tls-server-end-point
 UNIQ  | tls-unique
-Table: Mapping of cb-type to Channel Bindings Types
+Table: Mapping of cb-type to Channel Binding Types
 
 The following table lists the HT SASL mechanisms registered by this document.
 
