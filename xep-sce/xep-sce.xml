@@ -6,6 +6,7 @@
   <!ENTITY time "&lt;time/&gt;">
   <!ENTITY rpad "&lt;rpad/&gt;">
   <!ENTITY to "&lt;to/&gt;">
+  <!ENTITY from "&lt;from\&gt;">
   <!ENTITY % ents SYSTEM 'xep.ent'>
 %ents;
 ]>
@@ -13,7 +14,7 @@
 <xep>
 <header>
   <title>Stanza Content Encryption</title>
-  <abstract>The Stanza Content Encryption (SCE) protocol is intended as a way to allow clients to exchange arbitrary extension elements using different end-to-end encryption schemes.</abstract>
+  <abstract>The Stanza Content Encryption (SCE) protocol is intended as a way to allow clients to securely exchange arbitrary extension elements using different end-to-end encryption schemes.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -43,7 +44,7 @@
 </header>
 
 <section1 topic='Introduction' anchor='intro'>
-  <p>There is a number of different end-to-end encryption mechanisms that can be used to secure user communication against unauthorized access from malicious servers. TODO: formulation. Popular examples for this are &xep0384; and &xep0373;.</p>
+  <p>There is a number of different end-to-end encryption mechanisms that can be used to secure user communication against unauthorized access from malicious third parties. Popular examples for this are &xep0384; and &xep0373;.</p>
 
   <p>While the latter allows for encryption of arbitrary extension elements, protocols such as &xep0384; are limited to only encrypt the body of a message. This approach is not very flexible and prevents the combined usage with XMPP extension protocols such as &xep0385; or &xep0308; as their extension elements cannot be included in the encrypted part of the message, therefore leaking information about the message content.</p>
 
@@ -78,25 +79,35 @@
       <th>Element</th>
       <th>Description</th>
       <th>Usage</th>
+      <th>Verification</th>
     </tr>
     <tr>
       <td>&rpad;</td>
       <td>Random-length random-content padding</td>
       <td>Prevent known ciphertext and message length correlation attacks</td>
+      <td>None. This element is only used to change the length of the ciphertext and doesn't need to be verified</td>
     </tr>
     <tr>
       <td>&time;</td>
       <td>Timestamp</td>
       <td>Prevent replay attacks using old messages</td>
+      <td>Receiving clients MUST check whether the difference between the timestamp and the sending time derived from the stanza itself lays within a reasonable margin. The client SHOULD use the content of the timestamp element when displaying the send date of the message</td>
     </tr>
     <tr>
       <td>&to;</td>
       <td>Recipient of the message</td>
       <td>Prevent spoofing of the recipient</td>
+      <td>Receiving clients MUST check, if they are recipient of the message and otherwise alert the user/reject the message</td>
+    </tr>
+    <tr>
+      <td>&from;</td>
+      <td>Sender of the message</td>
+      <td>Prevent spoofing of the sender</td>
+      <td>Receiving clients MUST check, if the content of the from element matches the from attribute of the enclosing stanza and otherwise alert the user/reject the message</td>
     </tr>
   </table>
 
-  <p>Encryption protocols that make use of Stanza Content Encryption MUST define their own profiles that describe mandatory behaviour of how those elements are used. They MAY also define and add their own specific affix elements.</p>
+  <p>Encryption protocols that make use of Stanza Content Encryption MUST define their own profiles that describe mandatory behaviour of which of these elements are used. They MAY also define and add their own specific affix elements.</p>
 
 </section1>
 
@@ -122,6 +133,8 @@
 </message>]]>
   </example>
   <p>The example above obviously leaks information about the communication through the unencrypted OOB extension element.</p>
+
+  <p>Another example of a possible use case would be encrypted &lt;iq/&gt; queries. A resource might want to query sensitive information from another resource capable of Stanza Content Encryption. This problem can also be solved using SCE.</p>
 </section1>
 
 <section1 topic='Sending an encrypted message' anchor='sending'>
@@ -168,16 +181,44 @@
   <p>As a last step, the original unencrypted stanza is recreated by replacing the &envelope; element of the stanza with the contents of the &payload; element.</p>
 </section1>
 
-<section1 topic='Whitelist / Blacklist' anchor='white_blacklist'>
-  <p>TODO</p>
+<section1 topic='Blacklist' anchor='blacklist'>
+  <p>The receiving client MUST ignore certain elements that may allow for attacks to take place.</p>
+  <p>Since it is hard to come up with a complete list of blacklisted elements, a general rule of thumb would be the following:</p>
+  <p>Blacklisted are all elements that need to be read by the server at some point.</p>
+  <p>Below is an additional list of elements that are definitely forbidden inside the &content; element and MUST instead be placed in the message unencrypted.</p>
+  <table caption='Examples for elements that MUST be ignored by the recipient'>
+    <tr>
+      <th>Element</th>
+      <th>Reason</th>
+    </tr>
+    <tr>
+      <td>Elements of &xep0334;</td>
+      <td>Those elements are addressed to the server and of no interest for the client</td>
+    </tr>
+    <tr>
+      <td>Origin-ID elements of &xep0359;</td>
+      <td>These IDs may be used to identify a message even though it cannot be decrypted.</td>
+    </tr>
+    <tr>
+      <td>TODO: Other elements?</td>
+      <td></td>
+    </tr>
+  </table>
+
 </section1>
 
 <section1 topic='Business Rules' anchor='rules'>
-  <p>TODO: Recipient must verify that the decrypted &content; element contains valid XML and that the blacklist/whitelist rules are not violated.</p>
+  <p>Unencrypted &content; elements are NOT ALLOWED as child elements of the stanza and MUST be dropped.</p>
+  <p>Elements in the &content; element MUST be identified using an element name and namespace. Notably the &lt;body/&gt; element MUST contain a valid namespace (i.e. "jabber:client").</p>
+  <p>Recipient must verify that the decrypted &content; element contains valid XML before processing it any further. Invalid XML must be rejected.</p>
+  <p>After verifying the integrity of the &content; element, the recipient needs to make sure that no blacklisted elements are found within the payload. Any forbidden elements MUST be dropped before the message is processed any further.</p>
+  <p>Duplicate elements within the &content; element MUST be dropped.</p>
+  <p>Elements in the &content; element override elements in the enclosing stanza. TODO: Maybe we want to remove this rule by disallowing duplicate elements all together?</p>
 </section1>
 
 <section1 topic='Implementation Notes' anchor='impl'>
-  <p>As a first, naïve approach a recipient of a message containing an &envelope; element could simply reinject the reassambled unencrypted stanza into the XML stream. This might introduce some security issues. TODO: which?</p>
+  <p>As a first, naïve approach a recipient of a message containing an &envelope; element could simply reinject the reassambled unencrypted stanza into the XML stream. This might introduce some security issues. Most notably, there is no way to distinguish end-to-end encrypted elements from unencrypted elements.</p>
+  <p>Implementations should rather handle encrypted elements explicitly.</p>
 </section1>
 
 <section1 topic='Security Considerations' anchor='security'>
@@ -188,7 +229,7 @@
 </section1>
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
-  <p>TODO: Registrar will handle a whitelist/blacklist of elements that are allowed as child elements of the &content; element.</p>
+  <p>TODO: Maybe the Registrar should handle a blacklist of elements that are allowed as child elements of the &content; element?</p>
 </section1>
 
 <section1 topic='XML Schema' anchor='schema'>
