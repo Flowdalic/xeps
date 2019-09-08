@@ -36,6 +36,8 @@
 </section1>
 
 <section1 topic='JID Validation IQ Service' anchor='service'>
+  <p>If supported, service announces 'urn:xmpp:jid-validate:0'
+  feature.</p>
 
   <example caption='IQ validation request'><![CDATA[
 <iq type='get'
@@ -43,7 +45,7 @@
     to='example.org'
     id='request1'>
   <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
-    <jid>Σ@example.com/resource</jid>
+    <maybe-jid>Σ@example.com/resource</maybe-jid>
   </jid-validate-request>
 </iq>]]></example>
 
@@ -55,8 +57,8 @@
 
   <example caption='Valid JID result'><![CDATA[
 <iq type='result'
-    from='user@example.org/resource'
-    to='example.org'
+    from='example.org'
+    to='user@example.org/resource'
     id='request1'>
   <jid-validate-result xmlns='urn:xmpp:jid-validate:0'>
     <valid-jid>
@@ -73,14 +75,14 @@
     to='example.org'
     id='request2'>
   <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
-    <jid>henryⅣ@example.com</jid>
+    <maybe-jid>henryⅣ@example.com</maybe-jid>
   </jid-validate-request>
 </iq>]]></example>
 
   <example caption='Invalid JID result'><![CDATA[
 <iq type='result'
-    from='user@example.org/resource'
-    to='example.org'
+    from='example.org'
+    to='user@example.org/resource'
     id='request2'>
   <jid-validate-result xmlns='urn:xmpp:jid-validate:0'>
     <invalid-jid>
@@ -90,8 +92,28 @@
 </iq>]]></example>
 
 </section1>
+
+<section1 topic='Optional Base64 Encoded Variant' anchor='base64'>
+  <p>If supported, service announces 'urn:xmpp:jid-validate:base64:0'
+  feature. Responses as above.</p>
+
+    <example caption='IQ validation request'><![CDATA[
+<iq type='get'
+    from='user@example.org/resource'
+    to='example.org'
+    id='request1'>
+  <jid-validate-base64-request xmlns='urn:xmpp:jid-validate:0'>
+    <base64-maybe-jid>zqNAZXhhbXBsZS5jb20vcmVzb3VyY2U=</base64-maybe-jid>
+  </jid-validate-base64-request>
+</iq>]]></example>
+
+</section1>
+
 <section1 topic='Security Considerations' anchor='security'>
-  <p>TODO: Consider restricting access to serivce, e.g. to local or admin users only, or rate limit it.</p>
+
+  <p>TODO: Consider restricting access to service, e.g. to local or
+  admin users only, or rate limit it.</p>
+
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>REQUIRED.</p>
