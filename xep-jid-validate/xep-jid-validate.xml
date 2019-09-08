@@ -32,7 +32,7 @@
 </header>
 
 <section1 topic='Introduction' anchor='intro'>
-  <p>Usefull to test the PRECIS / JID enforcement implementation of XMPP services.</p>
+  <p>Usefull to test the PRECIS / JID enforcement implementation of XMPP services. Advantages over xep328: base64 encoded string possible. No jid-malformed error IQ response in case the stanza is not valid. This makes it impossible to distinguish from e.g. a malformed jid in 'to'. Parts are returned split.</p>
 </section1>
 
 <section1 topic='JID Validation IQ Service' anchor='service'>
