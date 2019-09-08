@@ -25,7 +25,7 @@
   &flow;
   <revision>
     <version>0.0.1</version>
-    <date>2001-09-14</date>
+    <date>2019-09-06</date>
     <initials>psa</initials>
     <remark><p>First draft.</p></remark>
   </revision>
@@ -45,8 +45,7 @@
   <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
     <jid>Σ@example.com/resource</jid>
   </jid-validate-request>
-</iq>
-]]></example>
+</iq>]]></example>
 
   <p>If the JID is valid, then a &lt;jid-validate-result/&gt; with a
   &lt;valid-jid/&gt; child element is returned. The valid-jid element
@@ -66,8 +65,7 @@
       <resourcepart>resource</resourcepart>
     <valid-jid>
   </jid-validate-result>
-</iq>
-]]></example>
+</iq>]]></example>
 
   <example caption='IQ validation request'><![CDATA[
 <iq type='get'
@@ -77,8 +75,7 @@
   <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
     <jid>henryⅣ@example.com</jid>
   </jid-validate-request>
-</iq>
-]]></example>
+</iq>]]></example>
 
   <example caption='Invalid JID result'><![CDATA[
 <iq type='result'
@@ -90,8 +87,7 @@
       <reason>Invalid codepoint 'Ⅳ' in localpart.</reason>
     </invalid-jid>
   </jid-validate-result>
-</iq>
-]]></example>
+</iq>]]></example>
 
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
