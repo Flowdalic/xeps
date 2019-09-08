@@ -6,8 +6,8 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>XEP Template</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <title>Application Specific Errors for MUC</title>
+  <abstract>TODO</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -16,18 +16,12 @@
   <approver>Council</approver>
   <dependencies>
     <spec>XMPP Core</spec>
-    <spec>XEP-0001</spec>
-    <spec>Etc.</spec>
+    <spec>XEP-0045</spec>
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED</shortname>
-  <author>
-    <firstname>Peter</firstname>
-    <surname>Saint-Andre</surname>
-    <email>stpeter@jabber.org</email>
-    <jid>stpeter@jabber.org</jid>
-  </author>
+  <shortname>muc-ase</shortname>
+  &flow;
   <revision>
     <version>0.0.1</version>
     <date>2001-09-14</date>

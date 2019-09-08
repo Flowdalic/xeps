@@ -6,8 +6,8 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>XEP Template</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <title>JID Validation Service</title>
+  <abstract>Specifies a service that validates JIDs on request.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -21,13 +21,8 @@
   </dependencies>
   <supersedes/>
   <supersededby/>
-  <shortname>NOT_YET_ASSIGNED</shortname>
-  <author>
-    <firstname>Peter</firstname>
-    <surname>Saint-Andre</surname>
-    <email>stpeter@jabber.org</email>
-    <jid>stpeter@jabber.org</jid>
-  </author>
+  <shortname>jid-validate</shortname>
+  &flow;
   <revision>
     <version>0.0.1</version>
     <date>2001-09-14</date>
@@ -35,32 +30,72 @@
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
+
 <section1 topic='Introduction' anchor='intro'>
-  <p>This is a template for use in writing XMPP Extension Protocol specifications (XEPs). For detailed information about the XSF's standards process and how to write a XEP, refer to "XEP-0001: XMPP Extension Protocols" and "XEP-0143: Guidelines for Authors of XMPP Extension Protocols".</p>
+  <p>Usefull to test the PRECIS / JID enforcement implementation of XMPP services.</p>
 </section1>
-<section1 topic='Requirements' anchor='reqs'>
-  <p>STRONGLY RECOMMENDED.</p>
-</section1>
-<section1 topic='Glossary' anchor='glossary'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Use Cases' anchor='usecases'>
-  <p>STRONGLY RECOMMENDED.</p>
-</section1>
-<section1 topic='Business Rules' anchor='rules'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Implementation Notes' anchor='impl'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Accessibility Considerations' anchor='access'>
-  <p>OPTIONAL.</p>
-</section1>
-<section1 topic='Internationalization Considerations' anchor='i18n'>
-  <p>OPTIONAL.</p>
+
+<section1 topic='JID Validation IQ Service' anchor='service'>
+
+  <example caption='IQ validation request'><![CDATA[
+<iq type='get'
+    from='user@example.org/resource'
+    to='example.org'
+    id='request1'>
+  <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
+    <jid>Σ@example.com/resource</jid>
+  </jid-validate-request>
+</iq>
+]]></example>
+
+  <p>If the JID is valid, then a &lt;jid-validate-result/&gt; with a
+  &lt;valid-jid/&gt; child element is returned. The valid-jid element
+  MUST contain 'domainpart' and may contain 'localpart' and/or
+  'resourcepart' elements. If the JID does not contain a local- or
+  resourcepart, then the element is omitted.</p>
+
+  <example caption='Valid JID result'><![CDATA[
+<iq type='result'
+    from='user@example.org/resource'
+    to='example.org'
+    id='request1'>
+  <jid-validate-result xmlns='urn:xmpp:jid-validate:0'>
+    <valid-jid>
+      <localpart>σ</localpart>
+      <domainpart>example.com</domainpart>
+      <resourcepart>resource</resourcepart>
+    <valid-jid>
+  </jid-validate-result>
+</iq>
+]]></example>
+
+  <example caption='IQ validation request'><![CDATA[
+<iq type='get'
+    from='user@example.org/resource'
+    to='example.org'
+    id='request2'>
+  <jid-validate-request xmlns='urn:xmpp:jid-validate:0'>
+    <jid>henryⅣ@example.com</jid>
+  </jid-validate-request>
+</iq>
+]]></example>
+
+  <example caption='Invalid JID result'><![CDATA[
+<iq type='result'
+    from='user@example.org/resource'
+    to='example.org'
+    id='request2'>
+  <jid-validate-result xmlns='urn:xmpp:jid-validate:0'>
+    <invalid-jid>
+      <reason>Invalid codepoint 'Ⅳ' in localpart.</reason>
+    </invalid-jid>
+  </jid-validate-result>
+</iq>
+]]></example>
+
 </section1>
 <section1 topic='Security Considerations' anchor='security'>
-  <p>REQUIRED.</p>
+  <p>TODO: Consider restricting access to serivce, e.g. to local or admin users only, or rate limit it.</p>
 </section1>
 <section1 topic='IANA Considerations' anchor='iana'>
   <p>REQUIRED.</p>

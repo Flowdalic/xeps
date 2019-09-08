@@ -6,7 +6,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Client Side Ping Controll (or "Don't Ping Me, I'll Ping You")</title>
+  <title>Client Side Ping (or "Don't Ping Me, I'll Ping You")</title>
   <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
@@ -31,6 +31,7 @@
   </revision>
 </header>
 <section1 topic='Introduction' anchor='intro'>
+  <p>In order to avoid unecessary server to client pings, the server needs to be aware of the default idle-interval after which a client will ping the server.</p>
 
   <p>TODO/WIP TEXT: Defines a mechanism allowing the client to tell the server that the client will
   never keep the connection idle longer then a certain period of time. This avoid the patholgical
