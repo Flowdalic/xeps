@@ -73,7 +73,7 @@
 
   <p>In order to properly compare and match JIDs, a normalization step
   is required by &rfc7622; (called 'Preparation' and 'Enforcement' by
-  &rfc8264;). The protocol defined herin can be used to
+  &rfc8264;). The protocol defined herein can be used to
   ask XMPP entities to perform such a normalization. Amongst other
   use-cases, this protocol can be used for testing purposes, where a
   testsuite checks the conformance of an normalization
@@ -202,7 +202,7 @@
 <section1 topic="Implementation Notes" anchor='impl'>
 
   <p>If a client has the ability to perform the normalization process
-  itself, it SHOULD NOT make use of the protocol defined herin.</p>
+  itself, it SHOULD NOT make use of the protocol defined herein.</p>
 
   <p>Upon a successful response, the client SHOULD cache the result,
   mapping the original JID to the normalized version.</p>
