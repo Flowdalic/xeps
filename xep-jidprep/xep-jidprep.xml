@@ -181,7 +181,7 @@
 <section1 topic='Optional Base64 Encoding' anchor='base64'>
 
   <p>To be able to feed arbitrary strings into the validator, not
-  being limited by XML 1.0, the protoocl supports an optional Base64
+  being limited by XML 1.0, the protocol supports an optional Base64
   (TODO: reference) encoding of the string to validate.</p>
 
   <p>If supported, service announces 'urn:xmpp:jidprep:base64:1'
