@@ -34,20 +34,20 @@
     <date>2019-09-09</date>
     <initials>fs</initials>
     <remark>
-	  <ul>
-		<li>Do not return error IQ result if the string to validate is
-		not a valid JID. It is indistinguishable if the error is
-		caused by the string to check, or if some other involved JID,
-		like the one in the 'to' attribute, is malformed.</li>
-		<li>Return the normalized JID in its parts, to make it clear
-		which parts constitute the JID</li>
-		<li>Do not use text as child of an IQ child element. Using
-		text makes it impossible to inject further child elements as
-		XMPP disallows mixed content.</li>
-		<li>Add support for base64 encoding.</li>
-		<li>Always announce the jidprep identity.</li>
-	  </ul>
-	</remark>
+      <ul>
+        <li>Do not return error IQ result if the string to validate is
+        not a valid JID. It is indistinguishable if the error is
+        caused by the string to check, or if some other involved JID,
+        like the one in the 'to' attribute, is malformed.</li>
+        <li>Return the normalized JID in its parts, to make it clear
+        which parts constitute the JID</li>
+        <li>Do not use text as child of an IQ child element. Using
+        text makes it impossible to inject further child elements as
+        XMPP disallows mixed content.</li>
+        <li>Add support for base64 encoding.</li>
+        <li>Always announce the jidprep identity.</li>
+      </ul>
+    </remark>
   </revision>
   <revision>
     <version>0.1</version>
