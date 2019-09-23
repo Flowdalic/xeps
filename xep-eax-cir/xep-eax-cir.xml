@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE xep SYSTEM 'xep.dtd' [
   <!ENTITY % ents SYSTEM 'xep.ent'>
+    <!ENTITY rfc2986 "<span class='ref'><link url='http://tools.ietf.org/html/rfc2986'>RFC 2986</link></span> <note>RFC 2986: PKCS #10: Certification Request Syntax Specification - Version 1.7 &lt;<link url='http://tools.ietf.org/html/rfc2986'>http://tools.ietf.org/html/rfc2986</link>&gt;.</note>" >
+
 %ents;
 ]>
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
