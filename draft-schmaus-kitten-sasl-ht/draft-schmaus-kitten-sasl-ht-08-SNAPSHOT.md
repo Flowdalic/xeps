@@ -1,12 +1,12 @@
 %%%
 Title = "The Hashed Token SASL Mechanism"
 category = "exp"
-docName = "draft-schmaus-kitten-sasl-ht-07-SNAPSHOT"
+docName = "draft-schmaus-kitten-sasl-ht-08-SNAPSHOT"
 ipr= "trust200902"
 area = "Internet"
 workgroup = "Common Authentication Technology Next Generation"
 
-date = 2019-05-06T12:00:01Z
+date = 2019-11-01T12:00:01Z
 
 [[author]]
 initials="F."
@@ -158,17 +158,10 @@ The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified 
 If this is the case, then the initiating entity **MUST NOT** include any further application protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
-> TODO: It should be possible to exploit TLS 1.3 early data for "0.5"
-> RTT resumption of the application protocol's session. That is, on
-> resumption the initiating entity MUST NOT send any application
-> protocol payload together with first flight data, besides the HT
-> initiator-msg. But if the responding entity is able to verify the
-> TLS 1.3 early data, then it can send additional application protocol
-> payload right away together with the "resumption successful"
-> response to the initiating entity.
-
-> TODO: Add note why HMAC() is always involved, even if HMAC() is
-> usually not required when modern hash algorithms are used.
+> SASL-HT hence allows exploiting TLS 1.3 early data for "0.5 Round Trip Time (RTT)" resumption of the application protocol's session.
+> Using TLS early data requires extra care when implementing: The early data should only contain the SASL-HT payload, i.e., the initiator-msg, and not an application protocol specific payload.
+> The reason for this is that the early data could be replayed, and thus needs to carry an idempotent operation.
+> On the other hand, if the responding entity can verify the early data, then it can send additional application protocol payload together with the "resumption successful" response to the initiating entity.
 
 ## Initiator Authentication
 
