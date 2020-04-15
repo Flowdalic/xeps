@@ -1,0 +1,858 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xep SYSTEM 'xep.dtd' [
+  <!ENTITY content "&lt;content/&gt;">
+  <!ENTITY payload "&lt;payload/&gt;">
+  <!ENTITY % ents SYSTEM "xep.ent">
+  <!ENTITY ns "urn:xmpp:omemo:1">
+  <!ENTITY nsdevices "urn:xmpp:omemo:1:devices">
+  <!ENTITY nsbundles "urn:xmpp:omemo:1:bundles">
+%ents;
+]>
+<?xml-stylesheet type='text/xsl' href='xep.xsl'?>
+<xep>
+<header>
+  <title>OMEMO Encryption</title>
+  <abstract>This specification defines a protocol for end-to-end encryption in one-to-one chats, as well as group chats where each participant may have multiple clients per account.</abstract>
+  &LEGALNOTICE;
+  <number>0384</number>
+  <status>Experimental</status>
+  <type>Standards Track</type>
+  <sig>Standards</sig>
+  <approver>Council</approver>
+  <dependencies>
+    <spec>XMPP Core</spec>
+    <spec>XEP-0060</spec>
+    <spec>XEP-0163</spec>
+    <spec>XEP-0420</spec>
+  </dependencies>
+  <supersedes/>
+  <supersededby/>
+  <shortname>OMEMO</shortname>
+  <author>
+    <firstname>Andreas</firstname>
+    <surname>Straub</surname>
+    <email>andy@strb.org</email>
+    <jid>andy@strb.org</jid>
+  </author>
+  <author>
+    <firstname>Daniel</firstname>
+    <surname>Gultsch</surname>
+    <email>daniel@gultsch.de</email>
+    <jid>daniel@gultsch.de</jid>
+  </author>
+  <author>
+    <firstname>Tim</firstname>
+    <surname>Henkes</surname>
+    <email>me@syndace.dev</email>
+  </author>
+  <author>
+    <firstname>Klaus</firstname>
+    <surname>Herberth</surname>
+    <jid>klaus@jsxc.org</jid>
+  </author>
+  &paulschaub;
+  <author>
+    <firstname>Marvin</firstname>
+    <surname>Wißfeld</surname>
+    <email>xmpp@larma.de</email>
+    <jid>jabber@larma.de</jid>
+  </author>
+  <revision>
+    <version>0.6.0</version>
+    <date>2020-04-15</date>
+    <initials>th</initials>
+    <remark>
+      <ul>
+        <li>Replaced the "naive" automatic session healing mechanism with a more sophisticated, hopefully secure alternative.</li>
+        <li>Various fixes, clarifications and general improvements.</li>
+      </ul>
+    </remark>
+  </revision>
+  <revision>
+    <version>0.5.0</version>
+    <date>2020-03-26</date>
+    <initials>th</initials>
+    <remark>
+      <ul>
+        <li>Usage of Ed25519 public keys, made XEdDSA optional.</li>
+        <li>Threat model added.</li>
+      </ul>
+    </remark>
+  </revision>
+  <revision>
+    <version>0.4.0</version>
+    <date>2020-03-08</date>
+    <initials>dg</initials>
+    <remark>
+      <ul>
+        <li>Incorporate the double ratchet protocol specification.</li>
+        <li>Use one node to store all bundles. One item per bundle.</li>
+        <li>Recommend 'open' access model for both PEP nodes.</li>
+        <li>Specify OMEMO encryption for XEP-0045 Multi-User Chats.</li>
+        <li>Use XEP-0420: Stanza Content Encryption.</li>
+        <li>Use AES256/CBC to encrypt SCE payload.</li>
+        <li>Change namespace to <tt>&ns;</tt></li>
+        <li>Use wrapping 'keys' element for key elements in 'header'.</li>
+        <li>Define threat model</li>
+        <li>Change the state back to Experimental</li>
+      </ul>
+    </remark>
+  </revision>
+  <revision>
+    <version>0.3.0</version>
+    <date>2018-07-31</date>
+    <initials>egp</initials>
+    <remark><p>Make examples show items published to the id "current", as per <cite>XEP-0060</cite> §12.20.</p></remark>
+  </revision>
+  <revision>
+    <version>0.2.2</version>
+    <date>2018-11-03</date>
+    <initials>pep</initials>
+    <remark>Fix a bunch of typos, batch-style.</remark>
+  </revision>
+  <revision>
+    <version>0.2.1</version>
+    <date>2018-05-21</date>
+    <initials>mb</initials>
+    <remark>Fix attribute names in schema</remark>
+  </revision>
+  <revision>
+    <version>0.2</version>
+    <date>2017-06-02</date>
+    <initials>dg</initials>
+    <remark>
+      <p>Depend on SignalProtocol instead of Olm.</p>
+      <p>Changed to eu.siacs.conversations.axolotl Namespace which is currently used in the wild</p>
+    </remark>
+  </revision>
+  <revision>
+    <version>0.1</version>
+    <date>2016-12-07</date>
+    <initials>XEP Editor: ssw</initials>
+    <remark><p>Initial version approved by the council.</p></remark>
+  </revision>
+  <revision>
+    <version>0.0.2</version>
+    <date>2016-09-22</date>
+    <initials>ssw, dg</initials>
+    <remark><p>Depend on Olm instead of Axolotl.</p></remark>
+  </revision>
+  <revision>
+    <version>0.0.1</version>
+    <date>2015-10-25</date>
+    <initials>as</initials>
+    <remark><p>First draft.</p></remark>
+  </revision>
+</header>
+<section1 topic='Introduction' anchor='intro'>
+  <section2 topic='Motivation' anchor='intro-motivation'>
+    <p>
+      There are two main end-to-end encryption schemes in common use in the XMPP
+      ecosystem, Off-the-Record (OTR) messaging (&xep0364;) and OpenPGP
+      (&xep0027;). Older OTR versions have had significant usability drawbacks for inter-client
+      mobility. As OTR sessions existed between exactly two clients, the chat
+      history would not be synchronized across other clients of the involved
+      parties. Furthermore, OTR chats were only possible if both participants were
+      online at the same time, due to how the rolling key agreement scheme of OTR
+      worked. Some of those problems have been addressed in OTRv4.
+      OpenPGP, while not suffering from these mobility issues, does not
+      provide any kind of forward secrecy and is vulnerable to replay attacks.
+      Additionally, PGP over XMPP uses a custom wireformat which is defined by
+      convention rather than standardization, and involves quite a bit of
+      external complexity. The wire format issues were resolved with &xep0373;.
+    </p>
+    <p>
+      This XEP defines a protocol that leverages the Double Ratchet encryption scheme to provide
+      multi-end to multi-end encryption, allowing messages to be synchronized
+      securely across multiple clients, even if some of them are offline.
+      The Double Ratchet encryption scheme is based on work by Trevor Perrin
+      and Moxie Marlinspike and was first published as the Axolotl protocol.
+      The specification for the protocol is available in the public domain.
+    </p>
+  </section2>
+  <section2 topic='Overview' anchor='intro-overview'>
+    <p>
+      The general idea behind this protocol is to maintain separate,
+      long-standing Double Ratchet-encrypted sessions with each device of each contact
+      (as well as with each of our other devices), which are used as secure key
+      transport channels. In this scheme, each message is encrypted with a
+      fresh, randomly generated encryption key. An encrypted header is added to
+      the message for each device that is supposed to receive it. These headers
+      simply contain the key that the payload message is encrypted with, and
+      they are separately encrypted using the session corresponding to the
+      counterpart device. The encrypted payload is sent together with the
+      headers as a &lt;message&gt; stanza. Individual recipient devices can
+      decrypt the header item intended for them, and use the contained payload
+      key to decrypt the payload message.
+    </p>
+    <p>
+      As the encrypted payload is common to all recipients, it only has to be
+      included once, reducing overhead. Furthermore, the transparent handling by the
+      Double Ratchet encryption scheme of messages that were lost or received out of order, as well
+      as those sent while the recipient was offline, is maintained by this protocol. As a
+      result, in combination with &xep0280; and &xep0313;, the desired property
+      of inter-client history synchronization is achieved.
+    </p>
+    <p>
+      While in the future a dedicated key server component could be used to distribute
+      key material for session creation, the current specification relies on &xep0060; and &xep0163; to publish
+      and acquire key bundles.
+    </p>
+  </section2>
+</section1>
+<section1 topic='Requirements' anchor='reqs'>
+  <p>It is a result of XMPP's federated nature that a message may pass more than just one server. Therefore it is in the users' interest to secure their communication from any intermediate host. End-to-end encryption is an efficient way to protect any data exchanged between sender and receiver against passive and active attackers such as servers and network nodes.</p>
+  <p>OMEMO is an end-to-end encryption protocol based on the Double Ratchet specified in section <link url='#protocol-double_ratchet'>Double Ratchet</link>. It provides the following guarantees under the threat model described in the next section:</p>
+  <ul>
+    <li>Confidentiality: Nobody else except sender and receiver is able to read the content of a message.</li>
+    <li>Perfect forward secrecy: Compromised key material does not compromise previous or future message exchanges.</li>
+    <li>Authentication: Every peer is able to authenticate the sender or receiver of a message, even if the details of the authentication process is out-of-scope for this specification.</li>
+    <li>Immutability: Every peer can ensure that a message was not changed by any intermediate node.</li>
+    <li>Plausible deniability: No participant can prove who created a specific message.</li>
+    <li>Asynchronicity: The usability of the protocol does not depend on the online status of any participant.</li>
+  </ul>
+  <p>OMEMO is not intended to protect against the following use cases:</p>
+  <ul>
+    <li>An attacker has permanent access to your device. Temporary access is covered by perfect forward secrecy.</li>
+    <li>You lost your device and an attacker can read messages on your notification screen.</li>
+    <li>Any kind of denial-of-service attack.</li>
+    <li>tbc</li>
+  </ul>
+  <p>
+    Trust management is a difficult topic, which is out of scope of this document.
+  </p>
+  <section2 topic='Threat Model' anchor='reqs-threat-model'>
+    <p>The use case for OMEMO is a situation where the content of a conversation needs to be protected, but where the servers the message passes by can’t be trusted to keep the content of the message secret. For example when information that is under strict embargo needs to passed within an organization and the server administrator is not one of the persons cleared to see the information or when a couple is exchanging intimate messages and they want to avoid leaking of those messages to the server administrator.</p>
+    <p>The OMEMO protocol protects against passive and active attackers which are able to read, modify, replay, delay and delete messages. The OMEMO protocol does not protect against attackers who rely on metadata and traffic analysis. The quality of the verification of the conversation participants OMEMO identity keys determines the level of protection OMEMO offers.</p>
+  </section2>
+</section1>
+<section1 topic='Glossary' anchor='glossary'>
+  <dl>
+    <di><dt>Device</dt><dd>A communication end point, i.e. a specific client instance</dd></di>
+    <di><dt>OMEMO element</dt><dd>An &lt;encrypted&gt; element in the <tt>&ns;</tt> namespace</dd></di>
+    <di><dt>Bundle</dt><dd>A collection of publicly accessible data used by the X3DH key agreement protocol that can be used to build a session with a device, namely its public IdentityKey, a signed PreKey with corresponding signature, and a list of (single use) PreKeys.</dd></di>
+    <di><dt>rid</dt><dd>The device id of the intended recipient of the containing &lt;key&gt;</dd></di>
+    <di><dt>sid</dt><dd>The device id of the sender of the containing OMEMO element</dd></di>
+  </dl>
+</section1>
+<section1 topic='Protocol Definition' anchor='protocol'>
+  <section2 topic='Overview' anchor='protocol-overview'>
+    <p>
+      This protocol uses the &doubleratchet; encryption scheme in conjunction with the &x3dh; key agreement protocol. The following section provides detailed technical information about the protocol that should be sufficient to build an implementation of the OMEMO Double Ratchet. Readers who do not intend to build an OMEMO-compatible library can safely skip this section, relevant details are repeated where needed.
+    </p>
+  </section2>
+  <section2 topic='Key Exchange' anchor='protocol-key_exchange'>
+    <p>
+      The &x3dh; key agreement protocol was specified by Trevor Perrin and Moxie Marlinspike and placed under the public domain. OMEMO uses a modified version of this key agreement protocol with the following parameters/settings:
+    </p>
+    <dl>
+      <di><dt>curve</dt><dd>Curve25519/Ed25519</dd></di>
+      <di><dt>hash function</dt><dd>SHA-256</dd></di>
+      <di><dt>info string</dt><dd>&quot;OMEMO X3DH&quot;</dd></di>
+      <di><dt>signed PreKey rotation period</dt><dd>Signed PreKeys SHOULD be rotated periodically once a week to once a month. A faster or slower rotation period should not be required.</dd></di>
+      <di><dt>time to keep the private key of the old signed PreKey after rotating it</dt><dd>The private key of the old signed PreKey SHOULD be kept for another rotation period as defined above, to account for delayed messages using the old signed PreKey.</dd></di>
+      <di><dt>number of PreKeys to provide in the bundle</dt><dd>The bundle SHOULD always contain around 100 PreKeys.</dd></di>
+      <di><dt>minimum number of PreKeys to provide in the bundle</dt><dd>The bundle MUST always contain at least 25 PreKeys.</dd></di>
+      <di><dt>usage of PeyKeys</dt><dd>All key exchanges MUST use a PreKey, key exchanges that don't use a PreKey MUST be rejected.</dd></di>
+      <di><dt>associated data</dt><dd>The associated data is created by concatenating the IdentityKeys of Alice and Bob: <tt>AD = Encode(IK_A) || Encode(IK_B)</tt>. <tt>Alice</tt> is the party that <em>actively initiated</em> the key exchange, while <tt>Bob</tt> is the party that <em>passive accepted</em> the key exchange.</dd></di>
+      <di><dt>XEdDSA</dt><dd>OMEMO does not mandate the usage of &xeddsa; with &x3dh; for the IdentityKey. Instead, there are three simple rules that implementations MUST follow:
+        <ol>
+          <li>Implementations must use the birational map between the curves Curve25519 and Ed25519 to convert the public part of the IdentityKey whenever required, as defined in &rfc7748; (on page 5).</li>
+          <li>Implementations must be able to perform X25519 (ECDH on Curve25519) using the IdentityKey.</li>
+          <li>Implementations must be able to create EdDSA-compatible signatures on the curve Ed25519 using the IdentityKey.</li>
+        </ol>
+        There are essentially two ways in which libraries can fulfill these requirements:
+        <ol>
+          <li>Libraries can use a Curve25519 key pair as their internal IdentityKey. In this case, the IdentityKey can be used for X25519 directly, and XEdDSA has to be used to produce EdDSA-compatible signatures. Note that libsignal by default does <strong>NOT</strong> use XEdDSA. libsignal <em>includes</em> XEdDSA though and has to be modified to use that to be compatible with OMEMO.</li>
+          <li>Libraries can use an Ed25519 key pair as their internal IdentityKey. In this case, the IdentityKey can create EdDSA-compatible signatures directly, and has to be converted first to perform X25519.</li>
+        </ol>
+        Note that this decision is purely local to each client and OMEMO library. The public key is ALWAYS transferred in its Ed25519 form and only valid EdDSA signatures are transferred. The choice between Curve25519 and Ed25519 affects the definition of the <tt>Sig(PK, M)</tt> and <tt>DH(PK1, PK2)</tt> functions as defined below.</dd></di>
+      <di><dt>Sig(PK, M)</dt><dd>If the IdentityKey pair is chosen to be a Curve25519 key pair, the definition of <tt>Sig(PK, M)</tt> found in the X3DH specification applies. If the IdentityKey pair is chosen to be an Ed25519 key pair, the following definition applies: <tt>Sig(PK, M)</tt> represents the byte sequence that is an Ed25519 signature on the byte sequence <tt>M</tt> and verifies with public key <tt>PK</tt>, and which was created by signing <tt>M</tt> with <tt>PK</tt>'s corresponding private key. The byte-format of the signature is defined in &rfc8032;.</dd></di>
+      <di><dt>DH(PK1, PK2)</dt><dd>The original definition of <tt>DH(PK1, PK2)</tt> found in the X3DH specification applies with one exception: if the IdentityKey pair is chosen to be an Ed25519 key pair and either <tt>PK1</tt> or <tt>PK2</tt> corresponds to the IdentityKey, the respective key first has to be converted into its Curve25519 equivalent (see above). This conversion is implemented for example by <tt>libsodium</tt>, which exports the conversion as <tt>crypto_sign_ed25519_sk_to_curve25519</tt> and <tt>crypto_sign_ed25519_pk_to_curve25519</tt> for the private and public key, respectively (documented on <link url="https://download.libsodium.org/doc/advanced/ed25519-curve25519">libsodium.org</link>).</dd></di>
+      <di><dt>Encode(PK)</dt><dd>The public part of the IdentityKey pair is encoded as defined in &rfc8032;. Note that the IdentityKey is always transferred in its Ed25519 form. When using a Curve25519 key pair internally, the public key has to be converted to Ed25519 first. Curve25519 public keys are encoded using the little-endian encoding of the u-coordinate as specified in &rfc7748;.</dd></di>
+    </dl>
+    <p>
+      The key exchange is done just-in-time when sending the first message to a device. Thus, each key exchange message always also contains encrypted content as produced by the Double Ratchet encryption scheme below.
+    </p>
+  </section2>
+  <section2 topic='Double Ratchet' anchor='protocol-double_ratchet'>
+    <p>NOTE: <tt>OMEMOMessage.proto</tt>, <tt>OMEMOAuthenticatedMessage.proto</tt> and <tt>OMEMOKeyExchange.proto</tt> refer to the protobuf structures as defined in the <link url="#protobuf-schema">Protobuf Schemas</link>.</p>
+    <p>
+      The &doubleratchet; encryption scheme was specified by Trevor Perrin and Moxie Marlinspike and placed under the public domain. OMEMO uses an extended version of this protocol with the following parameters/settings:
+    </p>
+    <dl>
+      <di><dt>ratchet initialization</dt><dd>
+        The Double Ratchet is initialized using the shared secret, ad and public keys as yielded by the X3DH key agreement protocol, as explained in the Double Ratchet specification. Additionally, the state is extended by the following values:
+        <ul>
+          <li><strong>ek</strong> &#8211; The public key of the ephemeral key pair used by the X3DH key agreement.</li>
+          <li><strong>DHrc</strong> &#8211; Tracks the Diffie-Hellman ratchet counter of the other party, initialized to 0.</li>
+          <li><strong>DHsc</strong> &#8211; Tracks the own Diffie-Hellman ratchet counter, initialized to 0.</li>
+        </ul>
+      </dd></di>
+      <di><dt>MAX_SKIP</dt><dd>Storing skipped message keys introduces two potential DoS attacks. First, the maximum number of skipped message keys to store has to be limited, otherwise an attacker could fill the storage of the receiving device with skipped message keys. It is RECOMMENDED to keep around 1000 skipped message keys around per session. Second, the maximum number of skipped message keys in a single message has to be limited, otherwise, with just a single malicious message, an attacker could make the receiving device calculate up to around 2^32 skipped message keys. The choice of this limit depends on the hardware capabilities of the device, though modern hardware is safe to choose values of around 1000 here too.</dd></di>
+      <di><dt>deletion policy for skipped message keys</dt><dd>As soon as the maximum number of skipped message keys are stored for a session, keys are discarded on a FIFO basis to make space for new skipped message keys. Implementations SHOULD NOT keep skipped message keys around forever, but discard old keys on a different implementation-defined policy. It is RECOMMENDED to base this policy on deterministic events rather than time.</dd></di>
+      <di><dt>CONCAT(ad, header)</dt><dd><tt>CONCAT(ad, header) = ad || OMEMOMessage.proto(header)</tt> NOTE: the <tt>OMEMOMessage.proto</tt> is initialized without the ciphertext, which is optional. NOTE: Implementations are not strictly required to return a parseable byte array, as the unpacked/parsed data is required later in the protocol.</dd></di>
+      <di><dt>KDF_RK(rk, dh_out)</dt><dd>HKDF-SHA-256 using the rk as HKDF salt, dh_out as HKDF input material and &quot;OMEMO Root Chain&quot; as HKDF info.</dd></di>
+      <di><dt>KDF_CK(ck)</dt><dd>HMAC-SHA-256 using ck as the HMAC key, a single byte constant <tt>0x01</tt> as HMAC input to produce the next message key and a single byte constant <tt>0x02</tt> as HMAC input to produce the next chain key.</dd></di>
+      <di><dt>ENCRYPT(mk, plaintext, associated_data)</dt><dd>
+        The encryption step uses authenticated encryption consisting of AES-256-CBC with HMAC-SHA-256.
+        <ol>
+          <li>Use HKDF-SHA-256 to generate 80 bytes of output from the message key by providing mk as HKDF input, 256 zero-bits as HKDF salt and &quot;OMEMO Message Key Material&quot; as HKDF info.</li>
+          <li>Divide the HKDF output into a 32-byte encryption key, a 32-byte authentication key and a 16 byte IV.</li>
+          <li>Encrypt the plaintext (which consists of a 32 bytes key and a 32 bytes HMAC as specified in the section about <link url="#protocol-message_encryption">Message Encryption</link>) using AES-256-CBC with PKCS#7 padding, using the encryption key and IV derived in the previous step.</li>
+          <li>Split the associated data as returned by <tt>CONCAT</tt> into the original ad and the <tt>OMEMOMessage.proto</tt> structure.</li>
+          <li>Add the ciphertext to the <tt>OMEMOMessage.proto</tt> structure.</li>
+          <li>Serialize the <tt>OMEMOMessage.proto</tt> structure into a parseable byte array. To avoid potential problems regarding non-uniqueness of the serialization, make sure to only serialize <em>once</em> and to use that exact byte sequence in the following steps.</li>
+          <li>Concatenate the ad and the <tt>OMEMOMessage.proto</tt> structure into a parseable byte array. The result builds the HMAC input material for the next step.</li>
+          <li>Calculate the HMAC-SHA-256 using the authentication key and the input material as derived in the steps above. Truncate the output of the HMAC to 16 bytes/128 bits.</li>
+          <li>Put the <em>serialized</em> <tt>OMEMOMessage.proto</tt> structure and the HMAC into a new <tt>OMEMOAuthenticatedMessage.proto</tt> structure.</li>
+        </ol>
+      </dd></di>
+      <di><dt>RatchetEncrypt</dt><dd>As specified, with one addition: if <tt>header.n</tt> equals zero, increment <tt>state.DHsc</tt> once.</dd></di>
+    </dl>
+    <p>
+      If encrypting this message required a key exchange, the X3DH header data is placed into a new <tt>OMEMOKeyExchange.proto</tt> structure together with the <tt>OMEMOAuthenticatedMessage.proto</tt> structure.
+    </p>
+    <p>
+      To account for lost and out-of-order messages during the key exchange, <tt>OMEMOKeyExchange.proto</tt> structures are sent until a response by the recipient confirms that the key exchange was successfully completed. To do so, the X3DH header data is stored and added on each subsequent message until a response is received. This looks roughly as follows:
+    </p>
+    <ol>
+      <li>The first content is encrypted for a new recipient. This results in an X3DH header and a <tt>OMEMOAuthenticatedMessage.proto</tt> structure. Both are packed into an <tt>OMEMOKeyExchange.proto</tt> structure. The X3DH header is stored for following messages.</li>
+      <li>A second message is encrypted for the same recipient. This results in only an <tt>OMEMOAuthenticatedMessage.proto</tt> structure, as a new key exchange is not required. Together with the X3DH header that was stored in the previous step, an <tt>OMEMOKeyExchange.proto</tt> structure is constructed and sent to the recipient.</li>
+    </ol>
+    <p>
+      When receiving an OMEMOKeyExchange, the receiving device checks if it already has a Double Ratchet session with the sending device. If that is the case, the device compares the ephemeral public key stored in the Double Ratchet state with the ephemeral public key in the <tt>OMEMOKeyExchange.proto</tt> structure. If both are equal, the receiving device only processes the <tt>OMEMOAuthenticatedMessage.proto</tt> contained in the <tt>OMEMOKeyExchange.proto</tt>. Otherwise, it processes the whole <tt>OMEMOKeyExchange.proto</tt> structure.
+    </p>
+  </section2>
+  <section2 topic='Message Encryption' anchor='protocol-message_encryption'>
+    <p>
+      The contents are encrypted and authenticated using a combination of AES-256-CBC and HMAC-SHA-256.
+    </p>
+    <ol>
+      <li>Generate 32 bytes of cryptographically secure random data, called <tt>key</tt> in the remainder of this algorithm.</li>
+      <li>Use HKDF-SHA-256 to generate 80 bytes of output from the key by providing the key as HKDF input, 256 zero-bits as HKDF salt and &quot;OMEMO Payload&quot; as HKDF info.</li>
+      <li>Divide the HKDF output into a 32-byte encryption key, a 32-byte authentication key and a 16 byte IV.</li>
+      <li>Encrypt the plaintext using AES-256-CBC with PKCS#7 padding, using the encryption key and IV derived in the previous step.</li>
+      <li>Calculate the HMAC-SHA-256 using the authentication key and the ciphertext from the previous steps. Truncate the output of the HMAC to 16 bytes/128 bits.</li>
+      <li>Concatenate the key and the HMAC, encrypt them using the Double Ratchet as specified above, once for each intended recipient. This yields one OMEMOKeyExchange or OMEMOAuthenticatedMessage per recipient device.</li>
+    </ol>
+  </section2>
+  <section2 topic='Message Decryption' anchor='protocol-message_decryption'>
+    <p>
+      The contents are decrypted by reversing the encryption steps.
+    </p>
+    <ol>
+      <li>Decrypt the key and HMAC from the OMEMOKeyExchange or OMEMOAuthenticatedMessage, encrypted using the Double Ratchet belonging to this device.</li>
+      <li>Use HKDF-SHA-256 to generate 80 bytes of output from the key by providing the key as HKDF input, 256 zero-bits as HKDF salt and &quot;OMEMO Payload&quot; as HKDF info.</li>
+      <li>Divide the HKDF output into a 32-byte encryption key, a 32-byte authentication key and a 16 byte IV.</li>
+      <li>Verify the (truncated) HMAC-SHA-256 using the authentication key derived in the previous step and the ciphertext.</li>
+      <li>Decrypt the ciphertext using AES-256-CBC with PKCS#7 padding, using the encryption key and IV derived in the previous steps.</li>
+    </ol>
+  </section2>
+</section1>
+<section1 topic='Use Cases' anchor='usecases'>
+  <section2 topic='Setup' anchor='usecases-setup'>
+    <p>
+      To participate in OMEMO-encrypted chats, clients need to set up an OMEMO library and generate a device id, which is a randomly generated integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0). The device id must be unique for the account.
+    </p>
+  </section2>
+  <section2 topic='Discovering peer support' anchor='usecases-discovering'>
+    <p>In order to determine whether a given contact has devices that support OMEMO, the devices node in PEP is consulted. Devices MUST subscribe to <tt>&nsdevices;</tt> via PEP, so that they are informed whenever their contacts add a new device. They MUST cache the most up-to-date version of the device list.</p>
+    <example caption='Devicelist update received by subscribed clients'><![CDATA[
+<message from='juliet@capulet.lit'
+         to='romeo@montague.lit'
+         type='headline'
+         id='update_01'>
+  <event xmlns='http://jabber.org/protocol/pubsub#event'>
+    <items node=']]>&nsdevices;<![CDATA['>
+      <item id='current'>
+        <devices xmlns=']]>&ns;<![CDATA['>
+          <device id='12345' />
+          <device id='4223' label='Gajim on Ubuntu Linux' />
+        </devices>
+      </item>
+    </items>
+  </event>
+</message>]]></example>
+  </section2>
+  <section2 topic='Announcing support' anchor='usecases-announcing'>
+    <section3 topic='Device list' anchor='devices'>
+    <p>In order for other devices to be able to initiate a session with a given device, it first has to announce itself by adding its device id to the devices PEP node.</p>
+    <p>It is REQUIRED to set the access model of the <tt>&nsdevices;</tt> node to ‘open’ to give entities without presence subscription read access to the devices and allow them to establish an OMEMO session. Not having presence subscription is a common occurrence on the first few messages between two contacts and can also happen fairly frequently in group chats as not every participant had prior communication with every other participant.</p>
+    <p>The access model can be changed efficiently by using publish-options.</p>
+    <p>The device element MAY contain an attribute called label, which is a user defined string describing the device that published that bundle. It is RECOMMENDED to keep the length of the label under 53 Unicode code points.</p>
+    <example caption='Adding the own device id to the list'><![CDATA[
+<iq from='juliet@capulet.lit' type='set' id='announce1'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <publish node=']]>&nsdevices;<![CDATA['>
+      <item id='current'>
+        <devices xmlns=']]>&ns;<![CDATA['>
+          <device id='12345' label='Dino on Lenovo Thinkpad T495'/>
+          <device id='4223' />
+          <device id='31415' label='Conversations on Pixel 3' />
+        </devices>
+      </item>
+    </publish>
+    <publish-options>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'>
+          <value>http://jabber.org/protocol/pubsub#publish-options</value>
+        </field>
+        <field var='pubsub#access_model'>
+          <value>open</value>
+        </field>
+      </x>
+    </publish-options>
+  </pubsub>
+</iq>]]></example>
+    <p>NOTE: as per <link url='https://xmpp.org/extensions/xep-0060.html#impl-singleton'><cite>XEP-0060</cite> §12.20</link>, it is RECOMMENDED for the publisher to specify an ItemID of "current" to ensure that the publication of a new item will overwrite the existing item.</p>
+    <p>This step presents the risk of introducing a race condition: Two devices might simultaneously try to announce themselves, unaware of the other's existence. The second device would overwrite the first one. To mitigate this, devices MUST check that their own device id is contained in the list whenever they receive a PEP update from their own account. If they have been removed, they MUST reannounce themselves.</p>
+    </section3>
+    <section3 topic='Bundles' anchor='bundles'>
+    <p>Furthermore, a device MUST publish its IdentityKey, a signed PreKey, and a list of PreKeys. This tuple is called a bundle and is provided by OMEMO libraries. Bundles are maintained as multiple items in a PEP node called <tt>&nsbundles;</tt>. Each bundle MUST be stored in a seperate item. The item id MUST be set to the device id.</p>
+    <p>A bundle is an element called 'bundle' in the <tt>&ns;</tt> namespace. It has a child element called ‘spk’ that contains the public part of the signed PreKey as base64 encoded data, a child element called ‘spks’ that contains the signed PreKey signature as base64 encoded data and a child element called ‘ik’ that contains the public part of the IdentityKey as base64 encoded data. PreKeys are multiple elements called ‘pk’ that each contain the public part of one PreKey as base64 encoded data. PreKeys are wrapped in an element called ‘prekeys’ which is a child of the bundle element. The ‘spk’ and the ‘pk’s are tagged with an ‘id’-attribute which is a positive integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0) that uniquely identifies the keys. The ‘spk’ and the ‘pk’s are considered separate, which means that an ‘spk’ can have the same ‘id’ as a ‘pk’. These ids are used to save bandwidth during key exchanges, which refer to the keys using their id instead of their full public parts.</p>
+    <p>When publishing bundles a client MUST make sure that the <tt>&nsbundles;</tt> node is configured to store multiple items. This is not the default with &xep0163;. If the node doesn’t exist yet it can be configured on the fly by using publish-options as described in <link url='https://xmpp.org/extensions/xep-0060.html#publisher-publish-options'><cite>XEP-0060</cite> §7.1.5</link>. The value for 'pubsub#max_items' in publish_options MUST be set to 'max'. If the node did exist and was configured differently the bundle publication will fail. Clients MUST then reconfigure the node as described in <link url='https://xmpp.org/extensions/xep-0060.html#owner-configure'><cite>XEP-0060</cite> §8.2</link>.</p>
+    <example caption='Publishing bundle information'><![CDATA[
+<iq from='juliet@capulet.lit' type='set' id='annouce2'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <publish node=']]>&nsbundles;<![CDATA['>
+      <item id='31415'>
+        <bundle xmlns=']]>&ns;<![CDATA['>
+          <spk id='0'>b64/encoded/data</spk>
+          <spks>b64/encoded/data</spks>
+          <ik>b64/encoded/data</ik>
+          <prekeys>
+            <pk id='0'>b64/encoded/data</pk>
+            <pk id='1'>b64/encoded/data</pk>
+            <!-- … -->
+            <pk id='99'>b64/encoded/data</pk>
+          </prekeys>
+        </bundle>
+      </item>
+    </publish>
+    <publish-options>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'>
+          <value>http://jabber.org/protocol/pubsub#publish-options</value>
+        </field>
+        <field var='pubsub#max_items'>
+          <value>max</value>
+        </field>
+      </x>
+    </publish-options>
+  </pubsub>
+</iq>]]></example>
+  <p>As with the <tt>&nsdevices;</tt> node it is REQUIRED to set the access model of the <tt>&nsbundles;</tt> to open.</p>
+  <p>The access model can be changed efficiently by using publish-options.</p>
+  <example caption='Publishing bundle information with an open access model'><![CDATA[
+<iq from='juliet@capulet.lit' type='set' id='annouce2'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <publish node=']]>&nsbundles;<![CDATA['>
+      <item id='31415'>
+        <bundle xmlns=']]>&ns;<![CDATA['>
+          <!-- … -->
+        </bundle>
+      </item>
+    </publish>
+    <publish-options>
+      <x xmlns='jabber:x:data' type='submit'>
+        <field var='FORM_TYPE' type='hidden'>
+          <value>http://jabber.org/protocol/pubsub#publish-options</value>
+        </field>
+        <field var='pubsub#max_items'>
+          <value>max</value>
+        </field>
+        <field var='pubsub#access_model'>
+          <value>open</value>
+        </field>
+      </x>
+    </publish-options>
+  </pubsub>
+</iq>]]></example>
+  </section3>
+  </section2>
+  <section2 topic='Building a session' anchor='usecases-building'>
+    <p>In order to build a session with a device, their bundle information is fetched.</p>
+    <example caption='Fetching a device&apos;s bundle information'><![CDATA[
+<iq type='get'
+    from='romeo@montague.lit'
+    to='juliet@capulet.lit'
+    id='fetch1'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node=']]>&nsbundles;<![CDATA['>
+      <item id='31415'/>
+    <items>
+  </pubsub>
+</iq>]]></example>
+    <p>A random pk entry is selected, and used to build an OMEMO session.</p>
+  </section2>
+  <section2 topic='Sending a message' anchor='usecases-messagesend'>
+    <p>
+      In order to send a message, extension elements that are deemed sensible first have to be
+      encrypted. For this purpose, extensions that are only intended to be accessible to the recipient
+      are placed inside a &xep0420; &content; element, which is then encrypted using a message key.
+      For this reason OMEMO defines its own SCE profile.
+    </p>
+    <section3 topic='SCE Profile' anchor='sce'>
+      <p>
+        An OMEMO SCE &content; element
+      </p>
+      <ul>
+        <li>MUST contain an &lt;rpad/&gt; affix element. This is used to prevent an attacker from gaining insights about the content of a message based on the length of the ciphertext.</li>
+        <li>MAY contain a &lt;time/&gt; affix element. This can be used to prevent the server from modifying the order in which messages from different sending devices have been sent.</li>
+        <li>SHOULD contain a &lt;from/&gt; affix element.</li>
+        <li>MUST contain a &lt;to/&gt; affix element whenever a message is sent via a group chat (MUC/MIX). This is used to prevent the server from silently converting a group message into a private message and vice versa.</li>
+      </ul>
+      <example caption='Plaintext SCE content element'><![CDATA[
+<content xmlns='urn:xmpp:sce:0'>
+  <payload>
+    <body xmlns='jabber:client'>
+     Hello World!
+    </body>
+  </payload>
+  <rpad>...</rpad>
+  <from jid='romeo@montague.lit'/>
+</content>]]>
+      </example>
+    </section3>
+    <section3 topic='Encryption' anchor='encrypt'>
+      <p>
+        The &content; element is encrypted as described in the section about <link url='#protocol-message_encryption'>Message Encryption</link>.
+      </p>
+      <p>
+        Clients MUST only consider the devices on the <tt>&nsdevices;</tt> node of each recipient (i.e. including their own devices node, but excluding itself).
+      </p>
+    </section3>
+    <section3 topic='Message structure description' anchor='message-structure-description'>
+      <p>
+        An OMEMO encrypted message is specified to include an &lt;encrypted&gt; element in the <tt>&ns;</tt> namespace. It always contains two child nodes, the &lt;header&gt; and the &payload; element.
+        The &lt;header&gt; element has an attribute named 'sid' referencing the device id of the sending device and contains one or multiple &lt;keys&gt; elements, each with an attribute 'jid' of one of the recipients bare JIDs, an attribute 'dhcs_sig' containing the base64 encoded signature of the Diffie-Hellman ratchet counters as described below, as well as one or multiple &lt;key&gt; elements.
+        A &lt;key&gt; element has an attribute named 'rid' referencing the device id of the recipient device, and an attribute named 'kex' which defaults to 'false' and indicates if the enclosed encrypted message includes a key exchange, next to the two attributed 'dhc' and 'ekid' that are described below. The key and HMAC encrypted using the long-standing OMEMO session for that recipient device are encoded using base64 and placed as text content into the &lt;key&gt; element.
+        The encrypted &content; element is encoded using base64 and placed as text content into the &payload; element.
+      </p>
+      <p>A special case are <em>empty</em> messages, which are used in various places of the protocol purely to manage sessions and the ratchets. With empty messages, the step of creating and encrypting the &payload; element is skipped. Instead of encrypting key and authentication tag of the &payload; ciphertext with the Double Ratchet session, 32 zero-bytes are encrypted with the Double Ratchet session directly. The resulting OMEMOKeyExchange or OMEMOAuthenticatedMessage are put into &lt;key&gt; elements as usual, but the &payload; element is omitted altogether, so that the &lt;encrypted&gt; element only contains a &lt;header&gt;.</p>
+      <example caption='Sending a message'><![CDATA[
+<message to='juliet@capulet.lit' from='romeo@montague.lit' id='send1'>
+  <encrypted xmlns=']]>&ns;<![CDATA['>
+    <header sid='27183'>
+      <keys jid='juliet@capulet.lit' dhcs_sig='b64/encoded/data'>
+        <key rid='31415' dhc='5' ekid='b64/encoded/data'>b64/encoded/data</key>
+      </keys>
+      <keys jid='romeo@montague.lit' dhcs_sig='b64/encoded/data'>
+        <key rid='1337' dhc='2' ekid='b64/encoded/data'>b64/encoded/data</key>
+        <key kex='true' rid='12321' dhc='4' ekid='b64/encoded/data'>b64/encoded/data</key>
+        <!-- ... -->
+      </keys>
+    </header>
+    <payload>
+      base64/encoded/message/key/encrypted/content/element
+    </payload>
+  </encrypted>
+  <store xmlns='urn:xmpp:hints'/>
+</message>]]></example>
+      <p>
+        Each &lt;key&gt; element has an attribute called 'dhc', which is an unsigned integer. When encrypting and sending a message, the sender fills this attribute with the value of <tt>state.DHsc</tt> of the Double Ratchet session that belongs to the recipient device referenced by 'rid'. To fill the 'ekid' attribute, the sender first loads the value of <tt>state.ek</tt> of the Double Ratchet session that belongs to the recipient device referenced by 'rid'. The sender then calculates the SHA-256 checksum of <tt>state.ek</tt> and truncates the result to 8 bytes/64 bits. The result (which may be cached) is base64 encoded and assigned to 'ekid'. After filling all 'dhc' and 'ekid' attributes, the sender has to calculate the value of the 'dhcs_sig' attribute of each &lt;keys&gt; element. To do so, for each &lt;keys&gt; element, the sender creates a byte string <tt>jid || [(rid || ekid || dhc) || ...]</tt>, where
+      </p>
+      <ul>
+        <li>
+          <tt>(rid || ekid || dhc)</tt> is calculated for each &lt;key&gt; element:
+          <ul>
+            <li>'rid' is the value of the 'rid' attribute, encoded as four bytes in big-endian byte order.</li>
+            <li>'ekid' is the value of the 'ekid' attribute, before being base64 encoded.</li>
+            <li>'dhc' is the value of the 'dhc' attribute, encoded as four bytes in big-endian byte order.</li>
+          </ul>
+        </li>
+        <li>The byte strings <tt>(rid || ekid || dhc)</tt> are concatenated in ascending order of the corresponding 'rid' attributes.</li>
+        <li>'jid' is the value of the 'jid' attribute of the &lt;keys&gt; element, encoded into a byte sequence in UTF-8 encoding and prepended to the intermediate byte string.</li>
+      </ul>
+      <p>
+        The resulting byte string is then signed using the identity key of the sender, the (detached) signature is base64 encoded and assigned to the respective 'dhcs_sig' attribute.
+      </p>
+    </section3>
+  </section2>
+  <section2 topic='Receiving a message' anchor='usecases-receiving'>
+    <p>When an OMEMO element is received, the client MUST check whether there is a &lt;keys&gt; element with a jid attribute matching its own bare jid and an inner &lt;key&gt; element with a rid attribute matching its own device id. If this is not the case the message was not encrypted for this particular device and a warning message SHOULD be displayed instead. If such an element exists, the client checks whether the element's contents are an OMEMOKeyExchange.</p>
+    <p>If this is the case, a new session is built from this received element. The client MUST then republish their bundle information, replacing the used PreKey, such that it won't be used again by a different client. If the client already has a session with the sender's device, it MUST replace this session with the newly built session. The client MUST eventually delete the private key belonging to the PreKey after use (this is subject to the <link url='#business-rules'>Business rules</link>).</p>
+    <p>If the element's contents are an OMEMOAuthenticatedMessage, and the client has a session with the sender's device, it tries to decrypt the OMEMOAuthenticatedMessage using this session. If the decryption fails or there is no session with the sending device, a warning message SHOULD be displayed instead. Also refer to the section about recovering from broken sessions in the <link url='#business-rules'>Business Rules</link>.</p>
+    <p>
+      After either the OMEMOKeyExchange or the OMEMOAuthenticatedMessage is decrypted, the content is decrypted as described in the section about <link url='#protocol-message_decryption'>Message Decryption</link>.
+    </p>
+    <p>
+      When done processing the message, regardless of whether the decryption failed or succeeded, the recipient proceeds by validating the signature in the 'dhcs_sig' attribute of the &lt;keys&gt; element belonging to the recipient. To do so, the recipient builds the same byte string that the sender built as described in <link url='#usecases-messagesend'>Sending a message</link>, then validating the signature on that byte string with the identitiy public key of the sender. If the validation fails, no further actions are taken. If the validation succeeds, the recipient proceeds by loading the values of <tt>state.DHrc</tt> and <tt>state.ek</tt> of the Double Ratchet state that belongs to the sending device referenced by 'sid'. The recipient calculates the ekid from <tt>state.ek</tt> and proceeds to differentiate between following cases:
+    </p>
+    <ol>
+      <li>The message decryption succeeded and <tt>'dhc' &gt; state.DHrc</tt>. In that case, 'dhc' is stored in <tt>state.DHrc</tt>, replacing the previous value.</li>
+      <li>The message decryption failed, <tt>'dhc' &lt; state.DHrc</tt> and 'ekid' matches. In that case, the recipient sends an empty (encrypted) message to the sender, following the rules of <link url='#usecases-messagesend'>Sending a message</link>.</li>
+      <li>The message decryption failed, <tt>'dhc' &gt; state.DHrc + 1</tt> and 'ekid' matches. In that case, the recipient considers the current session to be broken, discards the session, replaces it with a newly created session and notifies the sender be responding with an empty (encrypted) message, following the rules of <link url='#usecases-messagesend'>Sending a message</link>.</li>
+    </ol>
+  </section2>
+  <section2 topic='Opt-out' anchor='opt-out'>
+    <p>An account can signal to a peer that it wants to stop communicating using
+    OMEMO encrypted messages and would like to proceed in plain text instead. To do
+    that any of that account’s devices sends an &lt;opt-out/&gt; element qualified
+    by the <tt>&ns;</tt> namespace to all intended recipient devices
+    inside an encrypted stanza. The element MAY contain a child element &lt;reason&gt;.
+    If a device is receiving an encrypted stanza containing an &lt;opt-out/&gt; element,
+    it SHOULD display the information, that the peer would like to receive plain text messages.
+    To prevent that the user is accidentally sending plaintext messages, the client MUST
+    block all outgoing message until the user has confirmed the switch to plaintext.
+    Any existing double ratchet sessions SHOULD remain intact. At any point any party MAY
+    revert their decision and go back to sending OMEMO encrypted messages again.</p>
+    <example caption='A client signaling that it’s account no longer wants to receive OMEMO-encrypted messages'><![CDATA[
+<content xmlns='urn:xmpp:sce:0'>
+  <payload>
+    <opt-out xmlns=']]>&ns;<![CDATA['>
+      <reason>
+        Sorry, but for compliance reasons I need a permanent,
+        server-side, record of our conversation.
+      </reason>
+    </opt-out>
+  </payload>
+</content>
+]]></example>
+  </section2>
+  <section2 topic='Group Chats' anchor='group-chats'>
+    <p>NOTE: OMEMO encrypted group chats are currently specified to work with &xep0045;. This XEP might be updated in the future to specify the usage of OMEMO in conjunction with &xep0369;.</p>
+    <p>A Multi-User Chat room that supports OMEMO MUST be configured non-anonymous and SHOULD be configured members-only.</p>
+    <p>A participant wanting to send a message to a group chat MUST first retrieve the members list and then fetch the device list for each member (via pubsub and to their real JIDs) and then subsequently fetch all bundles referenced by the device lists.</p>
+    <section3 topic='Retrieving and maintaining members list' anchor='members-list'>
+    <p>On join a participant MUST request the member list, the admin list and the owner list as described in <link url='https://xmpp.org/extensions/xep-0045.html#modifymember'><cite>XEP-0045</cite> §9.5</link>, <link url='https://xmpp.org/extensions/xep-0045.html#modifyadmin'><cite>XEP-0045</cite> §10.8</link>, and <link url='https://xmpp.org/extensions/xep-0045.html#modifyowner'><cite>XEP-0045</cite> §10.5</link> respectively. The real JIDs from those three lists MUST be combined as the recipients of OMEMO encrypted messages. This includes recipients who are currently offline. Once joined a participant MUST keep track of affiliation changes that occur in the room. This is both for removals (users getting banned or have their affiliation set to none) and users becoming members, admins or owners.</p>
+    </section3>
+    <section3 topic='Fetching devices and bundles' anchor='group-fetch'>
+    <p>Before sending a message a participant MUST explicitly fetch device lists (if not already cached) for each of the members.</p>
+    <example caption='Juliet fetching devices for Romeo and Mercutio'><![CDATA[
+<iq type='get' from='juliet@capulet.lit' to='romeo@montague.lit' id='gfetch0'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node=']]>&nsdevices;<![CDATA['/>
+  </pubsub>
+</iq>
+<iq type='get' from='juliet@capulet.lit' to='mercutio@verona.lit' id='gfetch1'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node=']]>&nsdevices;<![CDATA['/>
+  </pubsub>
+</iq>]]></example>
+    <example caption='Juliet fetches bundles for Romeo and Mercutio'><![CDATA[
+<iq type='get' from='juliet@capulet.lit' to='romeo@montague.lit' id='gfetch2'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node=']]>&nsbundles;<![CDATA['>
+      <item id='123'/>
+    <items>
+  </pubsub>
+</iq>
+<iq type='get' from='juliet@capulet.lit' to='mercutio@verona.lit' id='gfetch3'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node=']]>&nsbundles;<![CDATA['>
+      <item id='456'/>
+    <items>
+  </pubsub>
+</iq>]]></example>
+    </section3>
+    <section3 topic='Sending a message' anchor='group-send'>
+    <p>Sending a message to a group chat is similiar to sending a message in a 1:1 conversation. Instead of the &lt;header&gt; element having two &lt;keys&gt; elements (one for the recipient and one for other devices of the sender) it will contain multiple &lt;keys&gt; elements. One for each participant of the room; including, again, other devices of the sender.</p>
+    <example caption='Juliet sends a message to a group chat with Romeo and Mercutio'><![CDATA[
+<message
+    from='juliet@capulet.lit/balcony'
+    to='secret-room@conference.capulet.lit'
+    type='groupchat'>
+  <encrypted xmlns=']]>&ns;<![CDATA['>
+    <header sid='27183'>
+      <keys jid='juliet@capulet.lit' dhcs_sig='b64/encoded/data'>
+        <key rid='31415' dhc='5' ekid='b64/encoded/data'>b64/encoded/data</key>
+      </keys>
+      <keys jid='romeo@montague.lit' dhcs_sig='b64/encoded/data'>
+        <key kex='true' rid='123' dhc='7' ekid='b64/encoded/data'>b64/encoded/data</key>
+      </keys>
+      <keys jid='mercutio@verona.lit' dhcs_sig='b64/encoded/data'>
+        <key kex='true' rid='456' dhc='12' ekid='b64/encoded/data'>b64/encoded/data</key>
+      </keys>
+    </header>
+    <payload>
+      base64/encoded/message/key/encrypted/content/element
+    </payload>
+  </encrypted>
+  <store xmlns='urn:xmpp:hints'/>
+</message>
+]]></example>
+    </section3>
+  </section2>
+</section1>
+<section1 topic='Business Rules' anchor='rules'>
+  <p>Before publishing a freshly generated device id for the first time, a device MUST check whether that device id already exists, and if so, generate a new one.</p>
+  <p>Clients SHOULD NOT immediately fetch the bundle and build a session as soon as a new device is announced. Before the first message is exchanged, the contact does not know which PreKey has been used (or, in fact, that any PreKey was used at all). As they have not had a chance to remove the used PreKey from their bundle announcement, this could lead to collisions where both Alice and Bob pick the same PreKey to build a session with a specific device. As each PreKey SHOULD only be used once, the party that sends their initial OMEMOKeyExchange later loses this race condition. This means that they think they have a valid session with the contact, when in reality their messages MAY be ignored by the other end. By postponing building sessions, the chance of such issues occurring can be drastically reduced. It is RECOMMENDED to construct sessions only immediately before sending a message.</p>
+  <p>After receiving an OMEMOKeyExchange and successfully building a new session, the receiving device SHOULD automatically respond with an empty message to the source of the OMEMOKeyExchange. This is to notify the device that the session initiation was completed successfully and that the device can stop sending OMEMOKeyExchanges.</p>
+  <p>There are various reasons why decryption of an OMEMOKeyExchange or an OMEMOAuthenticatedMessage could fail. One reason is if the message was received twice and already decrypted once, in this case the client MUST ignore the decryption failure and not show any warnings/errors. In all other cases of decryption failure, clients SHOULD notify their users (if applicable), so that the users know they potentially missed a message. Clients MUST NOT react to decryption errors by initiating new sessions automatically and without user interaction, outside of the rules given in <link url='#usecases-receiving'>Receiving a message</link>.</p>
+  <p>If an OMEMOKeyExchange is received as part of a message catch-up mechanism (like &xep0313;) and used to establish a new session with the sender, the client SHOULD postpone deletion of the private key corresponding to the used PreKey until after the catch-up is completed. If this is done, the client MUST send an OMEMO encrypted message with empty SCE payload right after the key exchange is completed, to forward the ratchet and to move away from the possibly double-used PreKey. This practice can mitigate the previously mentioned race condition by preventing message loss.</p>
+  <p>Clients that support message catch-up mechanisms (like &xep0313;), SHOULD monitor message catch-ups for messages that were sent by themselves, that is by the JID and device id of the own device. When encountering such a message, the client first validates 'dhcs_sig' as described in <link url='#usecases-receiving'>Receiving a message</link>. If the validation fails, no further actions are taken. If the validation succeeds, the client checks for each &lt;key&gt; child of each &lt;keys&gt; element whether <tt>'dhc' &gt; state.DHsc</tt> and 'ekid' matches for the corresponding session. If that is the case, the recipient considers the session to be broken, discards the session, replaces it with a newly created session and notifies the corresponding receiving device referenced by 'rid' with an empty (encrypted) message, following the rules of <link url='#usecases-messagesend'>Sending a message</link>.</p>
+  <p>OMEMO's forward secrecy and backup/restore mechanisms don't play well together. Restoring old data can lead to desynchronized aka "broken" sessions. Many of OMEMO's rules aim at automatically "healing" such broken sessions, but there are edge cases where OMEMO can't automatically recover in a secure manner. Because these cases exist, clients MUST offer a way to manually replace broken sessions. It is advisable to have a session replacement option per recipient/per chat, if applicable. Otherwise, at least an application-global session reset MUST be available.</p>
+  <p>When a client receives the first message for a given ratchet key with a counter of 53 or higher, it MUST send a heartbeat message. Heartbeat messages are normal OMEMO encrypted messages where the SCE payload does not include any elements. These heartbeat messages cause the ratchet to forward, thus consequent messages will have the counter restarted from 0.</p>
+  <p>When a client receives a message from a device id that is not on the device list, it SHOULD try to retrieve that user's devices node directly to ensure their local cached version of the devices list is up-to-date.</p>
+  <p>When the user of a client deactivates OMEMO for an account or globally, the client SHOULD delete the corresponding bundles and device ids from the PEP nodes. That way other clients should stop encrypting for that account.</p>
+</section1>
+<section1 topic='Implementation Notes' anchor='impl'>
+  <section2 topic='Server side requirements' anchor='server-side'>
+    <p>While OMEMO uses a Pubsub Service (&xep0060;) on the user’s account it has more requirments than those defined in &xep0163;. The requirements are:</p>
+    <ul>
+      <li>The pubsub service MUST persist node items.</li>
+      <li>The pubsub service MUST support publishing options as defined in <link url='https://xmpp.org/extensions/xep-0060.html#publisher-publish-options'><cite>XEP-0060</cite> §7.1.5</link>.</li>
+      <li>The pubsub service MUST support 'max' as a value for the 'pubsub#persist_items' node configuration.</li>
+      <li>The pubsub service MUST support the 'open' access model for node configuration and 'pubsub#access_model' as a publish option.</li>
+    </ul>
+  </section2>
+</section1>
+<section1 topic='Security Considerations' anchor='security'>
+  <p>Clients MUST NOT use a newly built session to transmit data without user intervention. If a client were to opportunistically start using sessions for sending without asking the user whether to trust a device first, an attacker could publish a fake device for this user, which would then receive copies of all messages sent by/to this user. A client MAY use such "not (yet) trusted" sessions for decryption of received messages, but in that case it SHOULD indicate the untrusted nature of such messages to the user. This rule does not apply to <em>empty</em> messages that are used purely to transfer key material, as part of automatic session healing, heartbeat messages or automatic key exchange completion.</p>
+  <p>When prompting the user for a trust decision regarding a key, the client SHOULD present the user with a fingerprint in the form of a hex-string, QR code, or other unique representation, such that it can be compared by the user. To ensure interoperability between clients and older versions of OMEMO, the fingerprint SHOULD be chosen to be the public part of the IdentityKey in its byte-encoded Curve25519 form (see the notes on XEdDSA and the byte-encoding of public keys in the <link url="#protocol-key_exchange">X3DH protocol section</link> for details). When displaying the fingerprint as a hex-string, one way to make it easier to compare the fingerprint is to split the hex-string into 8 substrings of 8 chars each, then coloring each 8-char group using &xep0392;. Lowercase letters are recommended when displaying the fingerprint as a hex-string.</p>
+  <p>While it is RECOMMENDED that clients postpone private key deletion until after message catch-up, the X3DH standard mandates that clients should not use duplicate-PreKey sessions for sending, so clients MAY delete such keys immediately for security reasons. For additional information on potential security impacts of this decision, refer to <note>Menezes, Alfred, and Berkant Ustaoglu. "On reusing ephemeral keys in Diffie-Hellman key agreement protocols." International Journal of Applied Cryptography 2, no. 2 (2010): 154-158.</note>.</p>
+</section1>
+<section1 topic='IANA Considerations' anchor='iana'>
+  <p>This document requires no interaction with the Internet Assigned Numbers Authority (IANA).</p>
+</section1>
+<section1 topic='XMPP Registrar Considerations' anchor='registrar'>
+  <section2 topic='Protocol Namespaces' anchor='namespaces'>
+    <p>This specification defines the following XMPP namespaces:</p>
+    <ul>
+      <li>&ns;</li>
+    </ul>
+  </section2>
+  <section2 topic='Protocol Versioning' anchor='versioning'>
+    &NSVER;
+  </section2>
+</section1>
+<section1 topic='XML Schema' anchor='schema'>
+  <code><![CDATA[
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+           targetNamespace=']]>&ns;<![CDATA['
+           xmlns=']]>&ns;<![CDATA['>
+
+    <xs:element name='encrypted'>
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref='header'/>
+                <xs:element ref='payload' minOccurs='0' maxOccurs='1'/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='payload' type='xs:base64Binary'/>
+
+    <xs:element name='header'>
+        <xs:complexType>
+            <xs:sequence maxOccurs='unbounded'>
+                <xs:element ref='keys'/>
+            </xs:sequence>
+            <xs:attribute name='sid' type='xs:unsignedInt'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='keys'>
+        <xs:complexType>
+            <xs:sequence maxOccurs='unbounded'>
+                <xs:element ref='key'/>
+            </xs:sequence>
+            <xs:attribute name='jid' type='xs:string' use='required'/>
+            <xs:attribute name='dhcs_sig' type='xs:base64Binary' use='required'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='key'>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base='xs:base64Binary'>
+                    <xs:attribute name='rid' type='xs:unsignedInt' use='required'/>
+                    <xs:attribute name='kex' type='xs:boolean' default='false'/>
+                    <xs:attribute name='dhc' type='xs:unsignedInt' use='required'/>
+                    <xs:attribute name='ekid' type='xs:base64Binary' use='required'/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='devices'>
+        <xs:complexType>
+            <xs:sequence maxOccurs='unbounded'>
+                <xs:element ref='device'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='device'>
+        <xs:complexType>
+            <xs:attribute name='id' type='xs:unsignedInt' use='required'/>
+            <xs:attribute name='label' type='xs:string'/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='bundle'>
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref='spk'/>
+                <xs:element ref='spks'/>
+                <xs:element ref='ik'/>
+                <xs:element ref='prekeys'/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='spk'>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base='xs:base64Binary'>
+                    <xs:attribute name='id' type='xs:unsignedInt' use='required'/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='spks' type='xs:base64Binary'/>
+    <xs:element name='ik' type='xs:base64Binary'/>
+
+    <xs:element name='prekeys'>
+        <xs:complexType>
+            <xs:sequence maxOccurs='unbounded'>
+                <xs:element ref='pk'/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name='pk'>
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base='xs:base64Binary'>
+                    <xs:attribute name='id' type='xs:unsignedInt' use='required'/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+]]></code>
+</section1>
+<section1 topic='Protobuf Schema' anchor='protobuf-schema'>
+  <code><![CDATA[
+message OMEMOMessage {
+    required uint32 n          = 1;
+    required uint32 pn         = 2;
+    required bytes  dh_pub     = 3;
+    optional bytes  ciphertext = 4;
+}
+
+message OMEMOAuthenticatedMessage {
+    required bytes mac     = 1;
+    required bytes message = 2; // Byte-encoding of an OMEMOMessage
+}
+
+message OMEMOKeyExchange {
+    required uint32 pk_id  = 1;
+    required uint32 spk_id = 2;
+    required bytes  ik     = 3;
+    required bytes  ek     = 4;
+    required OMEMOAuthenticatedMessage message = 5;
+}
+]]></code>
+</section1>
+
+<section1 topic='Acknowledgements' anchor='ack'>
+  <p>Big thanks to Daniel Gultsch for mentoring me during the development of this protocol. Thanks to Thijs Alkemade and Cornelius Aschermann for talking through some of the finer points of the protocol with me. And lastly I would also like to thank Sam Whited, Holger Weiss, and Florian Schmaus for their input on the standard.</p>
+  <p>The authors would like to thank the Chaosdorf for hosting them during the development of version 0.4.0 of this specification.</p>
+</section1>
+</xep>
