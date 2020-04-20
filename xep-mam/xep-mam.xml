@@ -186,9 +186,9 @@
             <li>The remote JID that the stanza is to (for an outgoing message) or from (for an
             incoming message).</li>
             <li>A server-assigned UID that MUST be unpredictable and unique within the archive.</li>
-            <li>The message stanza itself. The entire original stanza SHOULD be stored, but at a
-            minimum only the &BODY; tag MUST be preserved (ie. the server might, at its
-            discretion, strip certain extensions from messages before storage).</li>
+            <li>The message stanza itself. The entire original stanza SHOULD be stored, but at a minimum only the &BODY; tag MUST
+                be preserved (ie. the server might, at its discretion, strip certain extensions from messages before storage), in
+                addition to all standard attributes of the stanza (e.g. to, from, type, id).</li>
     </ul>
     <p>Note that 'incoming' and 'outgoing' messages are viewed within the context of the archived JID, rather than the system as a whole. For example, if romeo@montegue.lit sent a message to juliet@capulet.lit, it would be an outgoing message in the context of archiving for Romeo, and an incoming message in the context of archiving for Juliet.</p>
     <section2 topic='Order of messages' anchor='archive_order'>
@@ -287,7 +287,7 @@
   <section2 topic='Filtering results' anchor='filter'>
     <p>By default all messages match a query, and filters are used to request a subset of the archived
     messages. Filters are specified in a &xep0004; data form included with the query. The hidden FORM_TYPE field
-    MUST be set to this protocol's namespace, 'urn:xmpp:mam:2'. Five further fields are defined by this
+    MUST be set to this protocol's namespace, 'urn:xmpp:mam:2'. Six further fields are defined by this
     XEP and MUST be supported by servers, though all of them are optional for the client. These fields are:</p>
     <ul>
         <li>start</li>
@@ -295,6 +295,7 @@
         <li>with</li>
         <li>before-id (*)</li>
         <li>after-id (*)</li>
+        <li>ids (*)</li>
     </ul>
 
     <p>Servers supporting fields marked with an asterisk (*) MUST advertise the disco feature 'urn:xmpp:mam:2#extended' and clients
@@ -307,7 +308,7 @@
     <section3 topic='Filtering by JID' anchor='filter-jid'>
       <p>If a 'with' field is present in the form, it contains a JID against which to match messages. The
       server MUST only return messages if they match the supplied JID. A message in a user's archive matches if the JID matches either the to or from of the message. An item in a MUC archive matches if the publisher of the item matches the JID; note that this should only be available to entities that would already have been allowed to know the publisher of the events (e.g. this could not be used by a visitor to a semi-anonymous MUC).</p>
-      <p>If the 'with' field's value is the bare JID of the archive, the server must only return results where both the 'to' and 'from' match the bare JID (either as bare or by ignoring the resource), as otherwise every message in the archive would match</p>
+      <p>To allow querying for messages the user sent to themselves, the client needs to set the 'with' attribute to the account JID. In that case, the server MUST only return results where both the 'to' and 'from' match the bare JID (either as bare or by ignoring the resource), as otherwise every message in the archive would match.</p>
       <p>If 'with' is omitted, the server MUST match all messages in the selected timespan with the query,
       regardless of the to/from addresses on each message.</p>
     <example caption='Querying for all messages to/from a particular JID'><![CDATA[
@@ -411,6 +412,26 @@
 </iq>
     ]]></example>
 
+      <p>If the client already knows the UID of one or more messages it wants to fetch, it can use
+         the 'ids' field:</p>
+
+      <example caption='Fetching a specific message from the archive'><![CDATA[
+<iq type='set' id='juliet1'>
+  <query xmlns='urn:xmpp:mam:2'>
+    <x xmlns='jabber:x:data' type='submit'>
+      <field var='FORM_TYPE' type='hidden'>
+        <value>urn:xmpp:mam:2</value>
+      </field>
+      <field var='ids'>
+        <value>28482-98726-73623</value>
+      </field>
+    </x>
+  </query>
+</iq>
+    ]]></example>
+
+      <p>If any UID requested by the client in any of the 'before-id', 'after-id' or 'ids' form fields, the server MUST return an item-not-found error in response to the query.</p>
+
     </section3>
     <section3 topic='Retrieving form fields' anchor='query-form'>
       <p>In order for the client find out about additional fields the server might support, it can send an iq stanza of type 'get' addressed to the archive like this:</p>
@@ -430,6 +451,13 @@
       <field type='jid-single' var='with'/>
       <field type='text-single' var='start'/>
       <field type='text-single' var='end'/>
+      <field type='text-single' var='before-id'/>
+      <field type='text-single' var='after-id'/>
+      <field type='list-multi' var='ids'>
+        <validate xmlns="http://jabber.org/protocol/xdata-validate" datatype="xs:string">
+          <open/>
+        </validate>
+      </field>
       <field type='text-single' var='{http://example.com/}free-text-search'/>
       <field type='text-single' var='{http://example.com/}stanza-content'/>
     </x>
@@ -437,6 +465,7 @@
 </iq>
 ]]></example>
       <p>If the client understands any of the additional fields it MAY proceed to include any of them in subsequent queries. It is not required to include any or all of the supported fields in queries.</p>
+      <p>A special note about the 'ids' field: this field is of type 'list-multi' which typically is used to allow the client to select from a provided list of options. In this case the list of all possible ids MUST NOT be provided by the server, as it is likely to be extremely large. Instead the server MUST include a &xep0122; &lt;validate/&gt; element that signals the list is open to arbitrary values provided by the client.</p>
       <p>As specified in &xep0068;, names of custom fields SHOULD use Clark notation to avoid conflicts with other extensions.</p>
       <example caption="Client uses two discovered query fields in a query"><![CDATA[
 <iq type='set' id='query4'>
@@ -575,7 +604,7 @@
     ]]></example>
     <p>Note: There is no concept of an "open query", and servers MUST be prepared to receive arbitrary page requests at any time.</p>
     <p>RSM does not define the behaviour of including both &lt;before&gt; and &lt;after&gt; in the same request. To retrieve a range of items between two known ids, use before-id and after-id in the query form instead.</p>
-    <p>If the UID contained within an &lt;after&gt; or &lt;before&gt; element is not present in the archive, the server MUST return an error in response to the query. If the server is able to determine that the UID refers to a previously archived message that has expired, it SHOULD return a 'gone' error, otherwise it MUST return 'item-not-found'. The error allows a synchronizing client to detect when a message is no longer in the archive and determine that it may have a gap in its history.</p>
+    <p>If the UID contained within an &lt;after&gt; or &lt;before&gt; element is not present in the archive, the server MUST return an item-not-found error in response to the query.</p>
       <example caption='Message id not found in archive'><![CDATA[
 <iq type='error' id='q29303'>
   <error type='cancel'>
@@ -644,42 +673,29 @@
 
 </section1>
 
-<section1 topic='Fetching a single message' anchor='single'>
-  <p>Sometimes a client may want to fetch a single message, knowing only its UID. If the server advertises the 'urn:xmpp:mam:2#extended' feature, this can be done by sending an iq of type 'get' and a &lt;item&gt; payload element in the 'urn:xmpp:mam:2' namespace, like so:</p>
+<section1 topic='Archive metadata' anchor='archive-metadata'>
+  <p>When planning a query, a client may wish to learn the current state of the archive. This includes information about the first/last entries in the archive.</p>
 
-  <example caption='Requesting a single item'><![CDATA[
-<iq type='get' id='p6PMQ2'>
-  <item xmlns='urn:xmpp:mam:2' id='5d398-28273-f7382' />
-</iq>
-]]</example>
+  <p>When the archive advertises support for 'urn:xmpp:mam:2#extended' then the archive supports queries for this metadata via an iq of type 'get' to the
+     archive's address, with a &lt;metadata/&gt; payload in the 'urn:xmpp:mam:2' namespace.</p>
 
-  <p>The server returns the message directly in the iq response, wrapped in the usual &lt;result&gt; element:</p>
-
-  <example caption='Server returns a single item response'><![CDATA[
-<iq type='result' id='p6PMQ2'>
-  <result xmlns='urn:xmpp:mam:2' id='5d398-28273-f7382'>
-    <forwarded xmlns='urn:xmpp:forward:0'>
-      <delay xmlns='urn:xmpp:delay' stamp='2010-07-10T23:09:32Z'/>
-      <message xmlns='jabber:client'
-         to='romeo@montague.lit/orchard'
-         from='juliet@capulet.lit/balcony'
-         type='chat' id='8a54s'>
-        <body>What man art thou that thus bescreen'd in night so stumblest on my counsel?</body>
-      </message>
-    </forwarded>
-  </result>
-</iq>
-]]></example>
-
-  <p>If the UID requested by the client is not present in the archive, the server MUST return an error in response to the query. If the server is able to determine that the UID refers to a previously archived message that has expired, it SHOULD return a 'gone' error, otherwise it MUST return 'item-not-found'.</p>
-
-  <example caption='Server responds that the message is no longer in the archive'><![CDATA[
-<iq type='error' id='p6PMQ2'>
-  <error type='cancel'>
-    <gone xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
-   </error>
+  <example caption='Requesting archive metadata'><![CDATA[
+<iq type='get' id='jui8921rr9'>
+  <metadata xmlns='urn:xmpp:mam:2'/>
 </iq>
     ]]></example>
+
+  <example caption='Server returns archive metadata'><![CDATA[
+<iq type='result' id='jui8921rr9'>
+  <metadata xmlns='urn:xmpp:mam:2'>
+    <start id='YWxwaGEg' timestamp='2008-08-22T21:09:04Z' />
+    <end id='b21lZ2Eg' timestamp='2020-04-20T14:34:21Z' />
+  </metadata>
+</iq>
+    ]]></example>
+
+  <p>The server response includes a &lt;metadata/&gt; element containing information about the archive. This element MUST include &lt;start/&gt; and &lt;end/&gt;
+     elements, which each have an 'id' and XEP-0082 formatted 'timestamp of the first and last messages in the archive respectively.</p>
 </section1>
 
 <section1 topic='Business Rules' anchor='business_rules'>
@@ -798,7 +814,7 @@
         <td>Required</td>
       </tr>
       <tr>
-        <td>Queries using 'before-id' and 'after-id'</td>
+        <td>Queries using 'before-id', 'after-id' or 'ids'</td>
         <td>-</td>
         <td>Required</td>
       </tr>
@@ -808,7 +824,7 @@
         <td>Required</td>
       </tr>
       <tr>
-        <td>Requesting a single item by id</td>
+        <td>Archive metadata query</td>
         <td>-</td>
         <td>Required</td>
       </tr>
@@ -847,7 +863,7 @@
 
 <section1 topic='Acknowledgements' anchor='acks'>
         <p>Many thanks to Dave Cridland, Kim Alvefur, Yann Leboulanger, Evgeny Khramtsov, Florian Schmaus, Lance Stout,
-       Waqas Hussain, Daniel Gultsch, Philipp Hörist and Jonas Schäfer for their input and feedback on this specification.</p>
+       Waqas Hussain, Daniel Gultsch, Philipp Hörist, Jonas Schäfer and Georg Lukas for their input and feedback on this specification.</p>
 </section1>
 
 </xep>
