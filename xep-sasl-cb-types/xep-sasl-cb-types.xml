@@ -50,7 +50,8 @@
 
   <p>This specification extends the SASL 'mechanism' element,
   qualified by the 'urn:ietf:params:xml:ns:xmpp-sasl' namespace, by an
-  optional attribute named 'sasl-channel-binding'. This element
+  optional attribute named 'sasl-channel-binding' qualified by the
+  'urn:xmpp:sasl-cb:0' namespace. This element
   contains one or more 'channel-binding' elements, of which each MUST
   have an attribute with the name 'type'. The value of the 'type'
   attribute SHOULD be the "Channel-binding unique prefix" of a
@@ -66,7 +67,7 @@
     <mechanism>EXTERNAL</mechanism>
     <mechanism>SCRAM-SHA-1-PLUS</mechanism>
     <mechanism>PLAIN</mechanism>
-    <sasl-channel-binding>
+    <sasl-channel-binding xmlns='urn:xmpp:sasl-cb:0'>
       <channel-binding type='tls-server-end-point'/>
       <channel-binding type='tls-exporter'/>
     </sasl-channel-binding>
