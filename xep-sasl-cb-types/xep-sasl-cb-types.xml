@@ -50,7 +50,7 @@
 
   <p>This specification extends the SASL 'mechanism' element,
   qualified by the 'urn:ietf:params:xml:ns:xmpp-sasl' namespace, by an
-  optional attribute named 'sasl-channel-binding' qualified by the
+  optional element named 'sasl-channel-binding' qualified by the
   'urn:xmpp:sasl-cb:0' namespace. This element
   contains one or more 'channel-binding' elements, of which each MUST
   have an attribute with the name 'type'. The value of the 'type'
