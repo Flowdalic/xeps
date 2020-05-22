@@ -9,7 +9,7 @@
 <xep>
 <header>
   <title>SASL Channel-Binding Type Capability</title>
-  <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
+  <abstract>This specification allows servers to annouce their supported SASL channel-binding types to clients.</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
   <status>ProtoXEP</status>
@@ -40,28 +40,34 @@
   requested a channel-binding type unsupported by the server is
   basically unspecified.</p>
 
-  <p>Hence the extension defined herein fills the gap left by
-  &rfc6120; by allowing the server the announce its supported
-  channel-binding types.</p>
+  <p>The extension defined herein fills the gap left by &rfc6120;, by
+  allowing the server the announce its supported channel-binding
+  types.</p>
 
 </section1>
 
 <section1 topic='Announcing the SASL Channel-Binding Type Capability' anchor='sasl-cb-type'>
 
-  <p>This specification extends the SASL 'mechanism' element,
-  qualified by the 'urn:ietf:params:xml:ns:xmpp-sasl' namespace, by an
-  optional element named 'sasl-channel-binding' qualified by the
-  'urn:xmpp:sasl-cb:0' namespace. This element
-  contains one or more 'channel-binding' elements, of which each MUST
-  have an attribute with the name 'type'. The value of the 'type'
-  attribute SHOULD be the "Channel-binding unique prefix" of a
-  channel-binding type registered with the &iana-cb-types;.</p>
+  <p>This protocol consists of a single optional extension element
+  named 'sasl-channel-binding' qualified by the 'urn:xmpp:sasl-cb:0'
+  namespace. The 'sasl-channel-binding' element MUST contain one or
+  more 'channel-binding' elements, of which each MUST have an
+  attribute with the name 'type'. The value of the 'type' attribute
+  SHOULD be the "Channel-binding unique prefix" of a channel-binding
+  type which was registered with the &iana-cb-types;.</p>
 
-  <p>An entity declares that it supports particular channel-binding
-  types, by listing the channel-binding types via the
-  'sasl-channel-binding' element defined herein.</p>
+  <p>A server declares that it supports particular channel-binding
+  types by listing the supported types via the 'sasl-channel-binding'
+  element defined herein. The 'sasl-channel-binding' element could
+  appear as child element to the SASL &lt;mechanisms/&gt;
+  stream-feature element, qualified by the
+  'urn:ietf:params:xml:ns:xmpp-sasl' namespace, as specified in
+  &rfc6120;. Another potential appearance of
+  &lt;sasl-channel-binding&gt; is as child element of the
+  &lt;mechanisms/&gt; stream-feature element as specified in the
+  &xep0388;.</p>
 
-  <example caption='Example &gt;mechanisms/&lt; stream feature with SASL Channel-Binding Type Capability.'><![CDATA[
+  <example caption='Example &lt;mechanisms/&gt; stream feature with SASL Channel-Binding Type Capability.'><![CDATA[
 <stream:features>
   <mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'>
     <mechanism>EXTERNAL</mechanism>
