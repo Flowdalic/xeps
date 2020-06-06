@@ -18,7 +18,7 @@
   devices.</abstract>
   &LEGALNOTICE;
   <number>0373</number>
-  <status>Experimental</status>
+  <status>Deferred</status>
   <type>Standards Track</type>
   <sig>Standards</sig>
   <approver>Council</approver>
@@ -46,6 +46,30 @@
     <email>look@my.amazin.horse</email>
     <jid>valodim@stratum0.org</jid>
   </author>
+  <revision>
+    <version>0.4.0</version>
+    <date>2018-07-30</date>
+    <initials>ps</initials>
+    <remark>Fix node name in examples</remark>
+  </revision>
+  <revision>
+    <version>0.3.3</version>
+    <date>2018-07-30</date>
+    <initials>ps</initials>
+    <remark>Improve note about OpenGPG fingerprint; editorial fixes</remark>
+  </revision>
+  <revision>
+    <version>0.3.2</version>
+    <date>2018-07-05</date>
+    <initials>ps</initials>
+    <remark>Add example and small editorial fixes</remark>
+  </revision>
+  <revision>
+    <version>0.3.1</version>
+    <date>2018-05-21</date>
+    <initials>ps</initials>
+    <remark>Fix slightly incorrect reference to RFC 4880</remark>
+  </revision>
   <revision>
     <version>0.3.0</version>
     <date>2018-04-16</date>
@@ -137,7 +161,8 @@
     <di><dt>Public-Key metadata node ("metadata node")</dt><dd>A PEP node containing metadata of the entity's public OpenPGP key.</dd></di>
     <di><dt>Public-Key data node ("data node")</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
     <di><dt>Secret-Key node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
-    <di><dt>OpenPGP v4 Fingerprint String</dt><dd>A String representing the OpenPGP v4 fingerprint of a key.</dd></di>
+    <di><dt>OpenPGP v4 Fingerprint String</dt><dd>A String representing the OpenPGP v4 fingerprint of a key. If the key consists of a master key and subkeys, this is the fingerprint of the 
+master key.</dd></di>
   </dl>
 
 </section1>
@@ -166,7 +191,7 @@
     that is, it represents either a &signcrypt;, a &sign; or a &crypt;
     extension element qualified by the 'urn:xmpp:openpgp:0'
     namespace. Note that OpenPGP's ASCII Armor is not used, instead
-    the XMPP client MUST encode the raw bytes of OpenPGP message using
+    the XMPP client MUST encode the raw bytes of the OpenPGP message using
     Base64.</p>
 
     <p>In case of a &signcrypt; element, the OpenPGP message embedded
@@ -223,21 +248,21 @@
         <td>&signcrypt;</td>
         <td>MUST have at least one</td>
         <td>MUST have exactly one</td>
-        <td>SHOULD have exaclty one</td>
+        <td>SHOULD have exactly one</td>
         <td>MUST have exactly one</td>
       </tr>
       <tr>
         <td>&sign;</td>
         <td>MAY NOT contain one</td>
-        <td>MUST have exaclty one</td>
+        <td>MUST have exactly one</td>
         <td>NOT REQUIRED</td>
         <td>MUST have exactly one</td>
       </tr>
       <tr>
         <td>&crypt;</td>
         <td>MUST have at least one</td>
-        <td>MUST have exaclty one</td>
-        <td>SHOULD have exaclty one</td>
+        <td>MUST have exactly one</td>
+        <td>SHOULD have exactly one</td>
         <td>MUST have exactly one</td>
       </tr>
     </table>
@@ -281,7 +306,7 @@
   <p>Two PEP node types are invovled: A "medatata node" is used to store meta information about
   OpenPGP keys used by an entity while the actual public keys are stored in "data nodes".</p>
 
-  <section2 topic='The OpenPGP Public-Key Data Node' anchor='annoucning-pubkey'>
+  <section2 topic='The OpenPGP Public-Key Data Node' anchor='announcing-pubkey'>
 
     <p>The public key data, as specified in <cite>RFC 4880</cite>, is stored in a PEP data
     node. Note that OpenPGP's ASCII Armor is not used, instead the XMPP client MUST encode the
@@ -318,7 +343,7 @@
   <section2 topic='The OpenPGP Public Key Metadata Node' anchor='announcing-pubkey-list'>
 
     <p>To update the public keys used by an entity, the metadata node is updated. Before adding a
-    OpenPGP key ID to the metadata node, the publisher MUST ensure that the public key is available
+    OpenPGP key fingerprint to the metadata node, the publisher MUST ensure that the public key is available
     at the corresponding data node.</p>
 
     <p> The ID of the metadata node is 'urn:xmpp:openpgp:0:public-keys'. It contains a
@@ -350,13 +375,52 @@
 
   </section2>
 
-  <section2 topic='Discovering Public Keys' anchor='discover-pubkey'>
+  <section2 topic='Discovering Public Keys of a User' anchor='discover-pubkey-list'>
 
     <p>In order to discover the OpenPGP public keys, the interested entity first queries a remote
-    entities metadata note to learn about its currently annouced OpenPGP keys. Then the public
-    OpenPGP key(s) can be retrieved by querying the data node for a specific fingerprint.</p>
+    entities metadata note to learn about its currently annouced OpenPGP keys.</p>
 
-    <example caption='Requesting a OpenPGP public key from an XMPP entity.'><![CDATA[
+    <example caption='Requesting the metadata node of a user.'><![CDATA[
+<iq from='romeo@example.org/orchard'
+    to='juliet@example.org'
+    type='get'
+    id='getmeta'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node='urn:xmpp:openpgp:0:public-keys'/>
+  </pubsub>
+</iq>]]></example>
+
+    <example caption='Personal Eventing Protocol result containing the metadata node of the user.'><![CDATA[
+<iq from='juliet@example.org'
+    to='romeo@example.org/orchard'
+    type='result'
+    id='getmeta'>
+  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
+    <items node='urn:xmpp:openpgp:0:public-keys'>
+      <item>
+        <public-keys-list xmlns='urn:xmpp:openpgp:0'>
+          <pubkey-metadata
+            v4-fingerprint='1357B01865B2503C18453D208CAC2A9678548E35'
+            date='2018-03-01T15:26:12Z'
+            />
+          <pubkey-metadata
+            v4-fingerprint='67819B343B2AB70DED9320872C6464AF2A8E4C02'
+            date='1953-05-16T12:00:00Z'
+            />
+        </public-keys-list>
+      </item>
+    </items>
+  </pubsub>
+</iq>]]></example>
+
+  </section2>
+
+  <section2 topic='Requesting Public Keys' anchor='discover-pubkey'>
+
+    <p>OpenPGP key(s) can be retrieved by querying the data node for a specific
+    fingerprint.</p>
+
+    <example caption='Requesting an OpenPGP public key from an XMPP entity.'><![CDATA[
 <iq from='romeo@example.org/orchard'
     to='juliet@example.org'
     type='get'
@@ -424,12 +488,12 @@
     owner is whitelisted as described in &xep0223;. The secret key is
     additionally encrypted.</p>
 
-    <section2 topic='Required PEP features'>
+    <section2 topic='Required PEP features' anchor='synchro-pep-requirements'>
 
       <p>The used PEP server MUST support PEP and the whitelist access
       model. It SHOULD also support persistent items.</p>
 
-        <section3 topic='Discovering support'>
+        <section3 topic='Discovering support' anchor='synchro-pep-discover-support'>
 
           <example caption='Account owner queries server regarding protocol support'><![CDATA[
 <iq from='juliet@capulet.lit/balcony'
@@ -480,7 +544,7 @@
       clients first need to discover and verify the node for the correct
       settings.</p>
 
-      <section3 topic='Client Sends Request'>
+      <section3 topic='Client Sends Request' anchor='client-sends-secret-request'>
 
   <example caption='Requesting the user&apos;s secret key.'><![CDATA[
 <iq from='romeo@example.org/orchard'
@@ -488,13 +552,13 @@
     type='get'
     id='getsecret'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <items node='urn:xmpp:openpgp:secret-key:0'
+    <items node='urn:xmpp:openpgp:0:secret-key'
            max_items='1'/>
   </pubsub>
 </iq>]]></example>
 
       </section3>
-      <section3 topic='PEP Service Success Response'>
+      <section3 topic='PEP Service Success Response' anchor='client-receives-secret-response'>
 
   <example caption='Personal Eventing Protocol result containing the requested secret key.'><![CDATA[
 <iq from='juliet@example.org'
@@ -502,7 +566,7 @@
     type='result'
     id='getsecret'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <items node='urn:xmpp:openpgp:secret-key:0'>
+    <items node='urn:xmpp:openpgp:0:secret-key'>
       <item>
         <secretkey xmlns='urn:xmpp:openpgp:0'>
             BASE64_OPENPGP_ENCRYPTED_SECRET_KEY
@@ -513,7 +577,7 @@
 </iq>]]></example>
 
       </section3>
-      <section3 topic='PEP Node Does Not Exist Response'>
+      <section3 topic='PEP Node Does Not Exist Response' anchor='error-pep-node-inexistent'>
 
         <p>If the node does not exist the service will return an &IQ;
         error indicating the item-not-found error condition. The
@@ -531,7 +595,7 @@
 
       </section3>
 
-      <section3 topic='PEP Not Supported'>
+      <section3 topic='PEP Not Supported' anchor='pep-not-supported'>
 
         <p>The service will return a service-unavailable error &IQ; if
         it does not support PEP.</p>
@@ -549,14 +613,14 @@
       </section3>
 
     </section2>
-    <section2 topic='Creating the Secret Key PEP Node'>
+    <section2 topic='Creating the Secret Key PEP Node' anchor='create-secret-node'>
 
       <example caption='Client creates secret key PEP node'><![CDATA[
 <iq type='set'
     from='juliet@example.org/balcony'
     id='create-node'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <create node='urn:xmpp:openpgp:secret-key:0'/>
+    <create node='urn:xmpp:openpgp:0:secret-key'/>
     <configure>
       <x xmlns='jabber:x:data' type='submit'>
         <field var='FORM_TYPE' type='hidden'>
@@ -581,6 +645,10 @@
       bare JID of the user, who created the node, with an affiliation as
       'owner'.</p>
 
+    </section2>
+
+    <section2 topic='Encrypting the Secret Key Backup' anchor='backup-encryption'>
+
       <p>In order to set a new secret key, clients store the encrypted
       secret key as Base64 encoded raw OpenPGP message within an
       &lt;secretkey/&gt; element qualified by the 'urn:xmpp:openpgp:0'
@@ -590,8 +658,8 @@
         <li>All secret keys that should be included in the backup MUST
         be concatenated in their transferable key format (<cite>RFC
         4880</cite> <link
-        url='http://tools.ietf.org/html/rfc4880#section-11.1'>§
-        11.1</link>).
+        url='http://tools.ietf.org/html/rfc4880#section-11.2'>§
+        11.2</link>).
         </li>
         <li>A backup code is generated from secure random: The backup
         code consists of 24 upper case characters from the Latin
@@ -868,7 +936,7 @@
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
   <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan, Marc Laporte, Georg
-  Lukas, Adithya Abraham Philip, Brian Cully and fiaxh for their feedback.</p>
+  Lukas, Adithya Abraham Philip, Brian Cully, fiaxh and Paul Schaub for their feedback.</p>
 
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
