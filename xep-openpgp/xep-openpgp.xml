@@ -161,8 +161,9 @@
     <di><dt>Public-Key metadata node ("metadata node")</dt><dd>A PEP node containing metadata of the entity's public OpenPGP key.</dd></di>
     <di><dt>Public-Key data node ("data node")</dt><dd>A PEP node containing an entity's public OpenPGP key.</dd></di>
     <di><dt>Secret-Key node</dt><dd>A PEP node containing an entity's encrypted secret OpenPGP key.</dd></di>
-    <di><dt>OpenPGP v4 Fingerprint String</dt><dd>A String representing the OpenPGP v4 fingerprint of a key. If the key consists of a master key and subkeys, this is the fingerprint of the 
-master key.</dd></di>
+    <di><dt>OpenPGP v4 Fingerprint String</dt><dd>A String representing the OpenPGP v4 fingerprint
+    of a key. If the key consists of a primary key and subkeys, this is the fingerprint of the
+    primary key.</dd></di>
   </dl>
 
 </section1>
