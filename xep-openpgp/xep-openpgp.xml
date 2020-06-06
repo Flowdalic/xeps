@@ -660,7 +660,11 @@
         be concatenated in their transferable key format (<cite>RFC
         4880</cite> <link
         url='http://tools.ietf.org/html/rfc4880#section-11.2'>§
-        11.2</link>).
+        11.1</link>). The octet indicating string-to-key usage conventions
+        MUST be set to zero in the corresponding Secret-Key Packet(s)
+        (<cite>RFC 4880</cite> <link url='https://tools.ietf.org/html/rfc4880#section-5.5.3'>§ 5.5.3</link>).
+        The secret key material will be encrypted in step 4 using a
+        Symmetric-Key Encrypted Session Key Packet.
         </li>
         <li>A backup code is generated from secure random: The backup
         code consists of 24 upper case characters from the Latin
@@ -937,7 +941,8 @@
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
   <p>Thanks to Emmanuel Gil Peyrot, Sergei Golovan, Marc Laporte, Georg
-  Lukas, Adithya Abraham Philip, Brian Cully, fiaxh and Paul Schaub for their feedback.</p>
+  Lukas, Adithya Abraham Philip, Brian Cully, fiaxh, Paul Schaub and
+  Philipp Hörist for their feedback.</p>
 
   <p>The first draft of this specification was worked out and written
   on the wall of the 'Kymera' room in one of Google's buildings by the
