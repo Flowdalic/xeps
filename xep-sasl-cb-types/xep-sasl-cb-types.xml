@@ -97,14 +97,14 @@
   support channel-binding" (n), "I think you do not support
   channel-binding, but I do" (y), or, "Let us use channel-binding type
   X" (p). Clients using the information provided via the mechanisms
-  specified herein MAY want to indicate to the server that they
-  do not support channel-binding (even if they do), if no mutual supported
+  specified herein MAY want to indicate to the server, that they do
+  not support channel-binding (even if they do) if no mutual supported
   channel-binding type was found. The only alternative is that the
   client signals the server that he believes channel binding is not
   supported by the server. But this may cause the server to terminate
-  the connection because this would indicate an active MITM attack
-  (i.e., an attacker stripping the SASL mechanisms supporting channel
-  binding from the mechanism list).</p>
+  the connection because it indicates a potential ongoing MITM attack:
+  i.e., an attacker stripping the SASL mechanisms supporting channel
+  binding from the mechanism list.</p>
 
 </section1>
 
