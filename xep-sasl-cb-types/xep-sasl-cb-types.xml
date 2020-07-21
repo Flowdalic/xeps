@@ -116,13 +116,17 @@
   vector. An active attacker could replace the
   &lt;sasl-channel-binding;&gt; list with channel bindings unlikely
   (or impossible) to be supported by the client. If the client is
-  configured to use non channel binding SASL mechanisms as fallback,
+  configured to use non channel-binding SASL mechanisms as fallback,
   then this could be used to downgrade the connection security.</p>
 
-  <p>Clients with the highest security demands should not fall back to
-  non channel-binding SASL mechanisms and "pin" the announced channel
-  bindings types by a service. Clients may want to allow the pinned
-  channel-binding types to be upgraded to stronger ones.</p>
+  <p>Depending on the security policy of the application, clients may
+  refrain from falling back to non channel-binding SASL mechanisms in
+  case no mutual supported channel-binding type could be determined.
+  Alternatively, they may try channel-binding with a supported type
+  nevertheless. In an effort to mitigate the attack describe above, clients
+  could "pin" the announced channel bindings types by a service. In that
+  case, implementations may want to allow the set of pinned channel-binding
+  types to be extended to stronger ones.</p>
 
 </section1>
 
