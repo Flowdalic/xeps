@@ -88,11 +88,41 @@
 
 </section1>
 
+<section1 topic='Interaction with SASL mechanisms' anchor='sasl-mech-interaction'>
+
+  <p>Some SASL mechanisms with channel-binding support provide the
+  server about its presumed abilities to prevent Man in the Middle
+  (MITM) attacks. An example for this is &rfc5802;, which specifies
+  the gs2-cbind-flag. The flag has a tristate value of "I don't
+  support channel-binding" (n), "I think you do not support
+  channel-binding, but I do" (y), or, "Let us use channel-binding type
+  X" (p). Clients using the information provided via the mechanisms
+  specified herein MAY want to indicate to the server that they
+  do not support channel-binding (even if they do), if no mutual supported
+  channel-binding type was found. The only alternative is that the
+  client signals the server that he believes channel binding is not
+  supported by the server. But this may cause the server to terminate
+  the connection because this would indicate an active MITM attack
+  (i.e., an attacker stripping the SASL mechanisms supporting channel
+  binding from the mechanism list).</p>
+
+</section1>
+
 <section1 topic='Security Considerations' anchor='security'>
 
-  <p>The author belives that this document itself does not yield any
-  new security considerations.<note>Hopefully somebody will correct him, in
-  case he is wrong.</note></p>
+  <p>If a client signals to the server that he does not support
+  channel binding, because it found no mutual supported
+  channel-binding types, then this introduces a possible MITM attack
+  vector. An active attacker could replace the
+  &lt;sasl-channel-binding;&gt; list with channel bindings unlikely
+  (or impossible) to be supported by the client. If the client is
+  configured to use non channel binding SASL mechanisms as fallback,
+  then this could be used to downgrade the connection security.</p>
+
+  <p>Clients with the highest security demands should not fall back to
+  non channel-binding SASL mechanisms and "pin" the announced channel
+  bindings types by a service. Clients may want to allow the pinned
+  channel-binding types to be upgraded to stronger ones.</p>
 
 </section1>
 
@@ -117,7 +147,9 @@
 <section1 topic='Acknowledgements' anchor='acknowledgements'>
 
   <p>Thanks to Sam Whited for the discussion about the underlying
-  issue and incentivizing me to come up with this extension.</p>
+  issue and incentivizing me to come up with this extension. Further
+  thanks goes to Ruslan N. Marchenko for pointing out the possible
+  MITM attack vector.</p>
 
 </section1>
 
