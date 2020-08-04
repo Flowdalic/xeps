@@ -24,6 +24,15 @@
   <shortname>sasl-cb-types</shortname>
   &flow;
   <revision>
+    <version>0.2.0</version>
+    <date>2020-08-04</date>
+    <initials>fs</initials>
+    <remark>
+	  Discuss interaction with SASL mechanism and add security considerations.
+	  Recommend implementation of tls-server-end-point.
+	</remark>
+  </revision>
+  <revision>
     <version>0.1.0</version>
     <date>2020-06-14</date>
     <initials>XEP Editor (jsc)</initials>
@@ -105,9 +114,9 @@
   via &lt;sasl-channel-binding/&gt; MAY want to indicate to the server
   that they do not support channel-binding (even if they do) if no
   mutual supported channel-binding type was found. The only alternative
-  is that the client signals the server that he believes that the server
+  is, that the client signals the server that he believes that the server
   does not support channel binding. But this may cause the server to
-  terminate the connection because it indicates a potential ongoing
+  terminate the connection, because it indicates a potential ongoing
   SASL-mechanism stripping attack.</p>
 
 </section1>
