@@ -47,14 +47,14 @@
     <jid>valodim@stratum0.org</jid>
   </author>
   <revision>
-    <version>0.4.1</version>
+    <version>0.5.0</version>
     <date>2020-06-19</date>
     <initials>fs</initials>
     <remark>
       <ul>
         <li>Use RFC 4880 terminology: it is "primary key", not "master key".</li>
         <li>Clarify encryption of secret key material.</li>
-        <li>Move the information from the 'date' attribute in the item ID.</li>
+        <li>Move the information from the 'date' attribute into the item ID.</li>
       </ul>
     </remark>
   </revision>
