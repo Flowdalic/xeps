@@ -1,108 +1,139 @@
-%%%
-Title = "The Hashed Token SASL Mechanism"
-category = "exp"
-docName = "draft-schmaus-kitten-sasl-ht-08-SNAPSHOT"
-ipr= "trust200902"
-area = "Internet"
-workgroup = "Common Authentication Technology Next Generation"
+---
+title: "The Hashed Token SASL Mechanism"
+docName: "draft-schmaus-kitten-sasl-ht-08-SNAPSHOT"
+date: 2022-10-04
 
-date = 2019-11-01T12:00:01Z
+ipr: "trust200902"
+submissiontype: independent
+area: "Internet"
+wg: "Common Authentication Technology Next Generation"
+cat: "exp"
 
-[[author]]
-initials="F."
-surname="Schmaus"
-fullname="Florian Schmaus"
-organization="University of Erlangen-Nuremberg"
- [author.address]
- email = "schmaus@cs.fau.de"
+author:
+ -
+   name: Florian Schmaus
+   organization: Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)
+   email: flow@cs.fau.de
+ -
+   name: Christoph Egger
+   organization: Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)
+   email: egger@cs.fau.de
 
-[[author]]
-initials="C."
-surname="Egger"
-fullname="Christoph Egger"
-organization="University of Erlangen-Nuremberg"
- [author.address]
- email = "egger@cs.fau.de"
-%%%
+normative:
+  RFC2104:
+  RFC2119:
+  RFC3629:
+  RFC4086:
+  RFC4422:
+  RFC5056:
+  RFC5234:
+  RFC5246:
+  RFC5280:
+  RFC5929:
+  RFC6125:
+  RFC6920:
+  RFC7627:
+  RFC8174:
+  RFC8446:
+  iana-hash-alg:
+    title: "IANA Named Information Hash Algorithm Registry"
+    author:
+      name: "Nicolas Williams"
+      org: IANA
+    date: 2010
+    target: https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg
+  iana-cbt:
+    title: "IANA Channel-Binding Types"
+    author:
+      name: "Nicolas Williams"
+      org: IANA
+    date: 2010
+    target: https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml
 
-.# Abstract
+informative:
+  RFC5802:
+  RFC6120:
+  XEP-0397:
+    title: "XEP-0397: Instant Stream Resumption"
+    author:
+      name: "Florian Schmaus"
+    date: 2018
+    target: https://xmpp.org/extensions/xep-0397.html
+
+--- abstract
 
 This document specifies the family of Hashed Token SASL mechanisms which enable a proof-of-possession-based authentication scheme and are meant to be used for quick re-authentication of a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
 The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
 The SASL mechanism specified herin further provides hash agility, mutual authentication and is secured by channel binding.
 
-{mainmatter}
+--- middle
 
 # Introduction
 
-This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) [@!RFC4422] mechanisms, which enable a proof-of-possession-based authentication scheme.
+This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) {{RFC4422}} mechanisms, which enable a proof-of-possession-based authentication scheme.
 The HT mechanism is designed to be used with short-lived, exclusively ephemeral tokens, called SASL-HT tokens, and allow for quick, one round-trip, re-authentication of a previous session.
 
 Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) being secured by channel binding.
 
-Clients are supposed to request SASL-HT tokens from the server after being authenticated using a "strong" SASL mechanism like SCRAM [@RFC5802].
+Clients are supposed to request SASL-HT tokens from the server after being authenticated using a "strong" SASL mechanism like SCRAM {{RFC5802}}.
 Hence a typical sequence of actions using HT may look like the following:
 
-F> ~~~
-F> A) Client authenticates using a strong mechanism (e.g., SCRAM)
-F> B) Client requests secret SASL-HT token
-F> C) Service returns SASL-HT token
-F>    <normal client-server interaction here>
-F> D) Connection between client and server gets interrupted,
-F>    for example because of a WiFi ↔ GSM switch
-F> E) Client resumes the previous session using HT and token from C)
-F> F) Service revokes the successfully used SASL-HT token
-F>    [goto B]
-F> ~~~
-Figure: Example sequence using the Hashed Token (HT) SASL mechanism
+~~~
+A) Client authenticates using a strong mechanism (e.g., SCRAM)
+B) Client requests secret SASL-HT token
+C) Service returns SASL-HT token
+   <normal client-server interaction here>
+D) Connection between client and server gets interrupted,
+   for example because of a WiFi ↔ GSM switch
+E) Client resumes the previous session using HT and token from C)
+F) Service revokes the successfully used SASL-HT token
+   [goto B]
+~~~
+{: figure name="Example sequence using the Hashed Token (HT) SASL mechanism" }
 
 The HT mechanism requires an accompanying, application protocol specific, extension, which allows clients to requests a new SASL-HT token (see [Section 5](#requirements-for-the-applicationprotocol-extension)).
-One example for such an application protocol specific extension based on HT is [@XEP-0397].
-This XMPP [@RFC6120] extension protocol allows, amongst other things, B) and C),
+One example for such an application protocol specific extension based on HT is {{XEP-0397}}.
+This XMPP {{RFC6120}} extension protocol allows, amongst other things, B) and C),
 
 Since the SASL-HT token is not salted, and only one hash iteration is used, the HT mechanism is not suitable to protect long-lived shared secrets (e.g. "passwords").
-You may want to look at [@RFC5802] for that.
+You may want to look at {{RFC5802}} for that.
 
 ## Conventions and Terminology
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-"MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they
-appear in all capitals, as shown here.
+{::boilerplate bcp14+}
 
 ## Applicability
 
-Because this mechanism transports information that should not be controlled by an attacker, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see [@!RFC5246]), or over similar integrity-protected and authenticated channels.
+Because this mechanism transports information that should not be controlled by an attacker, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see {{RFC5246}}), or over similar integrity-protected and authenticated channels.
 Also, the application protcol specific extension which requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
 
-Also, when TLS is used, the client **MUST** successfully validate the server's certificate ([@!RFC5280], [@!RFC6125]).
+Also, when TLS is used, the client **MUST** successfully validate the server's certificate ({{RFC5280}}, {{RFC6125}}).
 
 The family of HT mechanisms is not applicable for proxy authentication since they can not carry an authorization identity string (authzid).
 
 # The HT Family of Mechanisms
 
-Each mechanism in this family differs by choice of the hash algorithm and the choice of the channel binding [@!RFC5929] type.
+Each mechanism in this family differs by choice of the hash algorithm and the choice of the channel binding {{RFC5929}} type.
 
 An HT mechanism name is a string beginning with "HT-" followed by the capitalised name of the used hash, followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
 
 Hence each HT mechanism has a name of the following form:
 
-F> ~~~
-F> HT-<hash-alg>-<cb-type>
-F> ~~~
+~~~
+HT-<hash-alg>-<cb-type>
+~~~
 
-Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" [@!iana-hash-alg] as specified in [@!RFC6920], and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
 In the case of 'ENDP', the tls-server-end-point channel binding type is used.
 In the case of 'UNIQ', the tls-unique channel binding type is used.
-Valid channel binding types are defined in the IANA "Channel-Binding Types" registry [@!iana-cbt] as specified in [@!RFC5056].
+Valid channel binding types are defined in the IANA "Channel-Binding Types" registry {{iana-cbt}} as specified in {{RFC5056}}.
 
 cb-type   | Channel Binding Type
 ------|-----------------------
 ENDP  | tls-server-end-point
 UNIQ  | tls-unique
-Table: Mapping of cb-type to Channel Binding Types
+{: title="Mapping of cb-type to Channel Binding Types" }
 
 The following table lists the HT SASL mechanisms registered by this document.
 
@@ -112,13 +143,13 @@ HT-SHA-512-ENDP     | SHA-512             | tls-server-end-point
 HT-SHA-512-UNIQ     | SHA-512             | tls-unique
 HT-SHA3-512-ENDP    | SHA3-512            | tls-server-end-point
 HT-SHA-256-UNIQ     | SHA-256             | tls-unique
-Table: Defined HT SASL mechanisms
+{: title="Defined HT SASL mechanisms" }
 
 # The HT Authentication Exchange
 
 The mechanism consists of a simple exchange of precisely two messages between the initiator and responder.
 
-The following syntax specifications use the Augmented Backus-Naur form (ABNF) notation as specified in [@!RFC5234].
+The following syntax specifications use the Augmented Backus-Naur form (ABNF) notation as specified in {{RFC5234}}.
 
 ## Initiator First Message
 
@@ -143,7 +174,7 @@ UTF4   = %xF0 %x90-BF 2(UTF0) / %xF1-F3 3(UTF0) /
 UTF0   = %x80-BF
 ~~~
 
-The initiator first message starts with the authentication identity (authcid, see[@!RFC4422]) as UTF-8 [@!RFC3629] encoded string.
+The initiator first message starts with the authentication identity (authcid, see{{RFC4422}}) as UTF-8 {{RFC3629}} encoded string.
 It is followed by initiator-hashed-token separated by as single null octet.
 
 The value of the initiator-hashed-token is defined as follows:
@@ -152,9 +183,9 @@ The value of the initiator-hashed-token is defined as follows:
 initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
 ~~~
 
-HMAC() is the function defined in [@!RFC2104] with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as a shared secret between initiator and responder.
+HMAC() is the function defined in {{RFC2104}} with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string which acts as a shared secret between initiator and responder.
 
-The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in [@!RFC8446].
+The initiator-msg **MAY** be included in TLS 1.3 0-RTT early data, as specified in {{RFC8446}}.
 If this is the case, then the initiating entity **MUST NOT** include any further application protocol payload in the early data besides the HT initiator-msg and potential required framing of the SASL profile.
 The responder **MUST** abort the SASL authentication if the early data contains additional application protocol payload.
 
@@ -191,7 +222,7 @@ The initiating entity **MUST** verify the responder-msg to achieve mutual authen
 
 # Compliance with SASL Mechanism Requirements
 
-This section describes compliance with SASL mechanism requirements specified in Section 5 of [@!RFC4422].
+This section describes compliance with SASL mechanism requirements specified in Section 5 of {{RFC4422}}.
 
 1.   "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA-3-512-ENDP" and "HT-SHA-3-512-UNIQ".
 2.   Definition of server-challenges and client-responses:
@@ -201,7 +232,7 @@ This section describes compliance with SASL mechanism requirements specified in 
 4.   HT does not offer any security layers (HT offers channel binding instead).
 5.   HT does not protect the authorization identity.
 
-# Requirements for the Application-Protocol Extension 
+# Requirements for the Application-Protocol Extension {#requirements-for-the-applicationprotocol-extension}
 
 It is **REQUIRED** that the application-protocol specific extension provides a mechanism to request a SASL-HT token in form of a Unicode string.
 The returned token **MUST** have been newly generated by a cryptographically secure random number generator and MUST contain at least 128 bit of entropy.
@@ -212,15 +243,15 @@ This allows pinning the token to a SASL mechanism, which increases the security 
 
 # Security Considerations
 
-To be secure, the HT mechanism **MUST** be used over a TLS channel that has had the session hash extension [@!RFC7627] negotiated, or session resumption **MUST NOT** have been used.
+To be secure, the HT mechanism **MUST** be used over a TLS channel that has had the session hash extension {{RFC7627}} negotiated, or session resumption **MUST NOT** have been used.
 
 It is **RECOMMENDED** that implementations periodically require a full authentication using a strong SASL mechanism which does not use the SASL-HT token.
 
-It is of vital importance that the SASL-HT token is generated by a cryptographically secure random generator. See [@!RFC4086] for more information about Randomness Requirements for Security.
+It is of vital importance that the SASL-HT token is generated by a cryptographically secure random generator. See {{RFC4086}} for more information about Randomness Requirements for Security.
 
 # IANA Considerations
 
-IANA has added the following family of SASL mechanisms to the SASL Mechanism registry established by [@!RFC4422]:
+IANA has added the following family of SASL mechanisms to the SASL Mechanism registry established by {{RFC4422}}:
 
 ~~~
 To: iana@iana.org
@@ -236,44 +267,17 @@ IETF SASL WG <kitten@ietf.org>
 Intended usage: COMMON
 Owner/Change controller: IESG <iesg@ietf.org>
 Note: Members of this family MUST be explicitly registered
-using the "IETF Review" [@!RFC5226] registration procedure.
+using the "IETF Review" {{RFC5226}} registration procedure.
 Reviews MUST be requested on the Kitten WG mailing list
 <kitten@ietf.org> (or a successor designated by the responsible
 Security AD).
 ~~~
 
-<reference anchor='iana-hash-alg' target='https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg'>
-    <front>
-        <title>IANA Named Information Hash Algorithm Registry</title>
-        <author initials='N.' surname='Williams' fullname='Nicolas Williams'>
-            <organization>IANA</organization>
-        </author>
-        <date year='2010'/>
-    </front>
-</reference>
 
-<reference anchor='iana-cbt' target='https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml'>
-    <front>
-        <title>IANA Channel-Binding Types</title>
-        <author initials='N.' surname='Williams' fullname='Nicolas Williams'>
-            <organization>IANA</organization>
-        </author>
-        <date year='2010'/>
-    </front>
-</reference>
-
-<reference anchor='XEP-0397' target='https://xmpp.org/extensions/xep-0397.html'>
-    <front>
-        <title>XEP-0397: Instant Stream Resumption</title>
-        <author initials='F.' surname='Schmaus' fullname='Florian Schmaus'>
-        </author>
-        <date year='2018'/>
-    </front>
-</reference>
-
-{backmatter}
+--- back
 
 # Acknowledgments
+{:numbered="false"}
 
 This document benefited from discussions on the KITTEN WG mailing list.
 The authors would like to especially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.

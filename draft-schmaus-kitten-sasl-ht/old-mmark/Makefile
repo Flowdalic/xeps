@@ -14,8 +14,6 @@ SNAPSHOT_HTML := $(filter %-SNAPSHOT.html, $(RFCS_HTML))
 IDNITS_OUT_TAG := idnits-out
 RFCS_IDNITS_OUT := $(patsubst %.txt, %.$(IDNITS_OUT_TAG).txt, $(NON_SNAPSHOT_RFCS_TXT))
 
-RFC_XML_VER ?= 3
-
 all: $(RFCS_TXT) $(RFCS_HTML)
 
 clean:
@@ -35,10 +33,10 @@ lint-idnits-latest-release: $(lastword $(NON_SNAPSHOT_RFCS_TXT))
 	idnits --verbose $< > $@
 
 %.txt: %.xml
-	xml2rfc --v$(RFC_XML_VER) --text $<
+	xml2rfc --text $<
 
 %.html: %.xml
-	xml2rfc --v$(RFC_XML_VER) --html $<
+	xml2rfc --html $<
 
 %.xml: %.md
-	kramdown-rfc --v$(RFC_XML_VER) $< > $@
+	mmark -xml2 -page $< > $@
