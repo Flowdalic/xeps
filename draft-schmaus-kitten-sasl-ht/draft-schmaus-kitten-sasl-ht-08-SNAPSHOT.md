@@ -33,6 +33,7 @@ normative:
   RFC6920:
   RFC7627:
   RFC8446:
+  RFC9266:
   iana-hash-alg:
     title: "IANA Named Information Hash Algorithm Registry"
     author:
@@ -122,18 +123,20 @@ Hence each HT mechanism has a name of the following form:
 HT-<hash-alg>-<cb-type>
 ~~~
 
-Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP' or 'UNIQ' denoting the channel binding type.
+Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP', 'UNIQ', or 'EXPR' denoting the channel binding type.
 In the case of 'ENDP', the tls-server-end-point channel binding type is used.
 In the case of 'UNIQ', the tls-unique channel binding type is used.
+In the case of 'EXPR', the tls-exporter {{RFC9266}} channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry {{iana-cbt}} as specified in {{RFC5056}}.
 
 cb-type | Channel Binding Type
 --------|-----------------------
 ENDP    | tls-server-end-point
 UNIQ    | tls-unique
+EXPR    | tls-exporter
 {: title="Mapping of cb-type to Channel Binding Types" }
 
-The following table lists the HT SASL mechanisms registered by this document.
+The following table lists some examples of HT SASL mechanisms registered by this document.
 
 Mechanism Name      | HT Hash Algorithm   | Channel-binding unique prefix
 --------------------|---------------------|------------------------------
@@ -141,7 +144,7 @@ HT-SHA-512-ENDP     | SHA-512             | tls-server-end-point
 HT-SHA-512-UNIQ     | SHA-512             | tls-unique
 HT-SHA3-512-ENDP    | SHA3-512            | tls-server-end-point
 HT-SHA-256-UNIQ     | SHA-256             | tls-unique
-{: title="Defined HT SASL mechanisms" }
+{: title="Examples of HT SASL mechanisms" }
 
 # The HT Authentication Exchange
 
