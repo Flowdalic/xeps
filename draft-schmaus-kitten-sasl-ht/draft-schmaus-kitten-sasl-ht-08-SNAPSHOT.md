@@ -127,10 +127,10 @@ In the case of 'ENDP', the tls-server-end-point channel binding type is used.
 In the case of 'UNIQ', the tls-unique channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry {{iana-cbt}} as specified in {{RFC5056}}.
 
-cb-type   | Channel Binding Type
-------|-----------------------
-ENDP  | tls-server-end-point
-UNIQ  | tls-unique
+cb-type | Channel Binding Type
+--------|-----------------------
+ENDP    | tls-server-end-point
+UNIQ    | tls-unique
 {: title="Mapping of cb-type to Channel Binding Types" }
 
 The following table lists the HT SASL mechanisms registered by this document.
