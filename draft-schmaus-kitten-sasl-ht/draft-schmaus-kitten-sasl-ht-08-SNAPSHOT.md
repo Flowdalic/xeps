@@ -21,7 +21,6 @@ author:
 
 normative:
   RFC2104:
-  RFC2119:
   RFC3629:
   RFC4086:
   RFC4422:
@@ -33,7 +32,6 @@ normative:
   RFC6125:
   RFC6920:
   RFC7627:
-  RFC8174:
   RFC8446:
   iana-hash-alg:
     title: "IANA Named Information Hash Algorithm Registry"
