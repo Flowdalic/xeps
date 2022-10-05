@@ -12,11 +12,11 @@ cat: "exp"
 author:
  -
    name: Florian Schmaus
-   organization: Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)
+   organization: FAU Erlangen-Nürnberg
    email: flow@cs.fau.de
  -
    name: Christoph Egger
-   organization: Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)
+   organization: FAU Erlangen-Nürnberg
    email: egger@cs.fau.de
 
 normative:
