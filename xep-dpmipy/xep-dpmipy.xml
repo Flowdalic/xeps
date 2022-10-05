@@ -6,7 +6,7 @@
 <?xml-stylesheet type='text/xsl' href='xep.xsl'?>
 <xep>
 <header>
-  <title>Client Side Ping (or "Don't Ping Me, I'll Ping You")</title>
+  <title>Client-Side Ping (or "Don't Ping Me, I'll Ping You")</title>
   <abstract>This specification provides an example of the format for XMPP Extension Protocols (XEPs).</abstract>
   &LEGALNOTICE;
   <number>xxxx</number>
@@ -30,23 +30,79 @@
     <remark><p>First draft.</p></remark>
   </revision>
 </header>
-<section1 topic='Introduction' anchor='intro'>
-  <p>In order to avoid unecessary server to client pings, the server needs to be aware of the default idle-interval after which a client will ping the server.</p>
 
+<section1 topic='Introduction' anchor='intro'>
+
+  <p>In order to avoid unecessary server to client pings, the server needs to be aware of the
+  default connection idle-interval after which a client will ping the server. This extensin protocol
+  defines a mechanism allowing clients to announce the maximum idle interval, after which they will
+  issue a server ping to check for connection liveness.</p>
+
+  <p>Without the mechanism described herin, XMPP client to server connections could be subject to
+  unnecessary pings between the server and client. Those are especially problematic on mobile
+  connection, where every byte of unnecessarily transfered data may required the baseband module of
+  the mobile device to power up, causing unwanted battery drain.</p>
+
+  <p>Assume for example that the server is configured to ping the client after an idle period of 10
+  minutes, however, the client being connected to a mobile network is using a optimized value for
+  the mobile case of 30 minutes. Since the client's inverval is larger than the server's, every 10
+  minutes a ping will be send over the, otherwise idle, connection. If the server wold have been
+  aware of the client's setting, it could adapt to it. That is, the server would only send a ping to
+  the client no client-initiated connection avitivyt could be observed after the clients maximum
+  connection-idle interval has been passed.</p>
+
+  
   <p>TODO/WIP TEXT: Defines a mechanism allowing the client to tell the server that the client will
   never keep the connection idle longer then a certain period of time. This avoid the patholgical
   case where pings from send by the server to check if the connection is still alive wakes a
-  sleeping client up.</p>
-
+  sleeping client up. Also compare to &xep0304; and explain what it is not sufficient.</p>
 </section1>
+
 <section1 topic='Requirements' anchor='reqs'>
   <p>STRONGLY RECOMMENDED.</p>
 </section1>
+
 <section1 topic='Glossary' anchor='glossary'>
   <p>OPTIONAL.</p>
 </section1>
-<section1 topic='Use Cases' anchor='usecases'>
+
+<section1 topic='Discovering Support' anchor='disco'>
+
+    <p>If an entity supports this,
+    i.e., what is specified herein, it MUST advertise that fact by announcing a &xep0030; feature of
+    'urn:xmpp:dpipu:0'. It thus includes this feature in response to a service discovery
+    request.</p>
+
+    <example caption="Service Discovery information request"><![CDATA[
+<iq type='get'
+    from='juliet@example.org/balcony'
+    to='romeo@example.org/orchard'
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'/>
+</iq>]]></example>
+  <example caption="Service Discovery information response"><![CDATA[
+<iq type='result'
+    from='romeo@example.org/orchard'
+    to='juliet@example.org/balcony'
+    id='disco1'>
+  <query xmlns='http://jabber.org/protocol/disco#info'>
+    ...
+    <feature var='urn:xmpp:dpmipy:0'/>
+    ...
+  </query>
+</iq>]]></example>
+</section1>
+<section1 topic='Announcing the maximum idle time' anchor='announcing'>
   <p>STRONGLY RECOMMENDED.</p>
+
+  
+  <example caption="Client annouces maximum idle time to server"><![CDATA[
+<iq type='set'
+    from='juliet@example.org/balcony'
+    id='dpmipy-announce'>
+  <idle-time max='1800' xmlns='urn:xmpp:dpmipy:0'/>
+</iq>]]></example>
+
 </section1>
 
 <!--
