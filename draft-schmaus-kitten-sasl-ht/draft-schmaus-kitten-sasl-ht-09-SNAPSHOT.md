@@ -8,6 +8,8 @@ submissiontype: independent
 area: "Internet"
 wg: "Common Authentication Technology Next Generation"
 cat: "exp"
+venue:
+  github: flowdalic/xeps/tree/master/draft-schmaus-kitten-sasl-ht
 
 author:
  -
@@ -61,8 +63,6 @@ informative:
     target: https://xmpp.org/extensions/xep-0397.html
 
 --- abstract
-
->  This I-D is developed at [ https://github.com/Flowdalic/xeps/tree/master/draft-schmaus-kitten-sasl-ht](https://github.com/Flowdalic/xeps/tree/master/draft-schmaus-kitten-sasl-ht)
 
 This document specifies the family of Hashed Token SASL mechanisms which enable a proof-of-possession-based authentication scheme and are meant to be used for quick re-authentication of a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
