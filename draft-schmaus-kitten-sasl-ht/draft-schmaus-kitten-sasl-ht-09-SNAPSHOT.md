@@ -67,7 +67,7 @@ informative:
 This document specifies the family of Hashed Token SASL mechanisms which enable a proof-of-possession-based authentication scheme and are meant to be used for quick re-authentication of a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
 The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
-The SASL mechanism specified herin further provides hash agility, mutual authentication and is secured by channel binding.
+The SASL mechanism specified herin further provides hash agility, mutual authentication and support for channel binding.
 
 --- middle
 
@@ -76,7 +76,7 @@ The SASL mechanism specified herin further provides hash agility, mutual authent
 This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) {{RFC4422}} mechanisms, which enable a proof-of-possession-based authentication scheme.
 The HT mechanism is designed to be used with short-lived, exclusively ephemeral tokens, called SASL-HT tokens, and allow for quick, one round-trip, re-authentication of a previous session.
 
-Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) being secured by channel binding.
+Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) support for channel binding.
 
 Clients are supposed to request SASL-HT tokens from the server after being authenticated using a "strong" SASL mechanism like SCRAM {{RFC5802}}.
 Hence a typical sequence of actions using HT may look like the following:
@@ -118,7 +118,7 @@ The family of HT mechanisms is not applicable for proxy authentication since the
 
 Each mechanism in this family differs by choice of the hash algorithm and the choice of the channel binding {{RFC5929}} type.
 
-An HT mechanism name is a string beginning with "HT-" followed by the capitalised name of the used hash, followed by "-", and suffixed by one of 'ENDP' and 'UNIQ'.
+An HT mechanism name is a string beginning with "HT-" followed by the capitalised name of the used hash, followed by "-", and suffixed by one of 'ENDP', 'UNIQ', 'EXPR' or 'NONE'.
 
 Hence each HT mechanism has a name of the following form:
 
@@ -126,11 +126,13 @@ Hence each HT mechanism has a name of the following form:
 HT-<hash-alg>-<cb-type>
 ~~~
 
-Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP', 'UNIQ', or 'EXPR' denoting the channel binding type.
+Where \<hash-alg\> is the capitalised "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP', 'UNIQ', 'EXPR' or 'NONE' denoting the channel binding type.
 In the case of 'ENDP', the tls-server-end-point channel binding type is used.
 In the case of 'UNIQ', the tls-unique channel binding type is used.
 In the case of 'EXPR', the tls-exporter {{RFC9266}} channel binding type is used.
 Valid channel binding types are defined in the IANA "Channel-Binding Types" registry {{iana-cbt}} as specified in {{RFC5056}}.
+
+In the special case of 'NONE', no channel binding is to be used (cb-data is to be an empty string).
 
 cb-type | Channel Binding Type
 --------|-----------------------
@@ -147,6 +149,7 @@ HT-SHA-512-ENDP     | SHA-512             | tls-server-end-point
 HT-SHA-512-UNIQ     | SHA-512             | tls-unique
 HT-SHA3-512-ENDP    | SHA3-512            | tls-server-end-point
 HT-SHA-256-UNIQ     | SHA-256             | tls-unique
+HT-SHA-256-NONE     | SHA-256             | N/A
 {: title="Examples of HT SASL mechanisms" }
 
 # The HT Authentication Exchange
@@ -204,8 +207,6 @@ Upon receiving the initiator-msg, the responder calculates itself the value of i
 If both values are equal, then the initiator has been successfully authenticated.
 Otherwise, if both values are not equal, then authentication **MUST** fail.
 
-If the responder was able to authenticate the initiator, then the used token **MUST** be revoked immediately. 
-
 ## Final Responder Message
 
 After the initiator was authenticated the responder continues the SASL authentication by sending the responder-msg to the initiator.
@@ -245,13 +246,19 @@ It is **RECOMMENDED** that the protocol allows the requestor to signal the name 
 If a token is used with a different mechanism than the one which was signalled upon requesting the token, then the authentication **MUST** fail.
 This allows pinning the token to a SASL mechanism, which increases the security because it makes it impossible for an attacker to downgrade the SASL mechanism.
 
+It is **RECOMMENDED** that the protocol defines a way for a client to request rotation or revocation of a token.
+
 # Security Considerations {#security-considerations}
 
 To be secure, the HT mechanism **MUST** be used over a TLS channel that has had the session hash extension {{RFC7627}} negotiated, or session resumption **MUST NOT** have been used.
 
 It is **RECOMMENDED** that implementations periodically require a full authentication using a strong SASL mechanism which does not use the SASL-HT token.
 
-It is of vital importance that the SASL-HT token is generated by a cryptographically secure random generator. See {{RFC4086}} for more information about Randomness Requirements for Security.
+It is of vital importance that the SASL-HT token is generated by a cryptographically secure random generator. See {{RFC4086}} for more information about Randomness Requirements for Security. In addition, comparison of the client's HMAC with the server's calculated HMAC **MUST** be performed using constant-time comparison functions, to protect against timing attacks.
+
+The tokens used with HT mechanisms **SHOULD** have a limited lifetime, e.g. based on usage count or time elapsed since issuance.
+
+Due to the additional security properties afforded by channel binding, it is **RECOMMENDED** that clients use HT mechanisms supporting channel binding in environments that can support it.
 
 # IANA Considerations
 
