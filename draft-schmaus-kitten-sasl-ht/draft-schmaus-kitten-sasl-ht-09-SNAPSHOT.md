@@ -28,7 +28,6 @@ normative:
   RFC4422:
   RFC5056:
   RFC5234:
-  RFC5246:
   RFC5280:
   RFC5929:
   RFC6125:
@@ -52,9 +51,9 @@ normative:
     target: https://www.iana.org/assignments/channel-binding-types/channel-binding-types.xhtml
 
 informative:
-  RFC5226:
   RFC5802:
   RFC6120:
+  RFC8126:
   XEP-0397:
     title: "XEP-0397: Instant Stream Resumption"
     author:
@@ -107,7 +106,7 @@ You may want to look at {{RFC5802}} for that.
 
 ## Applicability
 
-Because this mechanism transports information that should not be controlled by an attacker, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see {{RFC5246}}), or over similar integrity-protected and authenticated channels.
+Because this mechanism transports information that should not be controlled by an attacker, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see {{RFC8446}}), or over similar integrity-protected and authenticated channels.
 Also, the application protcol specific extension which requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
 
 Also, when TLS is used, the client **MUST** successfully validate the server's certificate ({{RFC5280}}, {{RFC6125}}).
@@ -284,7 +283,7 @@ IANA is requested to add the following family of SASL mechanisms to the SASL Mec
 > Owner/Change controller: IESG <iesg@ietf.org>
 >
 > Note: Members of this family MUST be explicitly registered
-> using the "IETF Review" {{RFC5226}} registration procedure.
+> using the "IETF Review" {{RFC8126}} registration procedure.
 > Reviews MUST be requested on the Kitten WG mailing list
 > <kitten@ietf.org> (or a successor designated by the responsible
 > Security AD).
