@@ -298,3 +298,4 @@ IANA is requested to add the following family of SASL mechanisms to the SASL Mec
 This document benefited from discussions on the KITTEN WG mailing list.
 The authors would like to especially thank Thijs Alkemade, Sam Whited and Alexey Melnikov for their comments on this topic.
 Furthermore, we would like to thank Alexander Würstlein, who came up with the idea to pin the token to a SASL mechanism for increased security.
+And last, but not least, thanks to Matthew Wild for working on the -NONE variant of SASL-HT.
