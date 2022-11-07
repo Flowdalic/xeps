@@ -1,7 +1,7 @@
 ---
 title: "The Hashed Token SASL Mechanism"
-docName: "draft-schmaus-kitten-sasl-ht-09-SNAPSHOT"
-date: 2022-10-10
+docName: "draft-schmaus-kitten-sasl-ht-09"
+date: 2022-11-07
 
 ipr: "trust200902"
 submissiontype: independent
