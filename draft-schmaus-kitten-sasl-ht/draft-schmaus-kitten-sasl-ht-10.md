@@ -1,6 +1,6 @@
 ---
 title: "The Hashed Token SASL Mechanism"
-docName: "draft-schmaus-kitten-sasl-ht-10-SNAPSHOT"
+docName: "draft-schmaus-kitten-sasl-ht-10"
 date: 2025-01-30
 
 ipr: "trust200902"
@@ -15,10 +15,12 @@ author:
  -
    name: Florian Schmaus
    organization: Friedrich-Alexander-Universität Erlangen-Nürnberg
+   country: Germany
    email: flow@cs.fau.de
  -
    name: Christoph Egger
    organization: Chalmers University of Technology
+   country: Sweden
    email: christoph.egger@chalmers.se
 
 normative:
