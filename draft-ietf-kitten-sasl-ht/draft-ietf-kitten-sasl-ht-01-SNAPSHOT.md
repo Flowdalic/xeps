@@ -1,15 +1,14 @@
 ---
 title: "The Hashed Token SASL Mechanism"
-docName: "draft-schmaus-kitten-sasl-ht-11-SNAPSHOT"
-date: 2025-01-30
+docName: "draft-ietf-kitten-sasl-ht-01-SNAPSHOT"
+date: 2025-02-22
 
-ipr: "trust200902"
-submissiontype: independent
-area: "Internet"
-wg: "Common Authentication Technology Next Generation"
-cat: "exp"
+ipr: trust200902
+area: Security
+wg: Common Authentication Technology Next Generation (kitten)
+cat: std
 venue:
-  github: flowdalic/xeps/tree/master/draft-schmaus-kitten-sasl-ht
+  github: flowdalic/xeps/tree/master/draft-ietf-kitten-sasl-ht
 
 author:
  -

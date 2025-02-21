@@ -1,6 +1,6 @@
 .PHONY: all clean lint lint-out lint-idnits-latest-release xml
 
-RFC_NAME := draft-schmaus-kitten-sasl-ht
+RFC_NAME := draft-*-kitten-sasl-ht
 
 RFCS_MD   := $(sort $(wildcard $(RFC_NAME)-*.md))
 RFCS_XML  := $(patsubst %.md, %.xml, $(RFCS_MD))
