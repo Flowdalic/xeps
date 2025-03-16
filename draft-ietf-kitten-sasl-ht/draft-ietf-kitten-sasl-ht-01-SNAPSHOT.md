@@ -70,10 +70,10 @@ informative:
 
 --- abstract
 
-This document specifies the family of Hashed Token SASL mechanisms which enable a proof-of-possession-based authentication scheme and are meant to be used to quickly re-authenticate of a previous session.
+This document specifies the family of Hashed Token SASL mechanisms, which enable a proof-of-possession-based authentication scheme and are meant to quickly re-authenticate a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
 The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
-The SASL mechanism specified herein further provides hash agility, mutual authentication and support for channel binding.
+The SASL mechanism specified herein further provides hash agility, mutual authentication, and support for channel binding.
 
 --- middle
 
