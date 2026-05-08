@@ -1,7 +1,7 @@
 ---
 title: "The Hashed Token SASL Mechanism"
 docName: "draft-ietf-kitten-sasl-ht-01-SNAPSHOT"
-date: 2025-02-22
+date: 2026-05-08
 
 ipr: trust200902
 area: Security
@@ -16,6 +16,11 @@ author:
    organization: Friedrich-Alexander-Universität Erlangen-Nürnberg
    country: Germany
    email: flow@cs.fau.de
+ -
+   name: Thilo Molitor
+   organization: Monal Instant Messenger
+   country: Germany
+   email: thilo+ietf@eightysoft.de
  -
    name: Christoph Egger
    organization: Chalmers University of Technology
@@ -169,14 +174,25 @@ The following syntax specifications use the Augmented Backus-Naur form (ABNF) no
 ## Initiator First Message
 
 The HT mechanism starts with the initiator-msg, which is sent by the initiator to the responder.
-The following lists the ABNF grammar for the initiator-msg:
+The following lists the ABNF grammar for SASL-HT in general and initiator-msg in particular:
 
 ~~~
-initiator-msg = authcid NUL initiator-hashed-token
-authcid = 1*SAFE ; MUST accept up to 255 octets
+initiator-msg          = authcid
+                         NUL extra-initiator-values
+                         NUL initiator-hashed-token
+authcid                = 1*SAFE ;; MUST accept up to 255 octets
+extra-initiator-values = key-value-pairs
+key-value-pairs        = [key-value-pair *("," key-value-pair)]
+key-value-pair         = 1*base64-char "=" base64
 initiator-hashed-token = 1*OCTET
 
-NUL    = %0x00 ; The null octet
+base64-char     = ALPHA / DIGIT / "/" / "+"
+base64-4        = 4base64-char
+base64-3        = 3base64-char "="
+base64-2        = 2base64-char "=="
+base64          = *base64-4 [base64-3 / base64-2]
+
+NUL    = %0x00 ;; The null octet
 SAFE   = UTF1 / UTF2 / UTF3 / UTF4
          ;; any UTF-8 encoded Unicode character except NUL
 
@@ -195,7 +211,10 @@ It is followed by initiator-hashed-token separated by a single null octet.
 The value of the initiator-hashed-token is defined as follows:
 
 ~~~
-initiator-hashed-token := HMAC(token, "Initiator" || cb-data)
+initiator-hashed-token := HMAC(token, initiator-hmac-message)
+initiator-hmac-message := "Initiator"
+                          || cb-data
+                          || extra-initiator-values
 ~~~
 
 HMAC() is the function defined in {{RFC2104}} with H being the selected HT hash algorithm, 'cb-data' represents the data provided by the selected channel binding type, and 'token' are the UTF-8 encoded octets of the SASL-HT token string, which acts as a shared secret between initiator and responder.
@@ -223,9 +242,12 @@ After the responder authenticated the initiator, the responder continues the SAS
 The ABNF for responder-msg is:
 
 ~~~
-responder-msg = success-response / error-response
-success-response = NUL 1*OCTET
-failure-response = %x01 1*SAFE
+responder-msg          = success-response / failure-response
+success-response       = NUL extra-responder-values
+                         NUL responder-hashed-token
+extra-responder-values = key-value-pairs
+responder-hashed-token = 1*OCTET
+failure-response       = %x01 failure-description
 ~~~
 
 ### Success Response
@@ -233,7 +255,10 @@ failure-response = %x01 1*SAFE
 The success-response value is defined as follows:
 
 ~~~
-success-response := NUL HMAC(token, "Responder" || cb-data)
+responder-hashed-token := HMAC(token, responder-hmac-message)
+responder-hmac-message := "Responder"
+                          || cb-data
+                          || extra-responder-values
 ~~~
 
 A success response starts with an octet whose value is set to zero (null), followed by the octet string of the result of the HMAC  function.
@@ -245,12 +270,11 @@ The initiating entity **MUST** verify the responder-msg to achieve mutual authen
 The failure-response value is defined as follows:
 
 ~~~
-failure-response := %x01 <failure-description>
-failure-description = "unknown-user" /
-                      "invalid-token" /
-                      "other-error"/
-                      failure-description-ext
-failure-description-ext = <additional custom failure reasons>
+failure-description     = "unknown-user" /
+                          "invalid-token" /
+                          "other-error"/
+                          failure-description-ext
+failure-description-ext = 1*SAFE ;; additional custom failure reasons
 ~~~
 
 A failure response starts with an octet whose value is set to one (0x01), followed by an an octet string describing the reason for the failure.
