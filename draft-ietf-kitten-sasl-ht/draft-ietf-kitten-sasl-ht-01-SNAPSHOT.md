@@ -1,7 +1,7 @@
 ---
 title: "The Hashed Token SASL Mechanism"
 docName: "draft-ietf-kitten-sasl-ht-01-SNAPSHOT"
-date: 2026-05-08
+date: 2026-05-10
 
 ipr: trust200902
 area: Security
@@ -66,6 +66,12 @@ informative:
       name: "Florian Schmaus"
     date: 2018-11-03
     target: https://xmpp.org/extensions/xep-0397.html
+  XEP-0474:
+    title: "XEP-0474: SASL SCRAM Downgrade Protection"
+    author:
+      name: "Thilo Molitor"
+    date: 2025-10-25
+    target: https://xmpp.org/extensions/xep-0474.html
   XEP-0484:
     title: "XEP-0484: Fast Authentication Streamlining Tokens"
     author:
@@ -78,7 +84,7 @@ informative:
 This document specifies the family of Hashed Token SASL mechanisms, which enable a proof-of-possession-based authentication scheme and are meant to quickly re-authenticate a previous session.
 The Hashed Token SASL mechanism's authentication sequence consists of only one round-trip.
 The usage of short-lived, exclusively ephemeral hashed tokens is achieving the single round-trip property.
-The SASL mechanism specified herein further provides hash agility, mutual authentication, and support for channel binding.
+The SASL mechanism specified herein further provides hash agility, mutual authentication, support for channel binding, and the capability to exchange authenticated key/value pairs.
 
 --- middle
 
@@ -87,9 +93,12 @@ The SASL mechanism specified herein further provides hash agility, mutual authen
 This specification describes the family of Hashed Token (HT) Simple Authentication and Security Layer (SASL) {{RFC4422}} mechanisms, which enable a proof-of-possession-based authentication scheme.
 The HT mechanism is designed to be used with short-lived, exclusively ephemeral tokens, called SASL-HT tokens, and allow for quick, one round-trip re-authentication of a previous session.
 
-Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, and 3) support for channel binding.
+Further properties of the HT mechanism are 1) hash agility, 2) mutual authentication, 3) support for channel binding, and 4) the optional exchange of authenticated key/value pairs.
 
-Clients should to request SASL-HT tokens from the server after being authenticated using a "strong" SASL mechanism like SCRAM {{RFC5802}}.
+The ability to include arbitrary key/value pairs allows the initiator and responder to negotiate session parameters or exchange context-specific data concurrently with the authentication exchange, with cryptographic guarantees regarding their integrity and authenticity.
+An example use case for these key/value pairs is transmitting a downgrade protection hash of the initially offered SASL mechanisms and channel-binding types (see {{XEP-0474}}).
+
+Clients should request SASL-HT tokens from the server after being authenticated using a "strong" SASL mechanism like SCRAM {{RFC5802}}.
 Hence a typical sequence of actions using HT may look like the following:
 
 ~~~
@@ -107,7 +116,6 @@ F) Service revokes the successfully used SASL-HT token
 
 The HT mechanism requires an accompanying, application-protocol-specific extension, which allows clients to request a new SASL-HT token (see [Section 5](#requirements-for-the-applicationprotocol-extension)).
 Examples of such an application-protocol-specific extension based on HT are {{XEP-0397}} and {{XEP-0484}}.
-This XMPP {{RFC6120}} extension protocol allows, amongst other things, B) and C),
 
 Since the SASL-HT token is not salted, and only one hash iteration is used, the HT mechanism is not suitable to protect long-lived shared secrets (e.g., "passwords").
 You may want to look at {{RFC5802}} for that.
@@ -119,11 +127,11 @@ You may want to look at {{RFC5802}} for that.
 ## Applicability
 
 Because this mechanism transports information that an attacker should not control, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see {{RFC8446}}) or over similar integrity-protected and authenticated channels.
-Also, the application-protcol-specific extension that requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
+Also, the application-protocol-specific extension that requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
 
 Also, when TLS is used, the client **MUST** successfully validate the server's certificate ({{RFC5280}}, {{RFC6125}}).
 
-The family of HT mechanisms is not applicable for proxy authentication since they can not carry an authorization identity string (authzid).
+The family of HT mechanisms is not applicable for proxy authentication since they cannot carry an authorization identity string (authzid).
 
 # The HT Family of Mechanisms
 
@@ -168,6 +176,7 @@ HT-SHA-256-NONE     | SHA-256             | N/A
 # The HT Authentication Exchange
 
 The mechanism consists of a simple exchange of precisely two messages between the initiator and responder.
+Both messages allow the inclusion of arbitrary key/value pairs.
 
 The following syntax specifications use the Augmented Backus-Naur form (ABNF) notation as specified in {{RFC5234}}.
 
@@ -183,14 +192,10 @@ initiator-msg          = authcid
 authcid                = 1*SAFE ;; MUST accept up to 255 octets
 extra-initiator-values = key-value-pairs
 key-value-pairs        = [key-value-pair *("," key-value-pair)]
-key-value-pair         = 1*base64-char "=" base64
+key-value-pair         = 1*key-value-char "=" 1*key-value-char
 initiator-hashed-token = 1*OCTET
 
-base64-char     = ALPHA / DIGIT / "/" / "+"
-base64-4        = 4base64-char
-base64-3        = 3base64-char "="
-base64-2        = 2base64-char "=="
-base64          = *base64-4 [base64-3 / base64-2]
+key-value-char     = ALPHA / DIGIT / "/" / "+" / "-" / "_"
 
 NUL    = %0x00 ;; The null octet
 SAFE   = UTF1 / UTF2 / UTF3 / UTF4
@@ -205,8 +210,12 @@ UTF4   = %xF0 %x90-BF 2(UTF0) / %xF1-F3 3(UTF0) /
 UTF0   = %x80-BF
 ~~~
 
-The initiator's first message starts with the authentication identity (authcid, see{{RFC4422}}) as UTF-8 {{RFC3629}} encoded string.
-It is followed by initiator-hashed-token separated by a single null octet.
+The initiator's first message starts with the authentication identity (authcid, see{{RFC4422}}) as UTF-8 {{RFC3629}} encoded string and its terminating null octet followed by an optional set of comma-separated key/value pairs (extra-initiator-values).
+This, in turn, is followed by another null octet and the initiator-hashed-token.
+
+The extra-initiator-values allow the initiator to pass arbitrary key/value pairs to the responder during the initial exchange.
+Because these key/value pairs are appended to the initiator-hmac-message before the HMAC calculation, their integrity and authenticity are guaranteed by the resulting initiator-hashed-token.
+If no extra values are being sent, the extra-initiator-values field remains empty, resulting in two consecutive null octets between the authcid and the initiator-hashed-token.
 
 The value of the initiator-hashed-token is defined as follows:
 
@@ -261,7 +270,11 @@ responder-hmac-message := "Responder"
                           || extra-responder-values
 ~~~
 
-A success response starts with an octet whose value is set to zero (null), followed by the octet string of the result of the HMAC  function.
+A success response starts with an octet whose value is set to zero (null), followed by an optional set of comma-separated key/value pairs (extra-responder-values).
+This is followed by another null octet and the octet string of the result of the HMAC function (responder-hashed-token).
+
+Similar to the initiator's message, the responder can use extra-responder-values to return arbitrary data.
+Because these values are incorporated into the responder-hmac-message prior to calculating the HMAC, the initiating entity can mutually authenticate the responder while simultaneously verifying the integrity of the provided key/value pairs.
 
 The initiating entity **MUST** verify the responder-msg to achieve mutual authentication.
 
@@ -277,7 +290,7 @@ failure-description     = "unknown-user" /
 failure-description-ext = 1*SAFE ;; additional custom failure reasons
 ~~~
 
-A failure response starts with an octet whose value is set to one (0x01), followed by an an octet string describing the reason for the failure.
+A failure response starts with an octet whose value is set to one (0x01), followed by an octet string describing the reason for the failure.
 
 Unrecognized failure descriptions should be treated as "other-error".
 The responder may substitute the actual failure cause with "other-error" to prevent information disclosure.
@@ -299,7 +312,7 @@ This section describes compliance with SASL mechanism requirements specified in 
 It is **REQUIRED** that the application-protocol-specific extension provides a mechanism to request a SASL-HT token in the form of a Unicode string.
 The returned token **MUST** have been newly generated by a cryptographically secure random number generator, and it MUST contain at least 128 bits of entropy.
 
-It is **RECOMMENDED** that the protocol allows the requestor to signal the name of the SASL mechanism that he intends to use with the token.
+It is **RECOMMENDED** that the protocol allows the requestor to signal the name of the SASL mechanism that the requestor intends to use with the token.
 If a token is used with a mechanism different from the one signaled upon requesting the token, then the authentication **MUST** fail.
 This requirement allows pinning the token to a SASL mechanism, which increases the security because it makes it impossible for an attacker to downgrade the SASL mechanism.
 
@@ -330,10 +343,10 @@ IANA is requested to add the following family of SASL mechanisms to the SASL Mec
 > SASL mechanism name (or prefix for the family): HT-*
 >
 > Security considerations:
->   [](#security-considerations) of draft-schmaus-kitten-sasl-ht
+>   [](#security-considerations) of draft-ietf-kitten-sasl-ht
 >
 > Published specification (optional, recommended):
->   draft-schmaus-kitten-sasl-ht-XX (TODO)
+>   draft-ietf-kitten-sasl-ht-XX (TODO)
 >
 > Person & email address to contact for further information:
 > IETF SASL WG <kitten@ietf.org>
