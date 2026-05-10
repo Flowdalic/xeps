@@ -191,7 +191,7 @@ initiator-msg          = authcid
                          NUL initiator-hashed-token
 authcid                = 1*SAFE ;; MUST accept up to 255 octets
 extra-initiator-values = key-value-pairs
-key-value-pairs        = [key-value-pair *("," key-value-pair)]
+key-value-pairs        = [ key-value-pair *("," key-value-pair) ]
 key-value-pair         = 1*key-value-char "=" 1*key-value-char
 initiator-hashed-token = 1*OCTET
 
@@ -261,7 +261,8 @@ failure-response       = %x01 failure-description
 
 ### Success Response
 
-The success-response value is defined as follows:
+A success response starts with an octet whose value is set to zero (null), followed by an optional set of comma-separated key/value pairs (extra-responder-values).
+This is followed by another null octet and the octet string of the result of the HMAC function (responder-hashed-token).
 
 ~~~
 responder-hashed-token := HMAC(token, responder-hmac-message)
@@ -270,9 +271,6 @@ responder-hmac-message := "Responder"
                           || extra-responder-values
 ~~~
 
-A success response starts with an octet whose value is set to zero (null), followed by an optional set of comma-separated key/value pairs (extra-responder-values).
-This is followed by another null octet and the octet string of the result of the HMAC function (responder-hashed-token).
-
 Similar to the initiator's message, the responder can use extra-responder-values to return arbitrary data.
 Because these values are incorporated into the responder-hmac-message prior to calculating the HMAC, the initiating entity can mutually authenticate the responder while simultaneously verifying the integrity of the provided key/value pairs.
 
@@ -280,7 +278,7 @@ The initiating entity **MUST** verify the responder-msg to achieve mutual authen
 
 ### Failure Response
 
-The failure-response value is defined as follows:
+A failure response starts with an octet whose value is set to one (0x01), followed by an octet string describing the reason for the failure (failure-description).
 
 ~~~
 failure-description     = "unknown-user" /
@@ -289,8 +287,6 @@ failure-description     = "unknown-user" /
                           failure-description-ext
 failure-description-ext = 1*SAFE ;; additional custom failure reasons
 ~~~
-
-A failure response starts with an octet whose value is set to one (0x01), followed by an octet string describing the reason for the failure.
 
 Unrecognized failure descriptions should be treated as "other-error".
 The responder may substitute the actual failure cause with "other-error" to prevent information disclosure.
