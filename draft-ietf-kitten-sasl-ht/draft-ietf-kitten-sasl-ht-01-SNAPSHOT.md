@@ -129,8 +129,6 @@ You may want to look at {{RFC5802}} for that.
 Because this mechanism transports information that an attacker should not control, the HT mechanism **MUST** only be used over channels protected by Transport Layer Security (TLS, see {{RFC8446}}) or over similar integrity-protected and authenticated channels.
 Also, the application-protocol-specific extension that requests a new SASL-HT token **SHOULD** only be used over similarly protected channels.
 
-Also, when TLS is used, the client **MUST** successfully validate the server's certificate ({{RFC5280}}, {{RFC6125}}).
-
 The family of HT mechanisms is not applicable for proxy authentication since they cannot carry an authorization identity string (authzid).
 
 # The HT Family of Mechanisms
@@ -191,7 +189,7 @@ initiator-msg          = authcid
                          NUL initiator-hashed-token
 authcid                = 1*SAFE ;; MUST accept up to 255 octets
 extra-initiator-values = key-value-pairs
-key-value-pairs        = [ key-value-pair *("," key-value-pair) ]
+key-value-pairs        = [ key-value-pair *( "," key-value-pair ) ]
 key-value-pair         = 1*key-value-char "=" 1*key-value-char
 initiator-hashed-token = 1*OCTET
 
