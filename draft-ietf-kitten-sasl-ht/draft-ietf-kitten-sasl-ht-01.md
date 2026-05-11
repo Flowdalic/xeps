@@ -1,7 +1,7 @@
 ---
 title: "The Hashed Token SASL Mechanism"
 docName: "draft-ietf-kitten-sasl-ht-01-SNAPSHOT"
-date: 2026-05-10
+date: 2026-05-11
 
 ipr: trust200902
 area: Security
@@ -34,9 +34,7 @@ normative:
   RFC4422:
   RFC5056:
   RFC5234:
-  RFC5280:
   RFC5929:
-  RFC6125:
   RFC6920:
   RFC7627:
   RFC8446:
@@ -58,7 +56,6 @@ normative:
 
 informative:
   RFC5802:
-  RFC6120:
   RFC8126:
   XEP-0397:
     title: "XEP-0397: Instant Stream Resumption"
