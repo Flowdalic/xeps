@@ -184,7 +184,7 @@ The following lists the ABNF grammar for SASL-HT in general and initiator-msg in
 initiator-msg          = authcid
                          NUL extra-initiator-values
                          NUL initiator-hashed-token
-authcid                = 1*SAFE ;; MUST accept up to 255 octets
+authcid                = 1*255SAFE ;; MUST accept up to 255 octets
 extra-initiator-values = key-value-pairs
 key-value-pairs        = [ key-value-pair *( "," key-value-pair ) ]
 key-value-pair         = 1*key-value-char "=" 1*key-value-char
