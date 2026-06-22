@@ -132,12 +132,12 @@ The family of HT mechanisms is not applicable for proxy authentication since the
 
 Each mechanism in this family differs by choice of the hash algorithm and the selection of the channel binding {{RFC5929}} type.
 
-An HT mechanism name is a string beginning with "HT-" followed by the capitalized name of the used hash, followed by "-", and suffixed by one of 'ENDP', 'UNIQ', 'EXPR' or 'NONE'.
+An HT mechanism name is a string beginning with "HT2-" followed by the capitalized name of the used hash, followed by "-", and suffixed by one of 'ENDP', 'UNIQ', 'EXPR' or 'NONE'.
 
 Hence, each HT mechanism has a name of the following form:
 
 ~~~
-HT-<hash-alg>-<cb-type>
+HT2-<hash-alg>-<cb-type>
 ~~~
 
 Where \<hash-alg\> is the capitalized "Hash Name String" of the IANA "Named Information Hash Algorithm Registry" {{iana-hash-alg}} as specified in {{RFC6920}}, and \<cb-type\> is one of 'ENDP', 'UNIQ', 'EXPR' or 'NONE' denoting the channel binding type.
@@ -159,13 +159,13 @@ NONE    | *No* Channel Binding
 
 The following table lists some examples of HT SASL mechanisms registered by this document.
 
-Mechanism Name      | HT Hash Algorithm   | Channel-binding unique prefix
---------------------|---------------------|------------------------------
-HT-SHA-512-ENDP     | SHA-512             | tls-server-end-point
-HT-SHA-512-UNIQ     | SHA-512             | tls-unique
-HT-SHA3-512-ENDP    | SHA3-512            | tls-server-end-point
-HT-SHA-256-UNIQ     | SHA-256             | tls-unique
-HT-SHA-256-NONE     | SHA-256             | N/A
+Mechanism Name       | HT Hash Algorithm   | Channel-binding unique prefix
+---------------------|---------------------|------------------------------
+HT2-SHA-512-ENDP     | SHA-512             | tls-server-end-point
+HT2-SHA-512-UNIQ     | SHA-512             | tls-unique
+HT2-SHA3-512-ENDP    | SHA3-512            | tls-server-end-point
+HT2-SHA-256-UNIQ     | SHA-256             | tls-unique
+HT2-SHA-256-NONE     | SHA-256             | N/A
 {: title="Examples of HT SASL mechanisms" }
 
 # The HT Authentication Exchange
@@ -290,7 +290,7 @@ The responder may substitute the actual failure cause with "other-error" to prev
 
 This section describes compliance with SASL mechanism requirements specified in Section 5 of {{RFC4422}}.
 
-1.   "HT-SHA-256-ENDP", "HT-SHA-256-UNIQ", "HT-SHA3-512-ENDP", "HT-SHA3-512-UNIQ", ….
+1.   "HT2-SHA-256-ENDP", "HT2-SHA-256-UNIQ", "HT2-SHA3-512-ENDP", "HT2-SHA3-512-UNIQ", ….
 2.   Definition of server-challenges and client-responses:
      a)  HT is a client-first mechanism.
      b)  HT does send additional data with success (the responder-msg).
@@ -331,7 +331,7 @@ IANA is requested to add the following family of SASL mechanisms to the SASL Mec
 >
 > Subject: Registration of a new SASL family HT
 >
-> SASL mechanism name (or prefix for the family): HT-*
+> SASL mechanism name (or prefix for the family): HT2-*
 >
 > Security considerations:
 >   [](#security-considerations) of draft-ietf-kitten-sasl-ht
