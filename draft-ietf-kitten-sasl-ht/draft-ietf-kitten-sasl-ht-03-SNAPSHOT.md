@@ -1,7 +1,7 @@
 ---
 title: "The Hashed Token SASL Mechanism"
-docName: "draft-ietf-kitten-sasl-ht-02-SNAPSHOT"
-date: 2026-05-11
+docName: "draft-ietf-kitten-sasl-ht-03-SNAPSHOT"
+date: 2026-06-22
 
 ipr: trust200902
 area: Security
